@@ -7,7 +7,6 @@ public class DropToRobbery : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     bool isEntered;
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         isEntered = true;
@@ -28,10 +27,10 @@ public class DropToRobbery : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 int locNum = robCust.number;
                 RobberyType robType = robCust.robberyType;
 
-                if (Drag.itemBeingDragged.GetComponent<DragCharacter>())
+                if (Drag.ItemType == DraggeableItemType.Character)
                 {
                     CharacterCustomization charCust;
-                    Drop.DropObject<CharacterCustomization, DragCharacter>(out charCust);
+                    Drop.DropObject(out charCust);
 
                     if (charCust != null)
                         if (charCust.status == CharacterStatus.normal)
@@ -39,10 +38,10 @@ public class DropToRobbery : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
                     isEntered = false;
                 }
-                if (Drag.itemBeingDragged.GetComponent<DragItem>())
+                if (Drag.ItemType == DraggeableItemType.Item)
                 {
                     ItemCustomization iCust;
-                    Drop.DropObject<ItemCustomization, DragItem>(out iCust);
+                    Drop.DropObject(out iCust);
                     if (iCust != null) WM1.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
                 }
                 isEntered = false;

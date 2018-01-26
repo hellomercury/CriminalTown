@@ -15,12 +15,12 @@ public class DragAndDropUpdate : MonoBehaviour
     public RM robUpdate;
 
 
-    void Update ()
+    void Update()
     {
         if (!NightButton.isNight)
         {
             //Update drop
-            if (Drag.itemBeingDragged)
+            if (Drag.IsObjectDragging)
             {
                 if (WM1.hospital.gameObject.activeInHierarchy)
                     WM1.hospital.GetComponent<DropToHospitalWindow>().DropToHospitalWindowUpdate();
@@ -39,9 +39,9 @@ public class DragAndDropUpdate : MonoBehaviour
 
             //Then update drag
             foreach (GameObject item in GameObject.FindGameObjectsWithTag("DraggableItem"))
-                item.GetComponent<DragItem>().DragUpdate();
+                item.GetComponent<Drag>().DragUpdate();
             foreach (GameObject character in GameObject.FindGameObjectsWithTag("DraggableCharacter"))
-                character.GetComponent<DragCharacter>().DragUpdate();
+                character.GetComponent<Drag>().DragUpdate();
         }
     }
 }
