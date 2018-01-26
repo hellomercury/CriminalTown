@@ -16,10 +16,10 @@ public class Drag : MonoBehaviour
     public static DraggableObjectsLocations Location { get; set; }
 
 
-    public Transform dragParent;
+    private Transform dragParent;
 
-    public float holdTime;
-    public float maxScrollVelocityInDrag;
+    public const float holdTime = 0.5f;
+    public const float maxHoldingAreaRadius = 10;
 
     private Transform startParent;
     private ScrollRect scrollRect;
@@ -131,10 +131,10 @@ public class Drag : MonoBehaviour
 
     public virtual IEnumerator Holding()
     {
-        Vector2 posBeforeHolding = transform.position;
+        Vector2 posBeforeHolding = Input.mousePosition;
         while (timer > 0)
         {
-            if (transform.position.magnitude - posBeforeHolding.magnitude > 10)
+            if (Input.mousePosition.magnitude - posBeforeHolding.magnitude > maxHoldingAreaRadius)
             {
                 isHolding = false;
             }
