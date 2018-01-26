@@ -4,11 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+//public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery}
+public enum DraggeableItemType { Item, Character }
+
 public class Drag : MonoBehaviour
 {
-    public static GameObject itemBeingDragged;
-
-    public static bool isCustomerDragged;
+    public static GameObject ItemBeingDragged { get; set; }
+    public static bool IsObjectDragging { get; set; }
+    public static DraggeableItemType ItemType { get; set; }
 
     public Transform customerScrollRect;
     public Transform dragParent;
@@ -16,54 +19,49 @@ public class Drag : MonoBehaviour
     public float holdTime;
     public float maxScrollVelocityInDrag;
 
-    protected Transform startParent;
+    //private DraggableObjectsLocations location;
+    private Transform startParent;
+    private ScrollRect scrollRect;
 
-    protected ScrollRect scrollRect;
+    private float timer;
 
-    protected float timer;
+    private static bool isHolding;
+    private bool isDragging;
+    private bool isPointerOverGameObject;
 
-    protected bool isHolding;
-    protected bool canDrag;
-    protected bool isPointerOverGameObject;
 
-    protected CanvasGroup canvasGroup;
+    private CanvasGroup canvasGroup;
+    private Vector3 startPos;
 
-    protected Vector3 startPos;
+    public Transform StartParent { get { return startParent; } }
+    public Vector3 StartPos { get { return startPos; } }
 
-    public Transform StartParent
-    {
-        get { return startParent; }
-    }
-
-    public Vector3 StartPos
-    {
-        get { return startPos; }
-    }
-
-    protected bool isHorizontalScrollActive;
-    protected bool isVerticalScrollActive;
+    private bool isHorizontalScrollActive;
+    private bool isVerticalScrollActive;
 
     public virtual void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         customerScrollRect = transform.parent.parent.parent.parent;
         dragParent = FindObjectOfType<Canvas>().transform;
+        switch (gameObject.tag)
+        {
+            case "DraggableCharacter": ItemType = DraggeableItemType.Character; break;
+            case "Draggabltem": ItemType = DraggeableItemType.Item; break;
+        }
     }
 
-    // Use this for initialization
     public virtual void Start()
     {
         timer = holdTime;
     }
 
-    // Update is called once per frame
     public virtual void DragUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                //Debug.Log("Mouse Button Down");
                 scrollRect = customerScrollRect.GetComponent<ScrollRect>();
                 isPointerOverGameObject = true;
                 isHolding = true;
@@ -75,15 +73,14 @@ public class Drag : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                //Debug.Log("Mouse Button Up");
                 isHolding = false;
                 if (isVerticalScrollActive) customerScrollRect.GetComponent<ScrollRect>().vertical = true;
                 if (isHorizontalScrollActive) customerScrollRect.GetComponent<ScrollRect>().horizontal = true;
 
-                if (canDrag)
+                if (isDragging)
                 {
-                    itemBeingDragged = null;
-                    isCustomerDragged = false;
+                    ItemBeingDragged = null;
+                    IsObjectDragging = false;
                     if (transform.parent == dragParent)
                     {
                         canvasGroup.blocksRaycasts = true;
@@ -91,7 +88,7 @@ public class Drag : MonoBehaviour
                         transform.SetParent(startParent);
                         transform.localPosition = startPos;
                     }
-                    canDrag = false;
+                    isDragging = false;
                     timer = holdTime;
                 }
             }
@@ -100,10 +97,10 @@ public class Drag : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
+            //if (gameObject.GetComponent<Button>().)
             {
-                if (canDrag)
+                if (isDragging)
                 {
-                    //Debug.Log("Mouse Button");
                     transform.position = Input.mousePosition;
                 }
                 else
@@ -124,9 +121,10 @@ public class Drag : MonoBehaviour
 
     public virtual IEnumerator Holding()
     {
+        Vector2 posBeforeHolding = transform.position;
         while (timer > 0)
         {
-            if (scrollRect.velocity.x >= maxScrollVelocityInDrag)
+            if (transform.position.magnitude - posBeforeHolding.magnitude > 10)
             {
                 isHolding = false;
             }
@@ -138,7 +136,6 @@ public class Drag : MonoBehaviour
             }
 
             timer -= Time.deltaTime;
-            //Debug.Log("Time : " + timer);
             yield return null;
         }
 
@@ -159,11 +156,11 @@ public class Drag : MonoBehaviour
         else isHorizontalScrollActive = false;
 
 
-        isCustomerDragged = true;
-        itemBeingDragged = gameObject;
+        IsObjectDragging = true;
+        ItemBeingDragged = gameObject;
         startPos = transform.localPosition;
         startParent = transform.parent;
-        canDrag = true;
+        isDragging = true;
         canvasGroup.blocksRaycasts = false;
         transform.SetParent(dragParent);
     }
@@ -171,7 +168,7 @@ public class Drag : MonoBehaviour
     public void Reset()
     {
         isHolding = false;
-        canDrag = false;
+        isDragging = false;
         isPointerOverGameObject = false;
     }
 }

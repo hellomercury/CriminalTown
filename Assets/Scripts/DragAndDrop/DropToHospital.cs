@@ -25,10 +25,10 @@ public class DropToHospital : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             if (isEntered)
             {
-                if (Drag.itemBeingDragged.GetComponent<DragCharacter>())
+                if (Drag.ItemType == DraggeableItemType.Character)
                 {
                     CharacterCustomization charCust;
-                    Drop.DropObject<CharacterCustomization, DragCharacter>(out charCust);
+                    Drop.DropObject(out charCust);
 
                     if (charCust != null)
                         if (charCust.status == CharacterStatus.normal)

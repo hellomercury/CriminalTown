@@ -321,9 +321,9 @@ GameObject:
   - component: {fileID: 222788765411453052}
   - component: {fileID: 114553631212213476}
   - component: {fileID: 114982297796245290}
-  - component: {fileID: 114351518431745744}
   - component: {fileID: 225040687085906250}
   - component: {fileID: 95153287729522912}
+  - component: {fileID: 114271589808192594}
   m_Layer: 5
   m_Name: Character
   m_TagString: DraggableCharacter
@@ -944,6 +944,21 @@ MonoBehaviour:
   m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114271589808192594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1449250750747242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ae8d1fb0f0a0241a80e474bd1c17a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customerScrollRect: {fileID: 0}
+  dragParent: {fileID: 0}
+  holdTime: 0.5
+  maxScrollVelocityInDrag: 0
 --- !u!114 &114278824327377650
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1064,21 +1079,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Num
---- !u!114 &114351518431745744
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1449250750747242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffeb5ea2bc9c9a9418d61b99cb98ade5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  customerScrollRect: {fileID: 0}
-  dragParent: {fileID: 0}
-  holdTime: 0.5
-  maxScrollVelocityInDrag: 10
 --- !u!114 &114356128557373538
 MonoBehaviour:
   m_ObjectHideFlags: 1

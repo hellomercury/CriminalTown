@@ -92,9 +92,9 @@ GameObject:
   - component: {fileID: 222424273642609826}
   - component: {fileID: 114901950680471156}
   - component: {fileID: 114779913752864204}
-  - component: {fileID: 114163616545074276}
   - component: {fileID: 225319127203005308}
   - component: {fileID: 95090282963725194}
+  - component: {fileID: 114631413048844116}
   m_Layer: 5
   m_Name: Item
   m_TagString: DraggableItem
@@ -119,21 +119,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114163616545074276
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1960970437253934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c489d514d223dcb428793c1e386aa70d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  customerScrollRect: {fileID: 0}
-  dragParent: {fileID: 0}
-  holdTime: 0.5
-  maxScrollVelocityInDrag: 1
 --- !u!114 &114242399852628938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -250,6 +235,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114631413048844116
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1960970437253934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ae8d1fb0f0a0241a80e474bd1c17a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customerScrollRect: {fileID: 0}
+  dragParent: {fileID: 0}
+  holdTime: 0
+  maxScrollVelocityInDrag: 0
 --- !u!114 &114779913752864204
 MonoBehaviour:
   m_ObjectHideFlags: 1
