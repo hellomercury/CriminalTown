@@ -41,7 +41,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     ItemCustomization iCust;
                     Drop.DropObject(out iCust);
                     if (iCust != null)
-                        if (Drag.ItemBeingDragged.GetComponent<Drag>().StartParent.parent == WM1.itemsPanel.itemsLocation)
+                        if (Drag.Location == DraggableObjectsLocations.itemsPanel)
                             WM1.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
                 }
                 isEntered = false;
@@ -54,7 +54,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     Drop.DropObject(out charCust);
 
                     if (charCust.status == CharacterStatus.robbery)
-                        if (Drag.ItemBeingDragged.GetComponent<Drag>().StartParent.parent == WM1.robberyWindow.GetComponent<RobberyWindow>().charactersLocation)
+                        if (Drag.Location == DraggableObjectsLocations.robbery)
                             WM1.robberyWindow.RemoveCharacterFromRobberyAndUpdate(charCust.character, WM1.robberyWindow.robType, WM1.robberyWindow.locationNum);
                 }
                 if (Drag.ItemType == DraggeableItemType.Item)
@@ -62,7 +62,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     ItemCustomization iCust;
                     Drop.DropObject(out iCust);
 
-                    if (Drag.ItemBeingDragged.GetComponent<Drag>().StartParent.parent == WM1.robberyWindow.itemsLocation)
+                    if (Drag.Location == DraggableObjectsLocations.robbery)
                         WM1.robberyWindow.TryToRemoveItemFromRobbery(iCust.number, WM1.robberyWindow.robType, WM1.robberyWindow.locationNum);
                 }
                 isEntered = false;

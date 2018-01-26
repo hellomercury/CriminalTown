@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
-//public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery}
+public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery}
 public enum DraggeableItemType { Item, Character }
 
 public class Drag : MonoBehaviour
@@ -12,14 +13,14 @@ public class Drag : MonoBehaviour
     public static GameObject ItemBeingDragged { get; set; }
     public static bool IsObjectDragging { get; set; }
     public static DraggeableItemType ItemType { get; set; }
+    public static DraggableObjectsLocations Location { get; set; }
 
-    public Transform customerScrollRect;
+
     public Transform dragParent;
 
     public float holdTime;
     public float maxScrollVelocityInDrag;
 
-    //private DraggableObjectsLocations location;
     private Transform startParent;
     private ScrollRect scrollRect;
 
@@ -42,13 +43,24 @@ public class Drag : MonoBehaviour
     public virtual void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
-        customerScrollRect = transform.parent.parent.parent.parent;
+        scrollRect = transform.parent.parent.parent.parent.GetComponent<ScrollRect>();
         dragParent = FindObjectOfType<Canvas>().transform;
         switch (gameObject.tag)
         {
             case "DraggableCharacter": ItemType = DraggeableItemType.Character; break;
             case "DraggableItem": ItemType = DraggeableItemType.Item; break;
         }
+        GetCurrentLocation();
+    }
+
+    private void GetCurrentLocation()
+    {
+        if (gameObject.transform.parent.parent == WM1.charactersPanel.charactersLocation)
+            Location = DraggableObjectsLocations.charactersPanel;
+        else if (gameObject.transform.parent.parent == WM1.itemsPanel.itemsLocation)
+            Location = DraggableObjectsLocations.itemsPanel;
+        else
+            Location = DraggableObjectsLocations.robbery;
     }
 
     public virtual void Start()
@@ -62,7 +74,6 @@ public class Drag : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                scrollRect = customerScrollRect.GetComponent<ScrollRect>();
                 //isPointerOverGameObject = true;
                 isHolding = true;
                 StartCoroutine(Holding());
@@ -74,8 +85,8 @@ public class Drag : MonoBehaviour
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
                 isHolding = false;
-                if (isVerticalScrollActive) customerScrollRect.GetComponent<ScrollRect>().vertical = true;
-                if (isHorizontalScrollActive) customerScrollRect.GetComponent<ScrollRect>().horizontal = true;
+                if (isVerticalScrollActive) scrollRect.GetComponent<ScrollRect>().vertical = true;
+                if (isHorizontalScrollActive) scrollRect.GetComponent<ScrollRect>().horizontal = true;
 
                 if (isDragging)
                 {
@@ -97,7 +108,6 @@ public class Drag : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
-            //if (gameObject.GetComponent<Button>().)
             {
                 if (isDragging)
                 {
@@ -141,16 +151,16 @@ public class Drag : MonoBehaviour
 
         gameObject.GetComponent<Animator>().SetTrigger("Dragged");
 
-        if (customerScrollRect.GetComponent<ScrollRect>().vertical == true)
+        if (scrollRect.vertical == true)
         {
-            customerScrollRect.GetComponent<ScrollRect>().vertical = false;
+            scrollRect.vertical = false;
             isVerticalScrollActive = true;
         }
         else isVerticalScrollActive = false;
 
-        if (customerScrollRect.GetComponent<ScrollRect>().horizontal == true)
+        if (scrollRect.horizontal == true)
         {
-            customerScrollRect.GetComponent<ScrollRect>().horizontal = false;
+            scrollRect.horizontal = false;
             isHorizontalScrollActive = true;
         }
         else isHorizontalScrollActive = false;
