@@ -162,27 +162,7 @@ public class RobberyWindow : MonoBehaviour
 
     public void TryToAddItemToRobbery(int itemNumber, RobberyType robberyType, int locationNum)
     {
-        //ModalPanelDetails details;
-
-        //if (DataScript.eData.IsRobberyEmpty(robberyType, locationNum))
         WM1.robberyItemsWindow.SetItemsWindow(itemNumber, isItemAdding: true, robberyType: robberyType, locationNum: locationNum);
-        //else
-        //{
-        //    EventButtonDetails yesButton = new EventButtonDetails
-        //    {
-        //        buttonText = "ОК",
-        //        action = () => { WM1.modalPanel.ClosePanel(); }
-        //    };
-        //    details = new ModalPanelDetails
-        //    {
-        //        iconSprite = WM1.modalPanel.wrongIcon,
-        //        imageSprite = WM1.itemsOptions.itemsSprites[itemNumber],
-        //        button0Details = yesButton,
-        //        text = "Добавьте по крайней мере одного персонажа, прежде чем кидаться вещами!",
-        //        titletext = "Ну и что это?"
-        //    };
-        //    WM1.modalPanel.CallModalPanel(details);
-        //}
     }
 
     public void AddItemToRobberyAndUpdate(int itemNumber, int itemCount, RobberyType robberyType, int locationNum)

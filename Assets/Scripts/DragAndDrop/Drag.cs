@@ -28,7 +28,6 @@ public class Drag : MonoBehaviour
 
     private static bool isHolding;
     private bool isDragging;
-    //private bool isPointerOverGameObject;
 
 
     private CanvasGroup canvasGroup;
@@ -45,12 +44,6 @@ public class Drag : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
         scrollRect = transform.parent.parent.parent.parent.GetComponent<ScrollRect>();
         dragParent = FindObjectOfType<Canvas>().transform;
-        switch (gameObject.tag)
-        {
-            case "DraggableCharacter": ItemType = DraggeableItemType.Character; break;
-            case "DraggableItem": ItemType = DraggeableItemType.Item; break;
-        }
-        GetCurrentLocation();
     }
 
     private void GetCurrentLocation()
@@ -59,8 +52,19 @@ public class Drag : MonoBehaviour
             Location = DraggableObjectsLocations.charactersPanel;
         else if (gameObject.transform.parent.parent == WM1.itemsPanel.itemsLocation)
             Location = DraggableObjectsLocations.itemsPanel;
-        else
+        else if (gameObject.transform.parent.parent == WM1.robberyWindow.itemsLocation)
             Location = DraggableObjectsLocations.robbery;
+        else if (gameObject.transform.parent.parent == WM1.robberyWindow.charactersLocation)
+            Location = DraggableObjectsLocations.robbery;
+    }
+
+    private void GetCurrentItemType()
+    {
+        switch (gameObject.tag)
+        {
+            case "DraggableCharacter": ItemType = DraggeableItemType.Character; break;
+            case "DraggableItem": ItemType = DraggeableItemType.Item; break;
+        }
     }
 
     public virtual void Start()
@@ -74,7 +78,6 @@ public class Drag : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                //isPointerOverGameObject = true;
                 isHolding = true;
                 StartCoroutine(Holding());
             }
@@ -113,21 +116,9 @@ public class Drag : MonoBehaviour
                 {
                     transform.position = Input.mousePosition;
                 }
-                //else
-                //{
-                //    if (!isPointerOverGameObject)
-                //    {
-                //        isHolding = false;
-                //    }
-                //}
             }
         }
     }
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    isPointerOverGameObject = false;
-    //}
 
     public virtual IEnumerator Holding()
     {
@@ -165,6 +156,8 @@ public class Drag : MonoBehaviour
         }
         else isHorizontalScrollActive = false;
 
+        GetCurrentLocation();
+        GetCurrentItemType();
 
         IsObjectDragging = true;
         ItemBeingDragged = gameObject;
@@ -173,12 +166,13 @@ public class Drag : MonoBehaviour
         isDragging = true;
         canvasGroup.blocksRaycasts = false;
         transform.SetParent(dragParent);
+
+        Debug.Log(Location + " " + ItemType);
     }
 
     public void Reset()
     {
         isHolding = false;
         isDragging = false;
-        //isPointerOverGameObject = false;
     }
 }
