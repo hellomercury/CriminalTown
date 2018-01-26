@@ -27,7 +27,7 @@ public class Drag : MonoBehaviour
 
     private static bool isHolding;
     private bool isDragging;
-    private bool isPointerOverGameObject;
+    //private bool isPointerOverGameObject;
 
 
     private CanvasGroup canvasGroup;
@@ -47,7 +47,7 @@ public class Drag : MonoBehaviour
         switch (gameObject.tag)
         {
             case "DraggableCharacter": ItemType = DraggeableItemType.Character; break;
-            case "Draggabltem": ItemType = DraggeableItemType.Item; break;
+            case "DraggableItem": ItemType = DraggeableItemType.Item; break;
         }
     }
 
@@ -63,7 +63,7 @@ public class Drag : MonoBehaviour
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
                 scrollRect = customerScrollRect.GetComponent<ScrollRect>();
-                isPointerOverGameObject = true;
+                //isPointerOverGameObject = true;
                 isHolding = true;
                 StartCoroutine(Holding());
             }
@@ -103,21 +103,21 @@ public class Drag : MonoBehaviour
                 {
                     transform.position = Input.mousePosition;
                 }
-                else
-                {
-                    if (!isPointerOverGameObject)
-                    {
-                        isHolding = false;
-                    }
-                }
+                //else
+                //{
+                //    if (!isPointerOverGameObject)
+                //    {
+                //        isHolding = false;
+                //    }
+                //}
             }
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isPointerOverGameObject = false;
-    }
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    isPointerOverGameObject = false;
+    //}
 
     public virtual IEnumerator Holding()
     {
@@ -169,6 +169,6 @@ public class Drag : MonoBehaviour
     {
         isHolding = false;
         isDragging = false;
-        isPointerOverGameObject = false;
+        //isPointerOverGameObject = false;
     }
 }

@@ -248,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customerScrollRect: {fileID: 0}
   dragParent: {fileID: 0}
-  holdTime: 0
+  holdTime: 0.5
   maxScrollVelocityInDrag: 0
 --- !u!114 &114779913752864204
 MonoBehaviour:
