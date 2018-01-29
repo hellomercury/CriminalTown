@@ -103,7 +103,7 @@ public class CharacterMenu : MonoBehaviour
         CommonWindowSettings();
 
         isStatsChanged = false;
-        WM1.guiEventManager.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
+        //character.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
     }
 
     private void SetSlidersMaxValues()

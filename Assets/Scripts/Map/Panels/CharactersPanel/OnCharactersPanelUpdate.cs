@@ -10,12 +10,6 @@ public class OnCharactersPanelUpdate : MonoBehaviour
 
     private Dictionary<Character, Button> charactersDict;
 
-    private void Start()
-    {
-        WM1.guiEventManager.OnAddEvent += OnAddCharacterPanelReaction;
-        WM1.guiEventManager.OnKickEvent += OnKickCharacterPanelReaction;
-    }
-
     public void UpdateCharactersPanel()
     {
         if (charactersDict != null)
@@ -28,6 +22,8 @@ public class OnCharactersPanelUpdate : MonoBehaviour
         {
             charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
             charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
+            //character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
+            //character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
         }
     }
 
@@ -42,9 +38,16 @@ public class OnCharactersPanelUpdate : MonoBehaviour
         Destroy(charactersDict[character].gameObject);
     }
 
+    private void OnStatsChangedPanelReaction(Character character)
+    {
+        charactersDict[character].GetComponent<CharacterCustomization>().SetCharStats();
+    }
+
     private void OnAddCharacterPanelReaction(Character character)
     {
         charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
         charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
+        //character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
+        //character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
     }
 }
