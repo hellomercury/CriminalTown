@@ -18,19 +18,18 @@ public class SData
 public class ChData
 {
     public List<Character> panelCharacters;
-    //public List<CommonCharacter> panelComCharacters, campComCharacters;
-    //public List<SpecialCharacter> panelSpCharacters, campSpCharacters;
     public List<Character> campCharacters;
 
     public void RemoveCharacter(Character character)
     {
-        character.CallOnKickEvent();
+        //character.CallOnKickEvent();
         panelCharacters.Remove(character);
     }
 
     public void AddCharacter(Character character)
     {
-
+        //character.CallOnAddEvent();
+        panelCharacters.Add(character);
     }
 }
 
@@ -55,24 +54,6 @@ public class EData
 
     public Dictionary<RobberyType, Dictionary<int, Robbery>> robberiesData;
 
-    //public IEnumerable<CommonCharacter> GetCommonCharactersForRobbery(RobberyType robberyType, int locationNum)
-    //{
-    //    foreach (CommonCharacter comChar in DataScript.chData.panelComCharacters)
-    //    {
-    //        if (comChar.Status == CharacterStatus.robbery)
-    //            if (comChar.LocationNum == locationNum && comChar.RobberyType == (int)robberyType)
-    //                yield return comChar;
-    //    }
-    //}
-    //public IEnumerable<SpecialCharacter> GetSpecialCharactersForRobbery(RobberyType robberyType, int locationNum)
-    //{
-    //    foreach (SpecialCharacter spChar in DataScript.chData.panelSpCharacters)
-    //    {
-    //        if (spChar.Status == CharacterStatus.robbery)
-    //            if (spChar.LocationNum == locationNum && spChar.RobberyType == (int)robberyType)
-    //                yield return spChar;
-    //    }
-    //}
     public IEnumerable<Character> GetCharactersForRobbery(RobberyType robberyType, int locationNum)
     {
         foreach (Character character in DataScript.chData.panelCharacters)
@@ -138,9 +119,9 @@ public class DataScript : MonoBehaviour
         hospitalChar.StatusValue = 20;
         chData.panelCharacters.Add(hospitalChar);
 
-        chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
-        chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));
-        chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 0));
+        //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
+        //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));
+        //chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 0));
         chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 1));
 
         //eData

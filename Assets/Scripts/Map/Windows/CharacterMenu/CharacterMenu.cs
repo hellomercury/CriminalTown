@@ -114,7 +114,7 @@ public class CharacterMenu : MonoBehaviour
         CommonWindowSettings();
 
         isStatsChanged = false;
-        character.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
+        //character.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
     }
 
     private void SetSlidersMaxValues()
@@ -331,9 +331,9 @@ public class CharacterMenu : MonoBehaviour
         if (isStatsChanged)
         {
             character.SetStats(chChanged);
-            character.CallOnStatsChangedEvent();
+            //character.CallOnStatsChangedEvent();
         }
-        character.OnKickEvent -= (ch) => OnKickCharacterWindowReaction();
+        //character.OnKickEvent -= (ch) => OnKickCharacterWindowReaction();
     }
 
     public void BoostRecovery()
@@ -343,7 +343,7 @@ public class CharacterMenu : MonoBehaviour
         DataScript.sData.money -= price;
         WM1.hospital.UpdateHospital();
         CheckPointsAndStats();
-        character.CallOnStatsChangedEvent();
+        //character.CallOnStatsChangedEvent();
     }
 
     public void BreakOut()
@@ -353,7 +353,7 @@ public class CharacterMenu : MonoBehaviour
         DataScript.sData.money -= price;
         WM1.policeStation.UpdatePoliceStationCharacters();
         CheckPointsAndStats();
-        character.CallOnStatsChangedEvent();
+        //character.CallOnStatsChangedEvent();
     }
 
     public void OnKickButtonClick()

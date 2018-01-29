@@ -65,7 +65,7 @@ public class RobberyWindow : MonoBehaviour
         {
             if (character.Status == CharacterStatus.robbery)
             {
-                if (character.LocationNum == locationNum && character.StatusValue == (int)robType)
+                if (character.LocationNum == locationNum && character.RobberyType == (int)robType)
                 {
                     charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
                     charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);

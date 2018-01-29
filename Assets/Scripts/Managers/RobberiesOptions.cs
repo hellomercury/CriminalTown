@@ -27,8 +27,6 @@ public class Robbery
     public int skill;
     public int luck;
 
-    //public List<CommonCharacter> commonCharacters;
-    //public List<SpecialCharacter> specialCharacters;
     public Dictionary<int, int> itemsCount;
 }
 

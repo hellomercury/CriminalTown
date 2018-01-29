@@ -22,8 +22,8 @@ public class OnCharactersPanelUpdate : MonoBehaviour
         {
             charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
             charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
-            character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
-            character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
+            //character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
+            //character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
         }
     }
 
@@ -47,7 +47,7 @@ public class OnCharactersPanelUpdate : MonoBehaviour
     {
         charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
         charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
-        character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
-        character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
+        //character.OnKickEvent += (ch) => OnKickCharacterPanelReaction(character);
+        //character.OnStatsChangedEvent += (ch) => OnStatsChangedPanelReaction(character);
     }
 }

@@ -77,8 +77,8 @@ public class NightButton : MonoBehaviour
         SetActiveMapAndUpdate(false);
 
         StartCoroutine(NightAnimation());
-        CalculateEvents();
         UpdateDataAfterDay();
+        CalculateEvents();
     }
 
     IEnumerator NightAnimation()

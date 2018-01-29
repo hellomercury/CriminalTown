@@ -81,5 +81,7 @@ public class OnBanditCampOpen : MonoBehaviour
 
         DataScript.chData.AddCharacter(highlightedChar);
         charactersDict.Remove(highlightedChar);
+
+        highlightedChar = null;
     }
 }

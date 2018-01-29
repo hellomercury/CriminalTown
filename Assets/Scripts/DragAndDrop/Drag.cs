@@ -8,7 +8,7 @@ using System;
 public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery}
 public enum DraggeableItemType { Item, Character }
 
-public class Drag : MonoBehaviour
+public class Drag : MonoBehaviour, IPointerExitHandler
 {
     public static GameObject ItemBeingDragged { get; set; }
     public static bool IsObjectDragging { get; set; }
@@ -28,6 +28,7 @@ public class Drag : MonoBehaviour
 
     private static bool isHolding;
     private bool isDragging;
+    private bool isPointerOverGameObject;
 
 
     private CanvasGroup canvasGroup;
@@ -78,6 +79,7 @@ public class Drag : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
+                isPointerOverGameObject = true;
                 isHolding = true;
                 StartCoroutine(Holding());
             }
@@ -117,7 +119,19 @@ public class Drag : MonoBehaviour
                     transform.position = Input.mousePosition;
                 }
             }
+            else
+            {
+                if (!isPointerOverGameObject)
+                {
+                    isHolding = false;
+                }
+            }
         }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isPointerOverGameObject = false;
     }
 
     public virtual IEnumerator Holding()
@@ -125,7 +139,7 @@ public class Drag : MonoBehaviour
         Vector2 posBeforeHolding = Input.mousePosition;
         while (timer > 0)
         {
-            if (Input.mousePosition.magnitude - posBeforeHolding.magnitude > maxHoldingAreaRadius)
+            if (Math.Abs(Input.mousePosition.magnitude - posBeforeHolding.magnitude) > maxHoldingAreaRadius)
             {
                 isHolding = false;
             }
@@ -174,5 +188,6 @@ public class Drag : MonoBehaviour
     {
         isHolding = false;
         isDragging = false;
+        isPointerOverGameObject = false;
     }
 }
