@@ -52,6 +52,10 @@ public class CampCharacterCustomization : MonoBehaviour
     public void CustomizeCharacter(Character character)
     {
         this.character = character;
+        portrait.sprite = character.Sprite;
+        characterName.text = character.Name;
+        description.text = character.History;
+
         if (character.GetType() == typeof(SpecialCharacter))
         {
             CustomizeSpecialCharacter();
@@ -60,35 +64,25 @@ public class CampCharacterCustomization : MonoBehaviour
         {
             CustomizeCommonCharacter();
         }
-    }
-
-    public void CustomizeCommonCharacter()
-    {
-        CommonCharacter comChar = (CommonCharacter)character;
-        portrait.sprite = comChar.Sprite;
-        characterName.text = comChar.Name;
-        description.text = comChar.History;
-        trait.SetActive(false);
 
         SetCharStats();
         SetDefaultColor();
     }
 
+    public void CustomizeCommonCharacter()
+    {
+        trait.SetActive(false);
+    }
+
     public void CustomizeSpecialCharacter()
     {
         SpecialCharacter spChar = (SpecialCharacter)character;
-        portrait.sprite = spChar.Sprite;
-        characterName.text = spChar.Name;
-        description.text = spChar.History;
 
         Trait newTrait = TraitsOptions.GetTrait(spChar.TraitIds[0]);
         traitDescriptionText.text = newTrait.description;
         traitNameText.text = newTrait.name;
         traitImage.sprite = WM1.traitsOptions.traitsSprites[spChar.TraitIds[0]];
         trait.SetActive(true);
-
-        SetCharStats();
-        SetDefaultColor();
     }
 
     private void SetCharStats()

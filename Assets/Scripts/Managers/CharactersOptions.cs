@@ -9,6 +9,10 @@ public enum Sex { male, female }
 [System.Serializable]
 public class Character
 {
+    public virtual string Name { get { return null; } set { } }
+    public virtual string History { get { return null; } set { } }
+    public virtual Sprite Sprite { get { return null; } set { } }
+
     public Sex Sex { set; get; }
 
     public int Level { set; get; }
@@ -152,15 +156,15 @@ public class SpecialCharacter : Character
     public int SpriteId { set; get; }
     public List<int> TraitIds { set; get; }
 
-    public string Name
+    public override string Name
     {
         get { return CharactersOptions.GetSpecialName(Authority, Id); }
     }
-    public string History
+    public override string History
     {
         get { return CharactersOptions.GetSpecialHistory(Authority, Id); }
     }
-    public Sprite Sprite
+    public override Sprite Sprite
     {
         get { return CharactersOptions.GetSpecialSprite(Id); }
     }
@@ -180,15 +184,15 @@ public class CommonCharacter : Character
     public int NameId { set; get; }
     public int HistoryId { set; get; }
 
-    public string Name
+    public override string Name
     {
         get { return CharactersOptions.GetCommonName((Sex)Sex, NameId); }
     }
-    public string History
+    public override string History
     {
         get { return CharactersOptions.GetCommonHistory((Sex)Sex, HistoryId); }
     }
-    public Sprite Sprite
+    public override Sprite Sprite
     {
         get { return CharactersOptions.GetCommonSprite((Sex)Sex, SpriteId); }
     }

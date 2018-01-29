@@ -95,22 +95,6 @@ public class RobberyWindow : MonoBehaviour
 
     public void TryToAddCharacterToRobbery(Character character, RobberyType robType, int locNum)
     {
-        Sprite sprite = null;
-        string name = null;
-        ModalPanelDetails details;
-        if (character.GetType() == typeof(CommonCharacter))
-        {
-            CommonCharacter comChar = (CommonCharacter)character;
-            sprite = comChar.Sprite;
-            name = comChar.Name;
-        }
-        else if (character.GetType() == typeof(SpecialCharacter))
-        {
-            SpecialCharacter spChar = (SpecialCharacter)character;
-            sprite = spChar.Sprite;
-            name = spChar.Name;
-        }
-
         if (character.Health <= 10)
         {
             EventButtonDetails yesButton = new EventButtonDetails
@@ -123,13 +107,13 @@ public class RobberyWindow : MonoBehaviour
                 buttonText = "Ладно, отдыхай",
                 action = WM1.modalPanel.ClosePanel
             };
-            details = new ModalPanelDetails
+            ModalPanelDetails details = new ModalPanelDetails
             {
                 button0Details = yesButton,
                 button1Details = noButton,
-                imageSprite = sprite,
+                imageSprite = character.Sprite,
                 text = "Босс, может мне лучше в больницу?",
-                titletext = name
+                titletext = character.Name
             };
             WM1.modalPanel.CallModalPanel(details);
         }

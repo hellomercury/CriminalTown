@@ -93,20 +93,9 @@ public class CharacterMenu : MonoBehaviour
 
         this.character = characterReference;
 
-        if (character.GetType() == typeof(CommonCharacter))
-        {
-            CommonCharacter comChar = (CommonCharacter)character;
-            portrait.sprite = comChar.Sprite;
-            characterName.text = comChar.Name;
-            historyText.text = comChar.History;
-        }
-        else if (character.GetType() == typeof(SpecialCharacter))
-        {
-            SpecialCharacter spChar = (SpecialCharacter)character;
-            portrait.sprite = spChar.Sprite;
-            characterName.text = spChar.Name;
-            historyText.text = spChar.History;
-        }
+        portrait.sprite = character.Sprite;
+        characterName.text = character.Name;
+        historyText.text = character.History;
         levelText.text = character.Level.ToString();
 
         CheckPointsAndStats();
@@ -130,7 +119,7 @@ public class CharacterMenu : MonoBehaviour
         recoverySlider.maxValue = CharactersOptions.maxRecovery;
         oppositionSlider.maxValue = CharactersOptions.maxOpposition;
     }
-     
+
     private void CommonWindowSettings()
     {
         verticalScrollbar.value = 1;

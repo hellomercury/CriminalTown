@@ -44,22 +44,7 @@ public class OnHospitalOpen : MonoBehaviour
 
     public void TryToAddCharacterToHospital(Character character)
     {
-        Sprite sprite = null;
-        string name = null;
         ModalPanelDetails details;
-        if (character.GetType() == typeof(CommonCharacter))
-        {
-            CommonCharacter comChar = (CommonCharacter)character;
-            sprite = comChar.Sprite;
-            name = comChar.Name;
-        }
-        else if (character.GetType() == typeof(SpecialCharacter))
-        {
-            SpecialCharacter spChar = (SpecialCharacter)character;
-            sprite = spChar.Sprite;
-            name = spChar.Name;
-        }
-
         if (character.Health <= 90)
         {
             EventButtonDetails yesButton = new EventButtonDetails
@@ -76,9 +61,9 @@ public class OnHospitalOpen : MonoBehaviour
             {
                 button0Details = yesButton,
                 button1Details = noButton,
-                imageSprite = sprite,
+                imageSprite = character.Sprite,
                 text = "Отправить персонажа на принудительное лечение?",
-                titletext = name
+                titletext = character.Name
             };
         }
         else
@@ -91,9 +76,9 @@ public class OnHospitalOpen : MonoBehaviour
             details = new ModalPanelDetails
             {
                 button1Details = noButton,
-                imageSprite = sprite,
+                imageSprite = character.Sprite,
                 text = "Босс, я не пойду в больницу из-за этой царапины!",
-                titletext = name
+                titletext = character.Name
             };
         }
         WM1.modalPanel.CallModalPanel(details);

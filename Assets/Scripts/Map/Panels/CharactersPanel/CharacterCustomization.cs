@@ -79,24 +79,10 @@ public class CharacterCustomization : MonoBehaviour
         tiredness.maxValue = CharactersOptions.maxTiredness;
         health.maxValue = CharactersOptions.maxHealth;
 
-        if (character.GetType() == typeof(CommonCharacter))
-        {
-            CommonCharacter comChar = (CommonCharacter)character;
-            portrait.sprite = comChar.Sprite;
-            characterName.text = comChar.Name;
-            status = comChar.Status;
-        }
-        else if (character.GetType() == typeof(SpecialCharacter))
-        {
-            SpecialCharacter spChar = (SpecialCharacter)character;
-            portrait.sprite = spChar.Sprite;
-            characterName.text = spChar.Name;
-            status = spChar.Status;
-        }
-        else
-        {
-            Debug.LogError("Invalyd type of character! LOL");
-        }
+        portrait.sprite = character.Sprite;
+        characterName.text = character.Name;
+        status = character.Status;
+
         SetCharStats();
     }
 

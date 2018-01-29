@@ -5,10 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery}
+public enum DraggableObjectsLocations { charactersPanel, itemsPanel, robbery }
 public enum DraggeableItemType { Item, Character }
 
-public class Drag : MonoBehaviour, IPointerExitHandler
+public class Drag : MonoBehaviour//, IPointerExitHandler
 {
     public static GameObject ItemBeingDragged { get; set; }
     public static bool IsObjectDragging { get; set; }
@@ -28,7 +28,7 @@ public class Drag : MonoBehaviour, IPointerExitHandler
 
     private static bool isHolding;
     private bool isDragging;
-    private bool isPointerOverGameObject;
+    //private bool isPointerOverGameObject;
 
 
     private CanvasGroup canvasGroup;
@@ -75,38 +75,37 @@ public class Drag : MonoBehaviour, IPointerExitHandler
 
     public virtual void DragUpdate()
     {
+        //DisplayManager.Instance().DisplayMessage(Input.touchCount.ToString());
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                isPointerOverGameObject = true;
+                //isPointerOverGameObject = true;
                 isHolding = true;
                 StartCoroutine(Holding());
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if ((Input.GetMouseButtonUp(0) && EventSystem.current.currentSelectedGameObject == gameObject)
+            || Input.touchCount > 1)
         {
-            if (EventSystem.current.currentSelectedGameObject == gameObject)
-            {
-                isHolding = false;
-                if (isVerticalScrollActive) scrollRect.GetComponent<ScrollRect>().vertical = true;
-                if (isHorizontalScrollActive) scrollRect.GetComponent<ScrollRect>().horizontal = true;
+            isHolding = false;
+            if (isVerticalScrollActive) scrollRect.GetComponent<ScrollRect>().vertical = true;
+            if (isHorizontalScrollActive) scrollRect.GetComponent<ScrollRect>().horizontal = true;
 
-                if (isDragging)
+            if (isDragging)
+            {
+                ItemBeingDragged = null;
+                IsObjectDragging = false;
+                if (transform.parent == dragParent)
                 {
-                    ItemBeingDragged = null;
-                    IsObjectDragging = false;
-                    if (transform.parent == dragParent)
-                    {
-                        canvasGroup.blocksRaycasts = true;
-                        gameObject.GetComponent<Animator>().SetTrigger("Dropped");
-                        transform.SetParent(startParent);
-                        transform.localPosition = startPos;
-                    }
-                    isDragging = false;
-                    timer = holdTime;
+                    canvasGroup.blocksRaycasts = true;
+                    gameObject.GetComponent<Animator>().SetTrigger("Dropped");
+                    transform.SetParent(startParent);
+                    transform.localPosition = startPos;
                 }
+                isDragging = false;
+                timer = holdTime;
             }
         }
 
@@ -119,20 +118,20 @@ public class Drag : MonoBehaviour, IPointerExitHandler
                     transform.position = Input.mousePosition;
                 }
             }
-            else
-            {
-                if (!isPointerOverGameObject)
-                {
-                    isHolding = false;
-                }
-            }
+            //else
+            //{
+            //    if (!isPointerOverGameObject)
+            //    {
+            //        isHolding = false;
+            //    }
+            //}
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isPointerOverGameObject = false;
-    }
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    isPointerOverGameObject = false;
+    //}
 
     public virtual IEnumerator Holding()
     {
@@ -188,6 +187,6 @@ public class Drag : MonoBehaviour, IPointerExitHandler
     {
         isHolding = false;
         isDragging = false;
-        isPointerOverGameObject = false;
+        //isPointerOverGameObject = false;
     }
 }

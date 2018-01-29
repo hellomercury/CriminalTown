@@ -34,34 +34,18 @@ public class NightButton : MonoBehaviour
             buttonText = "Нет",
             action = WM1.modalPanel.ClosePanel
         };
-
         foreach (Character character in DataScript.chData.panelCharacters)
         {
             if (character.Status == CharacterStatus.arrested)
                 if (character.DaysLeft < 2)
                 {
-                    Sprite sprite = null;
-                    string name = null;
-                    if (character.GetType() == typeof(CommonCharacter))
-                    {
-                        CommonCharacter comChar = (CommonCharacter)character;
-                        sprite = comChar.Sprite;
-                        name = comChar.Name;
-                    }
-                    else if (character.GetType() == typeof(SpecialCharacter))
-                    {
-                        SpecialCharacter spChar = (SpecialCharacter)character;
-                        sprite = spChar.Sprite;
-                        name = spChar.Name;
-                    }
-
                     ModalPanelDetails details = new ModalPanelDetails
                     {
                         button0Details = yesButton,
                         button1Details = noButton,
-                        imageSprite = sprite,
+                        imageSprite = character.Sprite,
                         text = "Этот персонаж скоро нас сдаст. Босс, ты уверен, что стоит оставить его в грязных руках копов?",
-                        titletext = name
+                        titletext = character.Name
                     };
                     WM1.modalPanel.CallModalPanel(details);
                     return;
