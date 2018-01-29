@@ -301,10 +301,11 @@ public class CharacterMenu : MonoBehaviour
         {
             SpecialCharacter spChar = (SpecialCharacter)character;
             traits = new List<GameObject>();
-            for (int i = 0; i < spChar.TraitIds.Count; i++)
+            List<Trait> charTraits = spChar.Traits;
+            for (int i = 0; i < charTraits.Count; i++)
             {
                 traits.Add(Instantiate(traitPrefab, traitsParameters.transform));
-                traits[i].GetComponent<TraitsCustomization>().CustomizeTrait(spChar.TraitIds[i]);
+                traits[i].GetComponent<TraitsCustomization>().CustomizeTrait(charTraits[i]);
             }
             traitsParameters.SetActive(true);
         }
@@ -350,7 +351,7 @@ public class CharacterMenu : MonoBehaviour
         EventButtonDetails yesButton = new EventButtonDetails
         {
             buttonText = "Да",
-            action = () => DataScript.chData.RemoveCharacter(character)
+            action = () => WM1.guiEventManager.RemoveCharacter(character)
         };
         EventButtonDetails noButton = new EventButtonDetails
         {

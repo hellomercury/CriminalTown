@@ -212,40 +212,39 @@ public class RobberiesOptions : MonoBehaviour
             if (character.GetType() == typeof(SpecialCharacter))
             {
                 SpecialCharacter spChar = (SpecialCharacter)character;
-                foreach (int traitId in spChar.TraitIds)
+                List<Trait> traits = spChar.Traits;
+                foreach (Trait trait in traits)
                 {
-                    Trait tempTrait = TraitsOptions.GetTrait(traitId);
-
                     //При редактировании трейтов ДОБАВИТЬ ИХ СЮДА!!!!!
-                    switch (tempTrait.traitType)
+                    switch (trait.traitType)
                     {
                         case TraitType.single:
-                            switch (tempTrait.stat)
+                            switch (trait.stat)
                             {
                                 case Stat.strenght:
-                                    coefStr = tempTrait.value;
+                                    coefStr = trait.value;
                                     break;
                                 case Stat.luck:
-                                    coefL = tempTrait.value;
+                                    coefL = trait.value;
                                     break;
                                 case Stat.fear:
-                                    coefF = tempTrait.value;
+                                    coefF = trait.value;
                                     break;
                                 case Stat.skill:
-                                    coefSk = tempTrait.value;
+                                    coefSk = trait.value;
                                     break;
                                 case Stat.agility:
-                                    coefAg = tempTrait.value;
+                                    coefAg = trait.value;
                                     break;
                                 default:
                                     break;
                             }
                             break;
                         case TraitType.group:
-                            groupTraits.Add(tempTrait);
+                            groupTraits.Add(trait);
                             break;
                         case TraitType.chance:
-                            chanceTraits.Add(tempTrait);
+                            chanceTraits.Add(trait);
                             break;
                     }
                 }

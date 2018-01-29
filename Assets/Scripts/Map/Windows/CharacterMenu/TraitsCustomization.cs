@@ -10,11 +10,10 @@ public class TraitsCustomization : MonoBehaviour
     public Image image;
     public Text descriptionText;
 
-    public void CustomizeTrait(int traitId)
+    public void CustomizeTrait(Trait trait)
     {
-        Trait trait = TraitsOptions.GetTrait(traitId);
         traitNameText.text = trait.name;
         descriptionText.text = trait.description;
-        image.sprite = WM1.traitsOptions.traitsSprites[traitId];
+        image.sprite = trait.Sprite;
     }
 }

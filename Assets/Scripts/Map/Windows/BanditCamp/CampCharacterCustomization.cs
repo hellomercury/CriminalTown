@@ -78,10 +78,10 @@ public class CampCharacterCustomization : MonoBehaviour
     {
         SpecialCharacter spChar = (SpecialCharacter)character;
 
-        Trait newTrait = TraitsOptions.GetTrait(spChar.TraitIds[0]);
+        Trait newTrait = spChar.Traits[0];
         traitDescriptionText.text = newTrait.description;
         traitNameText.text = newTrait.name;
-        traitImage.sprite = WM1.traitsOptions.traitsSprites[spChar.TraitIds[0]];
+        traitImage.sprite = spChar.Traits[0].Sprite;
         trait.SetActive(true);
     }
 

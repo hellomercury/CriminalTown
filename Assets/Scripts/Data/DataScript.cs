@@ -22,13 +22,11 @@ public class ChData
 
     public void RemoveCharacter(Character character)
     {
-        //character.CallOnKickEvent();
         panelCharacters.Remove(character);
     }
 
     public void AddCharacter(Character character)
     {
-        //character.CallOnAddEvent();
         panelCharacters.Add(character);
     }
 }

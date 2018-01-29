@@ -46,9 +46,7 @@ public class OnBanditCampOpen : MonoBehaviour
     public void HighlightCharacter(Character character)
     {
         if (highlightedChar != null)
-        {
             charactersDict[highlightedChar].GetComponent<CampCharacterCustomization>().SetDefaultColor();
-        }
 
         moneyImage.gameObject.SetActive(true);
         priceText.gameObject.SetActive(true);
@@ -79,7 +77,7 @@ public class OnBanditCampOpen : MonoBehaviour
         priceText.gameObject.SetActive(false);
         hireButton.interactable = false;
 
-        DataScript.chData.AddCharacter(highlightedChar);
+        WM1.guiEventManager.AddCharacter(highlightedChar);
         charactersDict.Remove(highlightedChar);
 
         highlightedChar = null;

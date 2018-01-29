@@ -84,6 +84,8 @@ public class CharacterCustomization : MonoBehaviour
         status = character.Status;
 
         SetCharStats();
+        character.OnStatsChangedEvent += SetCharStats;
+        character.OnLevelUpEvent += OnLevelUpReaction;
     }
 
     public void SetCharStats()
@@ -140,5 +142,10 @@ public class CharacterCustomization : MonoBehaviour
         skill.text = character.Skill.ToString();
         luck.text = character.Luck.ToString();
         fear.text = character.Fear.ToString();
+    }
+
+    private void OnLevelUpReaction()
+    {
+
     }
 }

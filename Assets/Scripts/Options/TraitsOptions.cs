@@ -8,11 +8,13 @@ public enum Stat { strenght, luck, fear, skill, agility, health, tiredness, chan
 
 public class Trait
 {
+    public int id;
     public string name;
     public string description;
     public TraitType traitType;
     public Stat stat;
     public float value;
+    public Sprite Sprite { get { return TraitsOptions.GetTraitSprite(id); } }
 }
 
 public class TraitsOptions : MonoBehaviour
@@ -29,6 +31,11 @@ public class TraitsOptions : MonoBehaviour
         return traitsCollection[traitId];
     }
 
+    public static Sprite GetTraitSprite(int traitId)
+    {
+        return WM1.traitsOptions.traitsSprites[traitId];
+    }
+
     public static void GetTraitsCollectionData()
     {
         TraitsCollectionDataXml = Resources.Load("TraitsCollectionData") as TextAsset;
@@ -40,10 +47,9 @@ public class TraitsOptions : MonoBehaviour
             XmlNode allTraits = xmlDoc.SelectSingleNode("./traitsCollection");
             foreach (XmlNode trait in allTraits)
             {
-                Trait newTrait = new Trait();
+                Trait newTrait = new Trait() { id = int.Parse(trait.Attributes["id"].Value)};
                 foreach (XmlNode info in trait)
                 {
-                    //Debug.Log(info.InnerText);
                     if (info.Name == "name") newTrait.name = info.InnerText;
                     if (info.Name == "description") newTrait.description = info.InnerText;
                     if (info.Name == "traitType") newTrait.traitType = (TraitType)System.Enum.Parse(typeof(TraitType), info.InnerText);
@@ -58,5 +64,4 @@ public class TraitsOptions : MonoBehaviour
             Debug.LogError("Ошибка загрузки XML файла с данными о трейтах!");
         }
     }
-
 }

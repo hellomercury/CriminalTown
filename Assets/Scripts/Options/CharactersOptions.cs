@@ -9,47 +9,51 @@ public enum Sex { male, female }
 [System.Serializable]
 public class Character
 {
+    //abstract properties
     public virtual string Name { get { return null; } set { } }
     public virtual string History { get { return null; } set { } }
     public virtual Sprite Sprite { get { return null; } set { } }
 
-    public Sex Sex { set; get; }
+    //base variables
+    private int statusValue;
+    private int robType;
+    private int boostCoef;
+    private int locNum;
 
-    public int Level { set; get; }
-    public int Tiredness { set; get; }
-    public int Health { set; get; }
-    public int Exp { set; get; }
-    public int Strength { set; get; }
-    public int Agility { set; get; }
-    public int Skill { set; get; }
-    public int Fear { set; get; }
-    public int Luck { set; get; }
-    public int Points { set; get; }
+
+    public Sex Sex { get; set; }
+    public int Level { get; set; }
+    public int Tiredness { get; set; }
+    public int Health { get; set; }
+    public int Exp { get; set; }
+    public int Strength { get; set; }
+    public int Agility { get; set; }
+    public int Skill { get; set; }
+    public int Fear { get; set; }
+    public int Luck { get; set; }
+    public int Points { get; set; }
 
     public CharacterStatus Status { set; get; }
 
-    private int statusValueOrRobType;
-    private int boostCoefOrLocNum;
-
     public int RobberyType
     {
-        get { return statusValueOrRobType; }
-        set { statusValueOrRobType = value; }
+        get { return robType; }
+        set { robType = value; }
     }
     public int LocationNum
     {
-        get { return boostCoefOrLocNum; }
-        set { boostCoefOrLocNum = value; }
+        get { return locNum; }
+        set { locNum = value; }
     }
     public int StatusValue
     {
-        get { return statusValueOrRobType; }
-        set { statusValueOrRobType = value; }
+        get { return statusValue; }
+        set { statusValue = value; }
     }
     public int BoostCoefficient
     {
-        get { return boostCoefOrLocNum; }
-        set { boostCoefOrLocNum = value; }
+        get { return boostCoef; }
+        set { boostCoef = value; }
     }
     public int DaysLeft
     {
@@ -61,10 +65,6 @@ public class Character
         }
     }
 
-    public Character()
-    {
-
-    }
 
     public void SetStats(Character character)
     {
@@ -80,8 +80,9 @@ public class Character
         Points = character.Points;
 
         Status = character.Status;
-        statusValueOrRobType = character.statusValueOrRobType;
-        boostCoefOrLocNum = character.boostCoefOrLocNum;
+        statusValue = character.statusValue;
+        robType = character.robType;
+        locNum = character.locNum;
     }
 
     public Character GetStats()
@@ -89,63 +90,45 @@ public class Character
         return new Character()
         {
             Level = this.Level,
-            Tiredness = this.Tiredness,
             Health = this.Health,
+            Tiredness = this.Tiredness,
             Exp = this.Exp,
             Strength = this.Strength,
             Agility = this.Agility,
             Skill = this.Skill,
-            Fear = this.Fear,
             Luck = this.Luck,
+            Fear = this.Fear,
             Points = this.Points,
 
             Status = Status,
-            statusValueOrRobType = statusValueOrRobType,
-            boostCoefOrLocNum = boostCoefOrLocNum
+            statusValue = statusValue,
+            robType = robType,
+            locNum = locNum
         };
     }
 
     public void AddExperience(int expToAdd)
     {
-        while (Exp + expToAdd > CharactersOptions.GetExperienceMaxValue(Level))
+        if (Exp + expToAdd > CharactersOptions.GetExperienceMaxValue(Level))
         {
-            Health = CharactersOptions.maxHealth;
-            Tiredness = 0;
-            expToAdd -= (CharactersOptions.GetExperienceMaxValue(Level) - Exp);
-            Exp = 0;
-            Level++;
-            Points++;
+            OnLevelUpEvent();
+            while (Exp + expToAdd > CharactersOptions.GetExperienceMaxValue(Level))
+            {
+                Health = CharactersOptions.maxHealth;
+                Tiredness = 0;
+                expToAdd -= (CharactersOptions.GetExperienceMaxValue(Level) - Exp);
+                Exp = 0;
+                Level++;
+                Points++;
+            }
         }
+        OnStatsChangedEvent();
         Exp += expToAdd;
     }
 
-    //public delegate void MethodContainer(Character character);
-
-    //public event MethodContainer OnKickEvent = delegate { };
-
-    //public event MethodContainer OnStatsChangedEvent = delegate { };
-
-    //public event MethodContainer OnAddEvent = delegate { };
-
-    //public void CallOnKickEvent() { OnKickEvent(this); }
-
-    //public void CallOnStatsChangedEvent() { OnStatsChangedEvent(this); }
-
-    //public void CallOnAddEvent() { OnAddEvent(this); }
-
-    public virtual void LogCharacterData()
-    {
-        Debug.Log("level: " + Level);
-        Debug.Log("health: " + Health);
-        Debug.Log("strength: " + Strength);
-        Debug.Log("agility: " + Agility);
-        Debug.Log("skill: " + Skill);
-        Debug.Log("fear: " + Fear);
-        Debug.Log("tiredness: " + Tiredness);
-        Debug.Log("luck: " + Luck);
-        Debug.Log("exp: " + Exp);
-        Debug.Log("points: " + Points);
-    }
+    public delegate void CharacterEvent();
+    public event CharacterEvent OnStatsChangedEvent = delegate { };
+    public event CharacterEvent OnLevelUpEvent = delegate { };
 }
 
 [System.Serializable]
@@ -154,7 +137,7 @@ public class SpecialCharacter : Character
     public int Authority { set; get; }
     public int Id { set; get; }
     public int SpriteId { set; get; }
-    public List<int> TraitIds { set; get; }
+    private List<int> traitIds;
 
     public override string Name
     {
@@ -166,14 +149,28 @@ public class SpecialCharacter : Character
     }
     public override Sprite Sprite
     {
-        get { return CharactersOptions.GetSpecialSprite(Id); }
+        get { return CharactersOptions.GetSpecialSprite(SpriteId); }
+    }
+    public List<Trait> Traits
+    {
+        get
+        {
+            List<Trait> traits = new List<Trait>();
+            for (int i = 0; i < traitIds.Count; i++)
+            {
+                traits.Add(TraitsOptions.GetTrait(traitIds[i]));
+            }
+            return traits;
+        }
     }
 
-    public override void LogCharacterData()
+    public SpecialCharacter(Character stats, int authority, int id, int spriteId, List<int> traitIds)
     {
-        base.LogCharacterData();
-        Debug.Log("authority: " + Authority);
-        Debug.Log("id: " + Id);
+        SetStats(stats);
+        Authority = authority;
+        Id = id;
+        SpriteId = spriteId;
+        this.traitIds = traitIds;
     }
 }
 
@@ -195,14 +192,6 @@ public class CommonCharacter : Character
     public override Sprite Sprite
     {
         get { return CharactersOptions.GetCommonSprite((Sex)Sex, SpriteId); }
-    }
-
-    public override void LogCharacterData()
-    {
-        base.LogCharacterData();
-        Debug.Log("\nspriteId: " + SpriteId);
-        Debug.Log("nameId" + NameId);
-        Debug.Log("historyId: " + HistoryId);
     }
 }
 
@@ -292,9 +281,17 @@ public partial class CharactersOptions : MonoBehaviour
     {
         return specialCharactersAuthList[authority][id][CharacterProperty.history];
     }
-    public static Sprite GetSpecialSprite(int id)
+    public static int GetSpecialSpriteId(int authority, int id)
     {
-        return WM1.charactersOptions.specialSprites[id];
+        return int.Parse(specialCharactersAuthList[authority][id][CharacterProperty.spriteId]);
+    }
+    public static Sprite GetSpecialSprite(int spriteId)
+    {
+        return WM1.charactersOptions.specialSprites[spriteId];
+    }
+    public static int GetSpecialTraitId(int authority, int id)
+    {
+        return int.Parse(specialCharactersAuthList[authority][id][CharacterProperty.traitId]);
     }
     #endregion
 
@@ -388,34 +385,32 @@ public partial class CharactersOptions : MonoBehaviour
         int[] rndStats = GetRandomStats(rndLevel);
         //int rndId = Random.Range(0, specialCharactersAuthList[authorityLevel].Count);
 
-        SpecialCharacter specialCharacter = new SpecialCharacter()
-        {
-            Status = CharacterStatus.normal,
-            StatusValue = 0,
-            LocationNum = 1,
-
-            Level = rndLevel,
-            Authority = authorityLevel,
-            Id = charNum,
-            SpriteId = int.Parse(specialCharactersAuthList[authorityLevel][charNum][CharacterProperty.spriteId]),
-            TraitIds = new List<int>
+        return new SpecialCharacter(
+            stats:
+            new Character()
             {
-                int.Parse(specialCharactersAuthList[authorityLevel][charNum][CharacterProperty.traitId])
+                Status = CharacterStatus.normal,
+                StatusValue = 0,
+                LocationNum = 1,
+                BoostCoefficient = 1,
+                RobberyType = 0,
+
+                Level = rndLevel,
+
+                Strength = rndStats[0],
+                Agility = rndStats[1],
+                Skill = rndStats[2],
+                Luck = Random.Range(5, 7),
+                Fear = Random.Range(0, 26),
+                Health = Random.Range(maxHealth * 3 / 4, maxHealth + 1),
+                Tiredness = Random.Range(0, maxTiredness / 4),
+                Exp = 0,
+                Points = 0,
             },
-
-            Strength = rndStats[0],
-            Agility = rndStats[1],
-            Skill = rndStats[2],
-            Luck = Random.Range(5, 7),
-            Fear = Random.Range(0, 26),
-
-            Tiredness = Random.Range(0, maxTiredness / 4),
-            Exp = 0,
-            Points = 0,
-            Health = Random.Range(maxHealth * 3 / 4, maxHealth + 1),
-        };
-
-        return specialCharacter;
+            authority: authorityLevel,
+            id: charNum,
+            spriteId: GetSpecialSpriteId(authorityLevel, charNum),
+            traitIds: new List<int> { GetSpecialTraitId(authorityLevel, charNum) });
     }
 
     public static int GetComPrice(int lvl)

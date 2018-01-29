@@ -9,9 +9,14 @@ using UnityEngine.UI;
 /// </summary>
 public class WM1 : MonoBehaviour
 {
-    public static WM1 wm1Instance;
-
     #region Managers
+    public GameObject guiEventManagerObject;
+    
+    public static GUIEventManager guiEventManager;
+    public static WM1 wm1Instance;
+    #endregion
+
+    #region Options
     public GameObject charactersOptionsObject;
     public GameObject itemsOptionsObject;
     public GameObject robberiesOptionsObject;
@@ -70,6 +75,7 @@ public class WM1 : MonoBehaviour
 
     private void Awake()
     {
+        guiEventManager = guiEventManagerObject.GetComponent<GUIEventManager>();
         wm1Instance = gameObject.GetComponent<WM1>();
 
         charactersOptions = charactersOptionsObject.GetComponent<CharactersOptions>();

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum GUIMode { Day, Night}
 
 public class NightButton : MonoBehaviour
 {
@@ -22,23 +23,24 @@ public class NightButton : MonoBehaviour
 
     private int currentEventNum;
 
-    public void OnNightButtonClick()
+
+    private bool CheckProblemsBeforeNight()
     {
-        EventButtonDetails yesButton = new EventButtonDetails
-        {
-            buttonText = "Да",
-            action = StartNight
-        };
-        EventButtonDetails noButton = new EventButtonDetails
-        {
-            buttonText = "Нет",
-            action = WM1.modalPanel.ClosePanel
-        };
         foreach (Character character in DataScript.chData.panelCharacters)
         {
             if (character.Status == CharacterStatus.arrested)
                 if (character.DaysLeft < 2)
                 {
+                    EventButtonDetails yesButton = new EventButtonDetails
+                    {
+                        buttonText = "Да",
+                        action = StartNight
+                    };
+                    EventButtonDetails noButton = new EventButtonDetails
+                    {
+                        buttonText = "Нет",
+                        action = WM1.modalPanel.ClosePanel
+                    };
                     ModalPanelDetails details = new ModalPanelDetails
                     {
                         button0Details = yesButton,
@@ -48,10 +50,15 @@ public class NightButton : MonoBehaviour
                         titletext = character.Name
                     };
                     WM1.modalPanel.CallModalPanel(details);
-                    return;
+                    return false;
                 }
         }
-        StartNight();
+        return true;
+    }
+
+    public void OnNightButtonClick()
+    {
+        if(CheckProblemsBeforeNight()) StartNight();
     }
 
     private void StartNight()
@@ -233,7 +240,7 @@ public class NightButton : MonoBehaviour
                 if (character.StatusValue <= 0)
                 {
                     DataScript.eData.policeKnowledge += 10;
-                    DataScript.chData.RemoveCharacter(character);
+                    WM1.guiEventManager.RemoveCharacter(character);
                 }
             }
         }
