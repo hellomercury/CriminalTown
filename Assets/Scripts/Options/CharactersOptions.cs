@@ -20,7 +20,6 @@ public class Character
     private int boostCoef;
     private int locNum;
 
-
     public Sex Sex { get; set; }
     public int Level { get; set; }
     public int Tiredness { get; set; }
@@ -64,7 +63,6 @@ public class Character
             else return 0;
         }
     }
-
 
     public void SetStats(Character character)
     {
@@ -124,6 +122,11 @@ public class Character
         }
         OnStatsChangedEvent();
         Exp += expToAdd;
+    }
+
+    public void CallOnStatsChangedEvent()
+    {
+        OnStatsChangedEvent();
     }
 
     public delegate void CharacterEvent();

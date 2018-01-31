@@ -12,8 +12,8 @@ public class OnCharactersPanelUpdate : MonoBehaviour
 
     private void Start()
     {
-        WM1.guiEventManager.OnAddEvent += OnAddCharacterPanelReaction;
-        WM1.guiEventManager.OnKickEvent += OnKickCharacterPanelReaction;
+        DataScript.chData.OnAddEvent += OnAddCharacterPanelReaction;
+        DataScript.chData.OnKickEvent += OnKickCharacterPanelReaction;
     }
 
     public void UpdateCharactersPanel()

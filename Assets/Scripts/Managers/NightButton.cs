@@ -240,7 +240,7 @@ public class NightButton : MonoBehaviour
                 if (character.StatusValue <= 0)
                 {
                     DataScript.eData.policeKnowledge += 10;
-                    WM1.guiEventManager.RemoveCharacter(character);
+                    DataScript.chData.RemoveCharacter(character);
                 }
             }
         }

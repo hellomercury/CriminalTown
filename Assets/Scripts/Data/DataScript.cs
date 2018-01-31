@@ -23,12 +23,22 @@ public class ChData
     public void RemoveCharacter(Character character)
     {
         panelCharacters.Remove(character);
+        OnKickEvent(character);
     }
 
     public void AddCharacter(Character character)
     {
         panelCharacters.Add(character);
+        OnAddEvent(character);
     }
+
+    public delegate void ChDataEvent(Character character);
+
+    public event ChDataEvent OnKickEvent = delegate { };
+
+    public event ChDataEvent OnAddEvent = delegate { };
+
+    
 }
 
 [Serializable]

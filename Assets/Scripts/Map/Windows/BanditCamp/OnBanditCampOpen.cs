@@ -77,7 +77,7 @@ public class OnBanditCampOpen : MonoBehaviour
         priceText.gameObject.SetActive(false);
         hireButton.interactable = false;
 
-        WM1.guiEventManager.AddCharacter(highlightedChar);
+        DataScript.chData.AddCharacter(highlightedChar);
         charactersDict.Remove(highlightedChar);
 
         highlightedChar = null;

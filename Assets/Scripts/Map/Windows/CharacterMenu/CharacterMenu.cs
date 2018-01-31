@@ -98,12 +98,13 @@ public class CharacterMenu : MonoBehaviour
         historyText.text = character.History;
         levelText.text = character.Level.ToString();
 
+        chChanged = character.GetStats();
         CheckPointsAndStats();
         SetTraits();
         CommonWindowSettings();
 
         isStatsChanged = false;
-        WM1.guiEventManager.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
+        DataScript.chData.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
     }
 
     private void SetSlidersMaxValues()
@@ -133,7 +134,6 @@ public class CharacterMenu : MonoBehaviour
         hospitalParameters.SetActive(false);
         arrestParameters.SetActive(false);
 
-        chChanged = character.GetStats();
 
         switch (character.Status)
         {
@@ -321,9 +321,9 @@ public class CharacterMenu : MonoBehaviour
         if (isStatsChanged)
         {
             character.SetStats(chChanged);
-            //character.CallOnStatsChangedEvent();
+            character.CallOnStatsChangedEvent();
         }
-        //character.OnKickEvent -= (ch) => OnKickCharacterWindowReaction();
+        DataScript.chData.OnKickEvent -= (ch) => OnKickCharacterWindowReaction();
     }
 
     public void BoostRecovery()
@@ -351,7 +351,7 @@ public class CharacterMenu : MonoBehaviour
         EventButtonDetails yesButton = new EventButtonDetails
         {
             buttonText = "Да",
-            action = () => WM1.guiEventManager.RemoveCharacter(character)
+            action = () => DataScript.chData.RemoveCharacter(character)
         };
         EventButtonDetails noButton = new EventButtonDetails
         {
