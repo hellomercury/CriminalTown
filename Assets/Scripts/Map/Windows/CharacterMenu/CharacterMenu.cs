@@ -104,7 +104,7 @@ public class CharacterMenu : MonoBehaviour
         CommonWindowSettings();
 
         isStatsChanged = false;
-        DataScript.chData.OnKickEvent += (ch) => OnKickCharacterWindowReaction();
+        DataScript.chData.OnRemoveEvent += (ch) => OnKickCharacterWindowReaction();
     }
 
     private void SetSlidersMaxValues()
@@ -323,7 +323,7 @@ public class CharacterMenu : MonoBehaviour
             character.SetStats(chChanged);
             character.CallOnStatsChangedEvent();
         }
-        DataScript.chData.OnKickEvent -= (ch) => OnKickCharacterWindowReaction();
+        DataScript.chData.OnRemoveEvent -= (ch) => OnKickCharacterWindowReaction();
     }
 
     public void BoostRecovery()

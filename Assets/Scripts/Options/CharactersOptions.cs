@@ -16,7 +16,7 @@ public class Character
 
     //base variables
     private int statusValue;
-    private int robType;
+    private RobberyType robType;
     private int boostCoef;
     private int locNum;
 
@@ -34,7 +34,7 @@ public class Character
 
     public CharacterStatus Status { set; get; }
 
-    public int RobberyType
+    public RobberyType RobberyType
     {
         get { return robType; }
         set { robType = value; }
@@ -331,8 +331,8 @@ public partial class CharactersOptions : MonoBehaviour
     public static int GetRandomCharLevelAtCurrentMoment()
     {
         int summ = 0;
-        foreach (Character character in DataScript.chData.panelCharacters) summ += character.Level;
-        int average = summ == 0 ? 0 : summ / DataScript.chData.panelCharacters.Count;
+        foreach (Character character in DataScript.chData.PanelCharacters) summ += character.Level;
+        int average = summ == 0 ? 0 : summ / DataScript.chData.PanelCharacters.Count;
         return average < levelsRndDispersion ? Random.Range(0, average + levelsRndDispersion) :
             Random.Range(average - levelsRndDispersion, average + levelsRndDispersion);
     }
@@ -384,6 +384,7 @@ public partial class CharactersOptions : MonoBehaviour
 
     public static SpecialCharacter GetSpecialCharacter(int authorityLevel, int charNum)
     {
+        //Special character must be stronger than common
         int rndLevel = GetRandomCharLevelAtCurrentMoment() + levelsRndDispersion;
         int[] rndStats = GetRandomStats(rndLevel);
         //int rndId = Random.Range(0, specialCharactersAuthList[authorityLevel].Count);
@@ -416,37 +417,37 @@ public partial class CharactersOptions : MonoBehaviour
             traitIds: new List<int> { GetSpecialTraitId(authorityLevel, charNum) });
     }
 
-    public static int GetComPrice(int lvl)
+    public static int GetComPrice(int level)
     {
-        return 100 * lvl;
+        return 100 * level;
     }
 
-    public static int GetSpPrice(int lvl)
+    public static int GetSpPrice(int level)
     {
-        return 1000 * lvl;
+        return 1000 * level;
     }
 
-    public static int GetBoostRecoveryPrice(int lvl)
+    public static int GetBoostRecoveryPrice(int level)
     {
-        return 20 * lvl;
+        return 20 * level;
     }
 
-    public static int GetBreakOutPrice(int lvl)
+    public static int GetBreakOutPrice(int level)
     {
-        return 50 * lvl;
+        return 50 * level;
     }
 
     public static void FillCampCells()
     {
-        while (DataScript.chData.campCharacters.Count < campComCellsAmount)
+        while (DataScript.chData.CampCharacters.Count < campComCellsAmount)
         {
             CommonCharacter randomComCharacter = GetRandomCommonCharacter(GetRandomCharLevelAtCurrentMoment());
-            DataScript.chData.campCharacters.Add(randomComCharacter);
+            DataScript.chData.CampCharacters.Add(randomComCharacter);
         }
-        while (DataScript.chData.campCharacters.Count < campSpCellsAmount)
+        while (DataScript.chData.CampCharacters.Count < campSpCellsAmount)
         {
             SpecialCharacter randomSpCharacter = GetSpecialCharacter(DataScript.pData.authority, 0);
-            DataScript.chData.campCharacters.Add(randomSpCharacter);
+            DataScript.chData.CampCharacters.Add(randomSpCharacter);
         }
         //DataScript.SaveCharactersData();
     }

@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class NightEventWindow : MonoBehaviour
 {
-    public static int choice;
-
+    #region References
     public Button button0;
     public Button button1;
     public Text button0Text;
@@ -24,6 +23,9 @@ public class NightEventWindow : MonoBehaviour
     public Image moneyImage;
     public Image[] awardsImages = new Image[4];
     public Text[] awardsTexts = new Text[4];
+    #endregion
+
+    public static int choice;
 
     private void ShowNode(NightEventNode eventNode)
     {
@@ -42,7 +44,7 @@ public class NightEventWindow : MonoBehaviour
         if (eventNode.buttons.Count > 0)
         {
             button0.onClick.RemoveAllListeners();
-            button0.onClick.AddListener(() => { WM1.nightButton.MakeChoice(eventNode, 0); });
+            button0.onClick.AddListener(() => { WM1.nightButton.MakeChoice(0); });
             button0.onClick.AddListener(CloseWindow);
             button0Text.text = eventNode.buttons[0].buttonText;
             button0.gameObject.SetActive(true);
@@ -50,7 +52,7 @@ public class NightEventWindow : MonoBehaviour
         if (eventNode.buttons.Count > 1)
         {
             button1.onClick.RemoveAllListeners();
-            button1.onClick.AddListener(() => { WM1.nightButton.MakeChoice(eventNode, 1); });
+            button1.onClick.AddListener(() => { WM1.nightButton.MakeChoice(1); });
             button1.onClick.AddListener(CloseWindow);
             button1Text.text = eventNode.buttons[1].buttonText;
             button1.gameObject.SetActive(true);

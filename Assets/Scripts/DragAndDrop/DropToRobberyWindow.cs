@@ -25,8 +25,8 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
         {
             if (isEntered)
             {
-                int locNum = WM1.robberyWindow.locationNum;
-                RobberyType robType = WM1.robberyWindow.robType;
+                int locNum = RobberyWindow.robberyData.LocationNum;
+                RobberyType robType = RobberyWindow.robberyData.RobberyType;
                 if (Drag.ItemType == DraggeableItemType.Character)
                 {
                     CharacterCustomization charCust;
@@ -55,7 +55,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
 
                     if (charCust.status == CharacterStatus.robbery)
                         if (Drag.Location == DraggableObjectsLocations.robbery)
-                            WM1.robberyWindow.RemoveCharacterFromRobberyAndUpdate(charCust.character, WM1.robberyWindow.robType, WM1.robberyWindow.locationNum);
+                            RobberyWindow.robberyData.RemoveCharacter(charCust.character);
                 }
                 if (Drag.ItemType == DraggeableItemType.Item)
                 {
@@ -63,7 +63,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     Drop.DropObject(out iCust);
 
                     if (Drag.Location == DraggableObjectsLocations.robbery)
-                        WM1.robberyWindow.TryToRemoveItemFromRobbery(iCust.number, WM1.robberyWindow.robType, WM1.robberyWindow.locationNum);
+                        WM1.robberyWindow.TryToRemoveItemFromRobbery(iCust.number, RobberyWindow.robberyData.RobberyType, RobberyWindow.robberyData.LocationNum);
                 }
                 isEntered = false;
             }

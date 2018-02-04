@@ -20,12 +20,9 @@ public enum ItemProperty
     price
 }
 
-public enum ItemName
+public struct ItemName
 {
-    lockpick = 0,
-    knife = 1,
-    pistol = 2,
-    shotgun = 3
+    public string name;
 }
 
 public class ItemsOptions : MonoBehaviour

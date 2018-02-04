@@ -5,25 +5,28 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 
-public enum EventStatus { success, fail, inProgress }
 
 public class RobberyCustomization : MonoBehaviour
 {
+    #region References
     public Image nightEvent;
     public Button nightEventButton;
     public Slider timerSlider;
     public Transform counter;
     public GameObject charCounterIconPrefab;
+    #endregion
 
     private List<GameObject> charCounterIcons = new List<GameObject>();
-    public void CounterMinus() { Destroy(charCounterIcons[0].gameObject); charCounterIcons.RemoveAt(0); }
-    public void CounterPlus() { charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter)); }
 
+    private Robbery robbery;
     public RobberyType robberyType;
     public int number;
     public bool isAvailable;
 
 
+    public void CounterMinus() { Destroy(charCounterIcons[0].gameObject); charCounterIcons.RemoveAt(0); }
+
+    public void CounterPlus() { charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter)); }
 
     public void OnClick()
     {
@@ -34,14 +37,15 @@ public class RobberyCustomization : MonoBehaviour
     {
         number = num;
         robberyType = robType;
+        robbery = DataScript.eData.robberiesData[robType][number];
         SetCounter();
     }
 
     private void SetCounter()
     {
-        if (DataScript.eData.IsRobberyEmpty(robberyType, number))
+        if (robbery.IsRobberyEmpty() == false)
         {
-            foreach (Character character in DataScript.eData.GetCharactersForRobbery(robberyType, number))
+            for (int i = 0; i < robbery.Characters.Count; i++)
                 charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
         }
     }

@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using UnityEngine.UI;
+using System.Collections.ObjectModel;
 
 
 [Serializable]
@@ -17,13 +16,25 @@ public class SData
 [Serializable]
 public class ChData
 {
-    public List<Character> panelCharacters;
-    public List<Character> campCharacters;
+    private List<Character> campCharacters;
+    private List<Character> panelCharacters;
+
+    public ReadOnlyCollection<Character> PanelCharacters { get { return panelCharacters.AsReadOnly(); } }
+    public List<Character> CampCharacters { get { return campCharacters; } }
+
+    //Constructor
+    public ChData()
+    {
+        campCharacters = new List<Character>();
+        panelCharacters = new List<Character>();
+        OnAddEvent = delegate { };
+        OnRemoveEvent = delegate { };
+    }
 
     public void RemoveCharacter(Character character)
     {
         panelCharacters.Remove(character);
-        OnKickEvent(character);
+        OnRemoveEvent(character);
     }
 
     public void AddCharacter(Character character)
@@ -34,11 +45,8 @@ public class ChData
 
     public delegate void ChDataEvent(Character character);
 
-    public event ChDataEvent OnKickEvent = delegate { };
-
-    public event ChDataEvent OnAddEvent = delegate { };
-
-    
+    public event ChDataEvent OnRemoveEvent;
+    public event ChDataEvent OnAddEvent;
 }
 
 [Serializable]
@@ -61,32 +69,12 @@ public class EData
     public int policeKnowledge;
 
     public Dictionary<RobberyType, Dictionary<int, Robbery>> robberiesData;
-
-    public IEnumerable<Character> GetCharactersForRobbery(RobberyType robberyType, int locationNum)
-    {
-        foreach (Character character in DataScript.chData.panelCharacters)
-        {
-            if (character.Status == CharacterStatus.robbery)
-                if (character.LocationNum == locationNum && character.RobberyType == (int)robberyType)
-                    yield return character;
-        }
-    }
-
-
-    public bool IsRobberyEmpty(RobberyType robberyType, int locationNum)
-    {
-        return DataScript.eData.GetCharactersForRobbery(robberyType, locationNum).GetEnumerator().MoveNext();
-    }
 }
 
 public class DataScript : MonoBehaviour
 {
     public static SData sData = new SData();
-    public static ChData chData = new ChData
-    {
-        panelCharacters = new List<Character>(),
-        campCharacters = new List<Character>(),
-    };
+    public static ChData chData = new ChData();
     public static PData pData = new PData();
     public static EData eData = new EData();
 
@@ -120,17 +108,17 @@ public class DataScript : MonoBehaviour
         CommonCharacter arrestedChar = CharactersOptions.GetRandomCommonCharacter(5);
         arrestedChar.Status = CharacterStatus.arrested;
         arrestedChar.StatusValue = 62;
-        chData.panelCharacters.Add(arrestedChar);
+        chData.AddCharacter(arrestedChar);
 
         CommonCharacter hospitalChar = CharactersOptions.GetRandomCommonCharacter(6);
         hospitalChar.Status = CharacterStatus.hospital;
         hospitalChar.StatusValue = 20;
-        chData.panelCharacters.Add(hospitalChar);
+        chData.AddCharacter(hospitalChar);
 
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));
         //chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 0));
-        chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 1));
+        chData.AddCharacter(CharactersOptions.GetSpecialCharacter(9, 1));
 
         //eData
         eData.policeKnowledge = 0;

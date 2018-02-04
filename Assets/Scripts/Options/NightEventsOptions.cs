@@ -6,7 +6,7 @@ using System;
 
 public enum SpriteType { characters, items, robberies, people, places }
 public enum CharacterSpriteType { comMale, comFemale, special }
-//public enum EventStatus { success, fail, choice }
+public enum EventStatus { success, fail, inProgress }
 
 public class NightEventButtonDetails
 {
@@ -40,24 +40,67 @@ public class NightEvent
 
 public class NightRobberyData
 {
-    public bool result;
-
-    public RobberyType robberyType;
-    public int locationNum;
+    private EventStatus eventStatus;
+    private Robbery robbery;
 
     public NightEvent nightEvent;
-    public int money;
-    public Dictionary<int, int> awards;
-    
-    public float chance;
-    public float hospitalChance;
-    public float policeChance;
-    public int healthAffect;
-    public int policeKnowledge;
 
-    public List<Character> characters;
-    //public List<CommonCharacter> commonCharacters;
-    //public List<SpecialCharacter> specialCharacters;
+    private int money;
+    private Dictionary<int, int> awards;
+
+    private float chance;
+    private float hospitalChance;
+    private float policeChance;
+    private int healthAffect;
+    private int policeKnowledge;
+
+    public EventStatus Status { get { return eventStatus; } }
+    public Robbery Robbery { get { return robbery; } }
+
+    public int Money { get { return money; } }
+    public Dictionary<int, int> Awards { get { return awards; } }
+
+    public float Chance { get { return chance; } }
+
+    //Constructor
+    public NightRobberyData(Robbery robbery)
+    {
+        this.robbery = robbery;
+        nightEvent = NightEventsOptions.GetRandomEvent(robbery.RobberyType);
+        chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
+        policeChance = UnityEngine.Random.Range(0, 51);
+        hospitalChance = UnityEngine.Random.Range(0, 51);
+        money = RobberiesOptions.GetRobberyMoneyRewardAtTheCurrentMoment(robbery.RobberyType);
+        awards = RobberiesOptions.GetRobberyAwardsAtTheCurrentMoment(robbery.RobberyType);
+        policeKnowledge = 1;
+    }
+
+    public void ApplyChoice(NightEventButtonDetails buttonDetails)
+    {
+        chance += buttonDetails.effect;
+        hospitalChance += buttonDetails.hospitalEffect;
+        policeChance += buttonDetails.policeEffect;
+        policeKnowledge += buttonDetails.policeKnowledge;
+        money += buttonDetails.money;
+        healthAffect += buttonDetails.healthAffect;
+
+        if (buttonDetails.awards != null)
+            foreach (int bKey in buttonDetails.awards.Keys)
+            {
+                if (awards.ContainsKey(bKey)) awards[bKey] += buttonDetails.awards[bKey];
+                else awards.Add(bKey, buttonDetails.awards[bKey]);
+            }
+    }
+
+    public void SetAsSuccesfull()
+    {
+        eventStatus = EventStatus.success;
+    }
+
+    public void SetAsFailed()
+    {
+        eventStatus = EventStatus.fail;
+    }
 }
 
 public class NightEventsOptions : MonoBehaviour

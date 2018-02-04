@@ -27,7 +27,7 @@ public class OnHospitalOpen : MonoBehaviour
 
         charactersDict = new Dictionary<Character, GameObject>();
 
-        foreach (Character character in DataScript.chData.panelCharacters)
+        foreach (Character character in DataScript.chData.PanelCharacters)
         {
             if (character.Status == CharacterStatus.hospital)
             {

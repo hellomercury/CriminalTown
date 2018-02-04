@@ -36,7 +36,7 @@ public class OnBanditCampOpen : MonoBehaviour
 
         charactersDict = new Dictionary<Character, Button>();
 
-        foreach (Character character in DataScript.chData.campCharacters)
+        foreach (Character character in DataScript.chData.CampCharacters)
         {
             charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
             charactersDict[character].GetComponent<CampCharacterCustomization>().CustomizeCharacter(character);
@@ -59,7 +59,7 @@ public class OnBanditCampOpen : MonoBehaviour
         priceText.text = highlightedCharPrice.ToString();
 
         if (DataScript.sData.money >= highlightedCharPrice
-            && DataScript.chData.panelCharacters.Count < CharactersOptions.panelCellsMaxAmount)
+            && DataScript.chData.PanelCharacters.Count < CharactersOptions.panelCellsMaxAmount)
         {
             hireButton.interactable = true;
         }

@@ -18,8 +18,8 @@ public class TestPanel : MonoBehaviour
 
     public void OnAddExpButtonClick()
     {
-        DisplayManager.Instance().DisplayMessage(DataScript.chData.panelCharacters[0].Name);
-        DataScript.chData.panelCharacters[2].AddExperience(5000);
+        DisplayManager.Instance().DisplayMessage(DataScript.chData.PanelCharacters[0].Name);
+        DataScript.chData.PanelCharacters[2].AddExperience(5000);
         //int charNumber;
         //int exp;
 

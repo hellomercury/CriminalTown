@@ -47,8 +47,8 @@ public class RobberyItemsWindow : MonoBehaviour
         else
         {
             buttonText.text = "Убрать";
-            countSlider.maxValue = DataScript.eData.robberiesData[robType][locNum].itemsCount[number] <= 10 ?
-                DataScript.eData.robberiesData[robType][locNum].itemsCount[number] : 10;
+            countSlider.maxValue = DataScript.eData.robberiesData[robType][locNum].Items[number] <= 10 ?
+                DataScript.eData.robberiesData[robType][locNum].Items[number] : 10;
         }
 
         

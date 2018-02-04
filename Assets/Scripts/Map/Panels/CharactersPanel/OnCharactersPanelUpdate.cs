@@ -13,7 +13,7 @@ public class OnCharactersPanelUpdate : MonoBehaviour
     private void Start()
     {
         DataScript.chData.OnAddEvent += OnAddCharacterPanelReaction;
-        DataScript.chData.OnKickEvent += OnKickCharacterPanelReaction;
+        DataScript.chData.OnRemoveEvent += OnKickCharacterPanelReaction;
     }
 
     public void UpdateCharactersPanel()
@@ -24,7 +24,7 @@ public class OnCharactersPanelUpdate : MonoBehaviour
 
         charactersDict = new Dictionary<Character, Button>();
 
-        foreach (Character character in DataScript.chData.panelCharacters)
+        foreach (Character character in DataScript.chData.PanelCharacters)
         {
             charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
             charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);

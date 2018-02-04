@@ -22,24 +22,18 @@ public class RobberyWindow : MonoBehaviour
     public GameObject charactersPanel;
     #endregion
 
-    public RobberyType robType;
-    public int locationNum;
-    private Robbery robberyData;
+    private RobberyType robType;
+    private int locationNum;
+    public static Robbery robberyData;
 
     private List<GameObject> items = new List<GameObject>();
 
     private Dictionary<Character, Button> charactersDict;
 
-    public void OnEnable()
-    {
-        transform.SetAsLastSibling();
-    }
-
     public void SetRobberyWindow(RobberyType robberyType, int locationNumber)
     {
-        robType = robberyType;
-        locationNum = locationNumber;
-
+        this.robType = robberyType;
+        this.locationNum = locationNumber;
         robberyData = DataScript.eData.robberiesData[robberyType][locationNumber];
 
         UpdateCharacters();
@@ -61,17 +55,10 @@ public class RobberyWindow : MonoBehaviour
 
         charactersDict = new Dictionary<Character, Button>();
 
-        foreach (Character character in DataScript.chData.panelCharacters)
+        foreach (Character character in robberyData.Characters)
         {
-            if (character.Status == CharacterStatus.robbery)
-            {
-                if (character.LocationNum == locationNum && character.RobberyType == (int)robType)
-                {
-                    charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
-                    charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
-                }
-            }
-
+            charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
+            charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
         }
     }
 
@@ -81,12 +68,12 @@ public class RobberyWindow : MonoBehaviour
         items.Clear();
 
         int j = 0;
-        foreach (int number in robberyData.itemsCount.Keys)
+        foreach (int number in robberyData.Items.Keys)
         {
             items.Add(Instantiate(itemPrefab, itemsLocation));
             items[j].GetComponent<ItemCustomization>().number = number;
             items[j].GetComponent<ItemCustomization>().itemImage.sprite = WM1.itemsOptions.itemsSprites[number];
-            items[j].GetComponent<ItemCustomization>().itemCount.text = robberyData.itemsCount[number].ToString();
+            items[j].GetComponent<ItemCustomization>().itemCount.text = robberyData.Items[number].ToString();
             items[j].GetComponent<ItemCustomization>().itemName.text = ItemsOptions.GetItemData(number)[ItemProperty.name];
             items[j].SetActive(true);
             j++;
@@ -100,7 +87,7 @@ public class RobberyWindow : MonoBehaviour
             EventButtonDetails yesButton = new EventButtonDetails
             {
                 buttonText = "Да мне плевать",
-                action = () => { AddCharacterToRobberyAndUpdate(character, robType, locNum); }
+                action = () => { DataScript.eData.robberiesData[robType][locNum].AddCharacter(character); }
             };
             EventButtonDetails noButton = new EventButtonDetails
             {
@@ -119,29 +106,9 @@ public class RobberyWindow : MonoBehaviour
         }
         else
         {
-            AddCharacterToRobberyAndUpdate(character, robType, locNum);
+            DataScript.eData.robberiesData[robType][locNum].AddCharacter(character);
         }
 
-    }
-
-    public void AddCharacterToRobberyAndUpdate(Character character, RobberyType robberyType, int locationNum)
-    {
-        character.Status = CharacterStatus.robbery;
-        character.RobberyType = (int)robberyType;
-        character.LocationNum = locationNum;
-
-        if (robberyWindowObject.activeInHierarchy) UpdateCharacters();
-        RM.rmInstance.GetRobberyCustomization(robberyType, locationNum).CounterPlus();
-    }
-
-    public void RemoveCharacterFromRobberyAndUpdate(Character character, RobberyType robType, int locNum)
-    {
-        character.Status = CharacterStatus.normal;
-        character.RobberyType = 0;
-        character.LocationNum = locationNum;
-
-        if (robberyWindowObject.activeInHierarchy) UpdateCharacters();
-        RM.rmInstance.GetRobberyCustomization(robType, locationNum).CounterMinus();
     }
 
     public void TryToAddItemToRobbery(int itemNumber, RobberyType robberyType, int locationNum)
@@ -152,11 +119,11 @@ public class RobberyWindow : MonoBehaviour
     public void AddItemToRobberyAndUpdate(int itemNumber, int itemCount, RobberyType robberyType, int locationNum)
     {
         DataScript.sData.itemsCount[itemNumber] -= itemCount;
-        if (DataScript.eData.robberiesData[robberyType][locationNum].itemsCount.ContainsKey(itemNumber))
+        if (DataScript.eData.robberiesData[robberyType][locationNum].Items.ContainsKey(itemNumber))
         {
-            DataScript.eData.robberiesData[robberyType][locationNum].itemsCount[itemNumber] += itemCount;
+            DataScript.eData.robberiesData[robberyType][locationNum].Items[itemNumber] += itemCount;
         }
-        else DataScript.eData.robberiesData[robberyType][locationNum].itemsCount.Add(itemNumber, itemCount);
+        else DataScript.eData.robberiesData[robberyType][locationNum].Items.Add(itemNumber, itemCount);
         //Debug.Log
 
         if (robberyWindowObject.activeInHierarchy) UpdateItems();
@@ -171,32 +138,26 @@ public class RobberyWindow : MonoBehaviour
     public void RemoveItemFromRobberyAndUpdate(int itemNumber, int itemCount, RobberyType robberyType, int locationNum)
     {
         DataScript.sData.itemsCount[itemNumber] += itemCount;
-        if (DataScript.eData.robberiesData[robberyType][locationNum].itemsCount[itemNumber] == itemCount)
+        if (DataScript.eData.robberiesData[robberyType][locationNum].Items[itemNumber] == itemCount)
         {
-            DataScript.eData.robberiesData[robberyType][locationNum].itemsCount.Remove(itemNumber);
+            DataScript.eData.robberiesData[robberyType][locationNum].Items.Remove(itemNumber);
         }
-        else DataScript.eData.robberiesData[robberyType][locationNum].itemsCount[itemNumber] -= itemCount;
+        else DataScript.eData.robberiesData[robberyType][locationNum].Items[itemNumber] -= itemCount;
         UpdateItems();
         WM1.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
     }
 
     public void RemoveAllItemsFromRoobbery(RobberyType robberyType, int locationNum)
     {
-        if (DataScript.eData.robberiesData[robberyType][locationNum].itemsCount != null)
+        if (DataScript.eData.robberiesData[robberyType][locationNum].Items != null)
         {
-            foreach (var item in DataScript.eData.robberiesData[robberyType][locationNum].itemsCount)
+            foreach (var item in DataScript.eData.robberiesData[robberyType][locationNum].Items)
             {
                 DataScript.sData.itemsCount[item.Key] += item.Value;
                 Debug.Log(DataScript.sData.itemsCount[item.Key]);
             }
-            DataScript.eData.robberiesData[robberyType][locationNum].itemsCount.Clear();
+            DataScript.eData.robberiesData[robberyType][locationNum].Items.Clear();
         }
-    }
-
-    public void RemoveAllCharactersFromRobbery(RobberyType robberyType, int locationNum)
-    {
-        //foreach (CommonCharacter comChar in DataScript.eData.GetCommonCharactersForRobbery(robberyType, locationNum))
-        //    RemoveCharacterFromRobbery(comChar.n;
     }
 
     public void CloseRobberyWindow()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Xml;
 using System.IO;
-
+using System.Collections.ObjectModel;
 
 public enum RobberyType { darkStreet, stall, house, shop, band }
 public enum RobberyProperty
@@ -20,21 +20,75 @@ public enum RobberyProperty
 [System.Serializable]
 public class Robbery
 {
-    public int rang;
+    private RobberyType robberyType;
+    private int locationNum;
 
-    public int strength;
-    public int agility;
-    public int skill;
-    public int luck;
+    private int strength;
+    private int agility;
+    private int skill;
+    private int luck;
 
-    public Dictionary<int, int> itemsCount;
+    private List<Character> characters;
+
+    //Constructor
+    public Robbery(RobberyType robberyType, int locationNum, int strength, int agility, int skill, int luck)
+    {
+        this.robberyType = robberyType;
+        this.locationNum = locationNum;
+        //this.rank = rank;
+        this.strength = strength;
+        this.agility = agility;
+        this.skill = skill;
+        this.luck = luck;
+        Items = new Dictionary<int, int>();
+        characters = new List<Character>();
+    }
+
+    public bool IsRobberyEmpty()
+    {
+        return characters.Count == 0;
+    }
+
+    public void AddCharacter(Character character)
+    {
+        characters.Add(character);
+        character.Status = CharacterStatus.robbery;
+        character.RobberyType = robberyType;
+        character.LocationNum = locationNum;
+        DataScript.chData.OnRemoveEvent += RemoveCharacter; //For permanently deletion
+        OnAddToRobEvent();
+    }
+
+    public void RemoveCharacter(Character character)
+    {
+        characters.Remove(character);
+        character.Status = CharacterStatus.normal;
+        character.RobberyType = 0;
+        character.LocationNum = locationNum;
+        DataScript.chData.OnRemoveEvent -= RemoveCharacter; //For permanently deletion
+        OnRemoveFromRobEvent();
+    }
+
+    public RobberyType RobberyType { get { return robberyType; } }
+    public int LocationNum { get { return locationNum; } }
+    public int Strength { get { return strength; } }
+    public int Agility { get { return agility; } }
+    public int Skill { get { return skill; } }
+    public int Luck { get { return luck; } }
+
+    public Dictionary<int, int> Items { get; set; }
+    public ReadOnlyCollection<Character> Characters { get { return characters.AsReadOnly(); } }
+
+    public delegate void RobberyEvent();
+    public event RobberyEvent OnAddToRobEvent = delegate { };
+    public event RobberyEvent OnRemoveFromRobEvent = delegate { };
 }
 
 public class RobberiesOptions : MonoBehaviour
 {
     public Sprite[] robberySprites = new Sprite[5];
 
-    
+
     public static int typesAmount;
     public const int darkStreetsAmount = 3;
     public const int stallsAmount = 3;
@@ -60,27 +114,27 @@ public class RobberiesOptions : MonoBehaviour
             { RobberyType.stall, new Dictionary<int, Robbery>() }
         };
 
-        Robbery robbery0 = GetRandomRobbery(RobberyType.darkStreet);
+        Robbery robbery0 = GetRandomRobbery(RobberyType.darkStreet, 0);
         DataScript.eData.robberiesData[RobberyType.darkStreet].Add(0, robbery0);
 
-        Robbery robbery1 = GetRandomRobbery(RobberyType.stall);
+        Robbery robbery1 = GetRandomRobbery(RobberyType.stall, 0);
         DataScript.eData.robberiesData[RobberyType.stall].Add(0, robbery1);
 
-        Robbery robbery2 = GetRandomRobbery(RobberyType.darkStreet);
+        Robbery robbery2 = GetRandomRobbery(RobberyType.darkStreet, 1);
         DataScript.eData.robberiesData[RobberyType.darkStreet].Add(1, robbery2);
 
-        Robbery robbery3 = GetRandomRobbery(RobberyType.darkStreet);
+        Robbery robbery3 = GetRandomRobbery(RobberyType.darkStreet, 2);
         DataScript.eData.robberiesData[RobberyType.darkStreet].Add(2, robbery3);
 
-        Robbery robbery4 = GetRandomRobbery(RobberyType.stall);
+        Robbery robbery4 = GetRandomRobbery(RobberyType.stall, 1);
         DataScript.eData.robberiesData[RobberyType.stall].Add(1, robbery4);
 
-        Robbery robbery5 = GetRandomRobbery(RobberyType.stall);
+        Robbery robbery5 = GetRandomRobbery(RobberyType.stall, 2);
         DataScript.eData.robberiesData[RobberyType.stall].Add(2, robbery5);
 
     }
 
-    public static Robbery GetRandomRobbery(RobberyType robberyType)
+    public static Robbery GetRandomRobbery(RobberyType robberyType, int locationNum)
     {
         int rndRang = 0;
 
@@ -103,22 +157,14 @@ public class RobberiesOptions : MonoBehaviour
                 break;
         }
         int[] stats = GetRandomRobberyStats(rndRang);
-        Robbery randomRobbery = new Robbery
-        {
-            rang = rndRang,
-            strength = stats[0],
-            agility = stats[1],
-            skill = stats[2],
-            luck = stats[3],
-            itemsCount = new Dictionary<int, int>()
-        };
-        return randomRobbery;
+        return new
+            Robbery(robberyType: robberyType, locationNum: locationNum, strength: stats[0], agility: stats[1], skill: stats[2], luck: stats[3]);
     }
 
-    private static int[] GetRandomRobberyStats(int rang)
+    private static int[] GetRandomRobberyStats(int rank)
     {
         int[] stats = new int[4] { 0, 0, 0, 0 };
-        for (int i = 0; i < rang; i++)
+        for (int i = 0; i < rank; i++)
         {
             int[] randStats = CharactersOptions.GetRandomStats(CharactersOptions.GetRandomCharLevelAtCurrentMoment());
             stats[0] += randStats[0];
@@ -139,34 +185,21 @@ public class RobberiesOptions : MonoBehaviour
         return new Dictionary<int, int> { { Random.Range(0, 3), Random.Range(0, 3) } };
     }
 
-    public static float CalculatePreliminaryChance(RobberyType robberyType, int locationNum)
+    public static float CalculatePreliminaryChance(Robbery robbery)
     {
-        //Avoid NULL REFERENCE
-        if (!DataScript.eData.robberiesData.ContainsKey(robberyType))
-        {
-            Debug.LogWarning("Ошибка! Данного ограбления нет в базе");
-            return 0;
-        }
-        else if (!DataScript.eData.robberiesData[robberyType].ContainsKey(locationNum))
-        {
-            Debug.LogWarning("Ошибка! Данного ограбления нет в базе");
-            return 0;
-        }
-
         float chance;
-        Robbery robbery = DataScript.eData.robberiesData[robberyType][locationNum];
         List<Trait> chanceTraits;
 
-        int rStrength = robbery.strength;
-        int rAgility = robbery.agility;
-        int rSkill = robbery.skill;
-        int rLuck = robbery.luck;
+        int rStrength = robbery.Strength;
+        int rAgility = robbery.Agility;
+        int rSkill = robbery.Skill;
+        int rLuck = robbery.Luck;
 
-        float banditsStats = CalculateBanditsStats(robberyType, locationNum, out chanceTraits);
+        float banditsStats = CalculateBanditsStats(robbery, out chanceTraits);
         float robberyStats = rStrength + rAgility + rSkill + rLuck;
-        float equipmentStats = CalcucateEquipmentStats(robberyType, locationNum);
+        float equipmentStats = CalcucateEquipmentStats(robbery);
 
-        Debug.Log(robberyType + " " + locationNum);
+        Debug.Log(robbery.RobberyType + " " + robbery.LocationNum);
         Debug.Log("banditsStats: " + banditsStats);
         Debug.Log("robberyStats: " + robberyStats);
         Debug.Log("equipmentStats: " + equipmentStats);
@@ -191,9 +224,10 @@ public class RobberiesOptions : MonoBehaviour
         return chance;
     }
 
-    private static float CalculateBanditsStats(RobberyType robberyType, int locationNum, out List<Trait> chanceTraits)
+    private static float CalculateBanditsStats(Robbery robbery, out List<Trait> chanceTraits)
     {
         int count = 0;
+        RobberyType rType = robbery.RobberyType;
 
         chanceTraits = new List<Trait>();
         List<Trait> groupTraits = new List<Trait>();
@@ -204,7 +238,7 @@ public class RobberiesOptions : MonoBehaviour
         float cLuck = 0;
         float cFear = 0;
 
-        foreach (Character character in DataScript.eData.GetCharactersForRobbery(robberyType, locationNum))
+        foreach (Character character in robbery.Characters)
         {
             count++;
             float coefStr = 1, coefAg = 1, coefSk = 1, coefL = 1, coefF = 1;
@@ -282,23 +316,23 @@ public class RobberiesOptions : MonoBehaviour
         }
 
         return
-            (cStrength * float.Parse(GetRobberyData(robberyType, RobberyProperty.strenghtInfluence)) +
-            cLuck * float.Parse(GetRobberyData(robberyType, RobberyProperty.luckInfluence)) +
-            cAgility * float.Parse(GetRobberyData(robberyType, RobberyProperty.agilityInfluence)) +
-            cSkill * float.Parse(GetRobberyData(robberyType, RobberyProperty.skillInfluence)))
+            (cStrength * float.Parse(GetRobberyData(rType, RobberyProperty.strenghtInfluence)) +
+            cLuck * float.Parse(GetRobberyData(rType, RobberyProperty.luckInfluence)) +
+            cAgility * float.Parse(GetRobberyData(rType, RobberyProperty.agilityInfluence)) +
+            cSkill * float.Parse(GetRobberyData(rType, RobberyProperty.skillInfluence)))
             *
-            (1 - cFear / (110*count));
+            (1 - cFear / (110 * count));
     }
 
-    private static float CalcucateEquipmentStats(RobberyType robberyType, int locationNum)
+    private static float CalcucateEquipmentStats(Robbery robbery)
     {
-        Dictionary<int, int> items = DataScript.eData.robberiesData[robberyType][locationNum].itemsCount;
+        Dictionary<int, int> items = robbery.Items;
 
         float itemsStats = 0;
 
         foreach (int itemNum in items.Keys)
         {
-            switch (robberyType)
+            switch (robbery.RobberyType)
             {
 
                 case RobberyType.darkStreet:
