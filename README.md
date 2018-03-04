@@ -19,5 +19,6 @@ CriminalTown - это мобильная пошаговая стратегия, 
 с налетов на прохожих в темных переулках, а ближе к концу игры занимается срывом сделок других банд и ограблением банков.
 
 ## Скриншоты (ранняя версия)
-<img src="https://image.ibb.co/kTSSQ7/2018_03_04_23_11_41.png" width="350"><img src="https://image.ibb.co/gD3OyS/2018_03_04_23_19_51.png" width="350">
-<img src="https://image.ibb.co/ifFssn/2018_03_04_23_38_28.png" width="250">
+<img src="https://image.ibb.co/kTSSQ7/2018_03_04_23_11_41.png" width="450">
+<img src="https://image.ibb.co/gD3OyS/2018_03_04_23_19_51.png" width="450">
+<img src="https://image.ibb.co/ifFssn/2018_03_04_23_38_28.png" width="350">
