@@ -72,6 +72,12 @@ public class CharacterCustomization : MonoBehaviour, ICharacterCard
         WM1.characterMenu.SetCharacterMenu(character);
     }
 
+    public void OnDestroy()
+    {
+        character.OnStatsChangedEvent -= OnStatsChangedReaction;
+        character.OnLevelUpEvent -= OnLevelUpReaction;
+    }
+
     public void CustomizeCharacter(Character character)
     {
         this.character = character;
