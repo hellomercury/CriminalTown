@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CharacterCustomization : MonoBehaviour
+public class CharacterCustomization : MonoBehaviour, ICharacterCard
 {
     public Sprite hospitalIcon;
     public Sprite normalIcon;
@@ -84,11 +84,11 @@ public class CharacterCustomization : MonoBehaviour
         status = character.Status;
 
         SetCharStats();
-        character.OnStatsChangedEvent += SetCharStats;
+        character.OnStatsChangedEvent += OnStatsChangedReaction;
         character.OnLevelUpEvent += OnLevelUpReaction;
     }
 
-    public void SetCharStats()
+    private void SetCharStats()
     {
         baseStats.SetActive(false);
         arrestStats.SetActive(false);
@@ -144,8 +144,26 @@ public class CharacterCustomization : MonoBehaviour
         fear.text = character.Fear.ToString();
     }
 
-    private void OnLevelUpReaction()
+    public void OnLevelUpReaction()
     {
+        StartCoroutine(LevelUpAnimation());
+    }
 
+    public void OnStatsChangedReaction()
+    {
+        SetCharStats();
+    }
+
+    private IEnumerator LevelUpAnimation()
+    {
+        float timer = 1;
+        Vector3 localScale = portrait.transform.localScale;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            portrait.transform.localScale += new Vector3(0.1f, 0.1f);
+            yield return 0;
+        }
+        portrait.transform.localScale = localScale;
     }
 }

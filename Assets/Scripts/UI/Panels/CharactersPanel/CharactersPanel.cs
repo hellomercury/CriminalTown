@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OnCharactersPanelUpdate : MonoBehaviour
+public class CharactersPanel : MonoBehaviour, ICharactersContainer
 {
     public Transform charactersLocation;
     public Button characterPrefab;
@@ -12,8 +12,8 @@ public class OnCharactersPanelUpdate : MonoBehaviour
 
     private void Start()
     {
-        DataScript.chData.OnAddEvent += OnAddCharacterPanelReaction;
-        DataScript.chData.OnRemoveEvent += OnKickCharacterPanelReaction;
+        DataScript.chData.OnAddEvent += OnAddReaction;
+        DataScript.chData.OnRemoveEvent += OnRemoveReaction;
     }
 
     public void UpdateCharactersPanel()
@@ -37,12 +37,13 @@ public class OnCharactersPanelUpdate : MonoBehaviour
             charObj.transform.GetChild(0).GetComponent<Button>().interactable = value;
     }
 
-    private void OnKickCharacterPanelReaction(Character character)
+    public void OnRemoveReaction(Character character)
     {
         Destroy(charactersDict[character].gameObject);
+        charactersDict.Remove(character);
     }
 
-    private void OnAddCharacterPanelReaction(Character character)
+    public void OnAddReaction(Character character)
     {
         charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
         charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);

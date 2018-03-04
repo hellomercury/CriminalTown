@@ -60,7 +60,7 @@ public class RobberyItemsWindow : MonoBehaviour
         itemsWindowObject.SetActive(true);
     }
 
-    public void AddRemoveButtonClick()
+    public void AddOrRemoveButtonClick()
     {
         if (isAdding) WM1.robberyWindow.AddItemToRobberyAndUpdate(number, (int)countSlider.value, robType, locNum);
         else WM1.robberyWindow.RemoveItemFromRobberyAndUpdate(number, (int)countSlider.value, robType, locNum);

@@ -22,6 +22,11 @@ public class ChData
     public ReadOnlyCollection<Character> PanelCharacters { get { return panelCharacters.AsReadOnly(); } }
     public List<Character> CampCharacters { get { return campCharacters; } }
 
+    public delegate void ChDataEvent(Character character);
+
+    public event ChDataEvent OnRemoveEvent;
+    public event ChDataEvent OnAddEvent;
+
     //Constructor
     public ChData()
     {
@@ -43,10 +48,6 @@ public class ChData
         OnAddEvent(character);
     }
 
-    public delegate void ChDataEvent(Character character);
-
-    public event ChDataEvent OnRemoveEvent;
-    public event ChDataEvent OnAddEvent;
 }
 
 [Serializable]

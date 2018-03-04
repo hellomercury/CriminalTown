@@ -124,6 +124,21 @@ public class Character
         Exp += expToAdd;
     }
 
+    public void AddToHospital()
+    {
+
+    }
+
+    public void AddToPolice()
+    {
+
+    }
+
+    public void SetDefaultStatus()
+    {
+
+    }
+
     public void CallOnStatsChangedEvent()
     {
         OnStatsChangedEvent();

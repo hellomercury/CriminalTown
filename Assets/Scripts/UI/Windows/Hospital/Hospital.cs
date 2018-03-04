@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class OnHospitalOpen : MonoBehaviour
+public class Hospital : MonoBehaviour, ICharactersContainer
 {
     public GameObject hospitalObject;
     public Transform charactersLocation;
@@ -92,4 +92,17 @@ public class OnHospitalOpen : MonoBehaviour
         character.BoostCoefficient = 1;
         UpdateHospital();
     }
+
+    public void OnRemoveReaction(Character character)
+    {
+        Destroy(charactersDict[character].gameObject);
+        charactersDict.Remove(character);
+    }
+
+    public void OnAddReaction(Character character)
+    {
+        charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
+        charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
+    }
+
 }

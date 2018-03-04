@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class RobberyWindow : MonoBehaviour
+public class RobberyWindow : MonoBehaviour, ICharactersContainer
 {
     #region References
     public GameObject robberyWindowObject;
@@ -45,6 +45,9 @@ public class RobberyWindow : MonoBehaviour
 
         robberyWindowObject.SetActive(true);
         robberyWindowObject.transform.SetAsLastSibling();
+
+        DataScript.eData.robberiesData[robType][locationNum].OnAddToRobEvent += OnAddReaction;
+        DataScript.eData.robberiesData[robType][locationNum].OnRemoveFromRobEvent += OnRemoveReaction;
     }
 
     public void UpdateCharacters()
@@ -124,7 +127,6 @@ public class RobberyWindow : MonoBehaviour
             DataScript.eData.robberiesData[robberyType][locationNum].Items[itemNumber] += itemCount;
         }
         else DataScript.eData.robberiesData[robberyType][locationNum].Items.Add(itemNumber, itemCount);
-        //Debug.Log
 
         if (robberyWindowObject.activeInHierarchy) UpdateItems();
         WM1.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
@@ -163,5 +165,19 @@ public class RobberyWindow : MonoBehaviour
     public void CloseRobberyWindow()
     {
         robberyWindowObject.SetActive(false);
+        DataScript.eData.robberiesData[robType][locationNum].OnAddToRobEvent -= OnAddReaction;
+        DataScript.eData.robberiesData[robType][locationNum].OnRemoveFromRobEvent -= OnRemoveReaction;
+    }
+
+    public void OnAddReaction(Character character)
+    {
+        charactersDict.Add(character, Instantiate(characterPrefab, charactersLocation));
+        charactersDict[character].GetComponent<CharacterCustomization>().CustomizeCharacter(character);
+    }
+
+    public void OnRemoveReaction(Character character)
+    {
+        Destroy(charactersDict[character].gameObject);
+        charactersDict.Remove(character);
     }
 }

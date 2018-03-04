@@ -10,9 +10,6 @@ using UnityEngine.UI;
 public class WM1 : MonoBehaviour
 {
     #region Managers
-    public GameObject guiEventManagerObject;
-    
-    public static GUIEventManager guiEventManager;
     public static WM1 wm1Instance;
     #endregion
 
@@ -46,7 +43,7 @@ public class WM1 : MonoBehaviour
     public static CharacterMenu characterMenu;
     public static RobberyItemsWindow robberyItemsWindow;
     public static OnPoliceStationOpen policeStation;
-    public static OnHospitalOpen hospital;
+    public static Hospital hospital;
     public static OnMarketOpen blackMarket;
     public static BuyWindow buyWindow;
     public static OnBanditCampOpen banditCamp;
@@ -66,8 +63,8 @@ public class WM1 : MonoBehaviour
     public GameObject nightButtonObject;
 
 
-    public static OnCharactersPanelUpdate charactersPanel;
-    public static OnItemsPanelUpdate itemsPanel;
+    public static CharactersPanel charactersPanel;
+    public static ItemsPanel itemsPanel;
     public static NightButton nightButton;
     #endregion
 
@@ -75,7 +72,6 @@ public class WM1 : MonoBehaviour
 
     private void Awake()
     {
-        guiEventManager = guiEventManagerObject.GetComponent<GUIEventManager>();
         wm1Instance = gameObject.GetComponent<WM1>();
 
         charactersOptions = charactersOptionsObject.GetComponent<CharactersOptions>();
@@ -89,13 +85,13 @@ public class WM1 : MonoBehaviour
         characterMenu = characterMenuObject.GetComponent<CharacterMenu>();
         robberyItemsWindow = robberyItemsWindowObject.GetComponent<RobberyItemsWindow>();
         policeStation = policeStationObject.GetComponent<OnPoliceStationOpen>();
-        hospital = hospitalObject.GetComponent<OnHospitalOpen>();
+        hospital = hospitalObject.GetComponent<Hospital>();
         blackMarket = blackMarketObject.GetComponent<OnMarketOpen>();
         buyWindow = buyWindowObject.GetComponent<BuyWindow>();
         banditCamp = banditCampObject.GetComponent<OnBanditCampOpen>();
 
-        charactersPanel = charactersPanelObject.GetComponent<OnCharactersPanelUpdate>();
-        itemsPanel = itemsPanelObject.GetComponent<OnItemsPanelUpdate>();
+        charactersPanel = charactersPanelObject.GetComponent<CharactersPanel>();
+        itemsPanel = itemsPanelObject.GetComponent<ItemsPanel>();
         nightButton = nightButtonObject.GetComponent<NightButton>();
 
         nightEventWindow = nightEventWindowObject.GetComponent<NightEventWindow>();

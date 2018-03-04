@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class OnItemsPanelUpdate : MonoBehaviour
+public class ItemsPanel : MonoBehaviour, IItemsContainer
 {
     public GameObject itemPrefab;
     public Transform itemsLocation;

@@ -35,7 +35,6 @@ public class Robbery
     {
         this.robberyType = robberyType;
         this.locationNum = locationNum;
-        //this.rank = rank;
         this.strength = strength;
         this.agility = agility;
         this.skill = skill;
@@ -55,8 +54,8 @@ public class Robbery
         character.Status = CharacterStatus.robbery;
         character.RobberyType = robberyType;
         character.LocationNum = locationNum;
-        DataScript.chData.OnRemoveEvent += RemoveCharacter; //For permanently deletion
-        OnAddToRobEvent();
+        OnAddToRobEvent(character);
+        character.CallOnStatsChangedEvent();
     }
 
     public void RemoveCharacter(Character character)
@@ -64,9 +63,9 @@ public class Robbery
         characters.Remove(character);
         character.Status = CharacterStatus.normal;
         character.RobberyType = 0;
-        character.LocationNum = locationNum;
-        DataScript.chData.OnRemoveEvent -= RemoveCharacter; //For permanently deletion
-        OnRemoveFromRobEvent();
+        character.LocationNum = 0;
+        OnRemoveFromRobEvent(character);
+        character.CallOnStatsChangedEvent();
     }
 
     public RobberyType RobberyType { get { return robberyType; } }
@@ -79,7 +78,7 @@ public class Robbery
     public Dictionary<int, int> Items { get; set; }
     public ReadOnlyCollection<Character> Characters { get { return characters.AsReadOnly(); } }
 
-    public delegate void RobberyEvent();
+    public delegate void RobberyEvent(Character character);
     public event RobberyEvent OnAddToRobEvent = delegate { };
     public event RobberyEvent OnRemoveFromRobEvent = delegate { };
 }
