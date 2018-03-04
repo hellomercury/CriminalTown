@@ -333,17 +333,17 @@ public class CharacterMenu : MonoBehaviour
         DataScript.sData.money -= price;
         WM1.hospital.UpdateHospital();
         CheckPointsAndStats();
-        //character.CallOnStatsChangedEvent();
+        character.CallOnStatsChangedEvent();
     }
 
     public void BreakOut()
     {
-        chChanged.Status = CharacterStatus.normal;
-        character.Status = CharacterStatus.normal;
+        chChanged.SetDefaultStatus();
+        character.SetDefaultStatus();
         DataScript.sData.money -= price;
         WM1.policeStation.UpdatePoliceStationCharacters();
         CheckPointsAndStats();
-        //character.CallOnStatsChangedEvent();
+        character.CallOnStatsChangedEvent();
     }
 
     public void OnKickButtonClick()

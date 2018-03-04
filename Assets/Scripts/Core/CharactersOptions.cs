@@ -15,6 +15,7 @@ public class Character
     public virtual Sprite Sprite { get { return null; } set { } }
 
     //base variables
+    private CharacterStatus status;
     private int statusValue;
     private RobberyType robType;
     private int boostCoef;
@@ -32,35 +33,21 @@ public class Character
     public int Luck { get; set; }
     public int Points { get; set; }
 
-    public CharacterStatus Status { set; get; }
-
-    public RobberyType RobberyType
-    {
-        get { return robType; }
-        set { robType = value; }
-    }
-    public int LocationNum
-    {
-        get { return locNum; }
-        set { locNum = value; }
-    }
-    public int StatusValue
-    {
-        get { return statusValue; }
-        set { statusValue = value; }
-    }
-    public int BoostCoefficient
-    {
-        get { return boostCoef; }
-        set { boostCoef = value; }
-    }
+    public CharacterStatus Status { get { return status; } }
+    public RobberyType RobberyType { get { return robType; } }
+    public int LocationNum { get { return locNum; } }
+    public int StatusValue { get { return statusValue; } }
+    public int BoostCoefficient { get { return boostCoef; } set { boostCoef = value; } }
     public int DaysLeft
     {
         get
         {
-            if (Status == CharacterStatus.hospital) return Mathf.CeilToInt((CharactersOptions.maxRecovery - StatusValue) / (float)(BoostCoefficient * CharactersOptions.recoveryStep));
-            else if (Status == CharacterStatus.arrested) return Mathf.CeilToInt(StatusValue / (float)Fear);
-            else return 0;
+            if (Status == CharacterStatus.hospital)
+                return Mathf.CeilToInt((CharactersOptions.maxRecovery - StatusValue) / (float)(BoostCoefficient * CharactersOptions.recoveryStep));
+            else if (Status == CharacterStatus.arrested)
+                return Mathf.CeilToInt(StatusValue / (float)Fear);
+            else
+                return 0;
         }
     }
 
@@ -77,7 +64,7 @@ public class Character
         Fear = character.Fear;
         Points = character.Points;
 
-        Status = character.Status;
+        status = character.Status;
         statusValue = character.statusValue;
         robType = character.robType;
         locNum = character.locNum;
@@ -98,7 +85,7 @@ public class Character
             Fear = this.Fear,
             Points = this.Points,
 
-            Status = Status,
+            status = Status,
             statusValue = statusValue,
             robType = robType,
             locNum = locNum
@@ -126,17 +113,64 @@ public class Character
 
     public void AddToHospital()
     {
-
+        status = CharacterStatus.hospital;
+        statusValue = Health;
+        boostCoef = 1;
+        CallOnStatsChangedEvent();
     }
 
     public void AddToPolice()
     {
+        status = CharacterStatus.arrested;
+        statusValue = CharactersOptions.maxOpposition - Fear;
+        boostCoef = 0;
+        CallOnStatsChangedEvent();
+    }
 
+    public void AddToRobbery(RobberyType robberyType, int locationNum)
+    {
+        status = CharacterStatus.robbery;
+        statusValue = 0;
+        this.robType = robberyType;
+        this.locNum = locationNum;
+        CallOnStatsChangedEvent();
     }
 
     public void SetDefaultStatus()
     {
+        status = CharacterStatus.normal;
+        statusValue = 0;
+        CallOnStatsChangedEvent();
+    }
 
+    public void LiveOneDay()
+    {
+        switch (status)
+        {
+            case CharacterStatus.normal:
+                break;
+            case CharacterStatus.robbery:
+                break;
+            case CharacterStatus.hospital:
+                statusValue += CharactersOptions.recoveryStep * boostCoef;
+                if (statusValue >= CharactersOptions.maxRecovery)
+                {
+                    //WM1.charactersPanel.charactersDict[character].GetComponent<CharacterCustomization>().Animator.SetTrigger("Recovering");
+                    SetDefaultStatus();
+                }
+                break;
+            case CharacterStatus.arrested:
+                statusValue -= Fear;
+                if (statusValue <= 0)
+                {
+                    SetDefaultStatus();
+                    DataScript.eData.policeKnowledge += 10;
+                    DataScript.chData.RemoveCharacter(this); //add new function for this!
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public void CallOnStatsChangedEvent()
@@ -376,11 +410,9 @@ public partial class CharactersOptions : MonoBehaviour
 
         randomCharacter.Level = level;
 
-        int[] rndStats = GetRandomStats(randomCharacter.Level);
+        randomCharacter.SetDefaultStatus();
 
-        randomCharacter.Status = CharacterStatus.normal;
-        randomCharacter.StatusValue = 0;
-        randomCharacter.LocationNum = 1;
+        int[] rndStats = GetRandomStats(randomCharacter.Level);
 
         randomCharacter.Sex = (Sex)sex;
         randomCharacter.Strength = rndStats[0];
@@ -404,16 +436,10 @@ public partial class CharactersOptions : MonoBehaviour
         int[] rndStats = GetRandomStats(rndLevel);
         //int rndId = Random.Range(0, specialCharactersAuthList[authorityLevel].Count);
 
-        return new SpecialCharacter(
+        SpecialCharacter specialCharacter = new SpecialCharacter(
             stats:
             new Character()
             {
-                Status = CharacterStatus.normal,
-                StatusValue = 0,
-                LocationNum = 1,
-                BoostCoefficient = 1,
-                RobberyType = 0,
-
                 Level = rndLevel,
 
                 Strength = rndStats[0],
@@ -430,6 +456,9 @@ public partial class CharactersOptions : MonoBehaviour
             id: charNum,
             spriteId: GetSpecialSpriteId(authorityLevel, charNum),
             traitIds: new List<int> { GetSpecialTraitId(authorityLevel, charNum) });
+
+        specialCharacter.SetDefaultStatus();
+        return specialCharacter;
     }
 
     public static int GetComPrice(int level)
@@ -452,7 +481,7 @@ public partial class CharactersOptions : MonoBehaviour
         return 50 * level;
     }
 
-    public static void FillCampCells()
+    public static void FillCampCells() //DELETE!!!!!
     {
         while (DataScript.chData.CampCharacters.Count < campComCellsAmount)
         {

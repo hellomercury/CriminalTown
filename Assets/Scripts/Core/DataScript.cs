@@ -107,14 +107,13 @@ public class DataScript : MonoBehaviour
 
         //chData
         CommonCharacter arrestedChar = CharactersOptions.GetRandomCommonCharacter(5);
-        arrestedChar.Status = CharacterStatus.arrested;
-        arrestedChar.StatusValue = 62;
+        arrestedChar.AddToPolice();
         chData.AddCharacter(arrestedChar);
 
         CommonCharacter hospitalChar = CharactersOptions.GetRandomCommonCharacter(6);
-        hospitalChar.Status = CharacterStatus.hospital;
-        hospitalChar.StatusValue = 20;
+        hospitalChar.AddToHospital();
         chData.AddCharacter(hospitalChar);
+
 
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));

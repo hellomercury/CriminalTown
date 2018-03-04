@@ -198,25 +198,7 @@ public class NightButton : MonoBehaviour
     {
         foreach (Character character in DataScript.chData.PanelCharacters)
         {
-            if (character.Status == CharacterStatus.hospital)
-            {
-                character.StatusValue += CharactersOptions.recoveryStep * character.BoostCoefficient;
-                if (character.StatusValue >= 100)
-                {
-                    //WM1.charactersPanel.charactersDict[character].GetComponent<CharacterCustomization>().Animator.SetTrigger("Recovering");
-                    character.Status = CharacterStatus.normal;
-                    character.Health = 100;
-                }
-            }
-            if (character.Status == CharacterStatus.arrested)
-            {
-                character.StatusValue -= character.Fear;
-                if (character.StatusValue <= 0)
-                {
-                    DataScript.eData.policeKnowledge += 10;
-                    DataScript.chData.RemoveCharacter(character);
-                }
-            }
+            character.LiveOneDay();
         }
     }
 
@@ -233,9 +215,9 @@ public class NightButton : MonoBehaviour
             {
                 if (character.Health <= 0)
                 {
-                    //TO HOSPITAL
+                    character.AddToHospital();
                 }
-                character.Status = CharacterStatus.normal;
+                character.SetDefaultStatus();
             }
             WM1.robberyWindow.RemoveAllItemsFromRoobbery(nightRobDat.Robbery.RobberyType, nightRobDat.Robbery.LocationNum);
         }

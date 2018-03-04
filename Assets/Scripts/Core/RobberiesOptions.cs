@@ -51,9 +51,7 @@ public class Robbery
     public void AddCharacter(Character character)
     {
         characters.Add(character);
-        character.Status = CharacterStatus.robbery;
-        character.RobberyType = robberyType;
-        character.LocationNum = locationNum;
+        character.AddToRobbery(robberyType, locationNum);
         OnAddToRobEvent(character);
         character.CallOnStatsChangedEvent();
     }
@@ -61,9 +59,7 @@ public class Robbery
     public void RemoveCharacter(Character character)
     {
         characters.Remove(character);
-        character.Status = CharacterStatus.normal;
-        character.RobberyType = 0;
-        character.LocationNum = 0;
+        character.SetDefaultStatus();
         OnRemoveFromRobEvent(character);
         character.CallOnStatsChangedEvent();
     }

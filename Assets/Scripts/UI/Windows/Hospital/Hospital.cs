@@ -17,6 +17,7 @@ public class Hospital : MonoBehaviour, ICharactersContainer
     private void OnEnable()
     {
         hospitalObject.transform.SetAsLastSibling();
+        
     }
 
     public void UpdateHospital()
@@ -50,7 +51,7 @@ public class Hospital : MonoBehaviour, ICharactersContainer
             EventButtonDetails yesButton = new EventButtonDetails
             {
                 buttonText = "Да",
-                action = () => {AddCharacterToHospital(character); }
+                action = () => {character.AddToHospital(); }
             };
             EventButtonDetails noButton = new EventButtonDetails
             {
@@ -83,14 +84,6 @@ public class Hospital : MonoBehaviour, ICharactersContainer
         }
         WM1.modalPanel.CallModalPanel(details);
 
-    }
-
-    public void AddCharacterToHospital(Character character)
-    {
-        character.Status = CharacterStatus.hospital;
-        character.StatusValue = character.Health;
-        character.BoostCoefficient = 1;
-        UpdateHospital();
     }
 
     public void OnRemoveReaction(Character character)
