@@ -1,23 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class NightButton : MonoBehaviour
-{
-    public Image map;
-    Color defaultMapColor;
-    public GameObject nightAnimation;
+namespace CriminalTown {
 
-    private float animationTime = 2;
-    private float animationTimer = 0;
+    public class NightButton : MonoBehaviour {
+        public Image map;
+        Color defaultMapColor;
+        public GameObject nightAnimation;
+
+        private float animationTime = 2;
+        private float animationTimer = 0;
 
 
-    public void OnNightButtonClick()
-    {
-       Night.Instance.TryToStartNight();
-    }
+        public void OnNightButtonClick() {
+            Night.Instance.TryToStartNight();
+        }
 
 //    IEnumerator NightAnimation()
 //    {
@@ -65,5 +62,7 @@ public class NightButton : MonoBehaviour
 
 
 
+
+    }
 
 }

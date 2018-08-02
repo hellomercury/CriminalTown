@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class WM0 : MonoBehaviour
-{
-    public GameObject modalPanelObject;
+namespace CriminalTown {
 
-    public static ModalPanel modalPanel;
+    public class WM0 : MonoBehaviour {
+        public GameObject modalPanelObject;
+
+        public static ModalPanel modalPanel;
 
 
-    private void Awake()
-    {
-        modalPanel = modalPanelObject.GetComponent<ModalPanel>();
+        private void Awake() {
+            modalPanel = modalPanelObject.GetComponent<ModalPanel>();
 
+        }
     }
+
 }

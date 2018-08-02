@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace CriminalTown {
 
-public interface ICharacterCard
-{
-    void OnStatsChangedReaction();
-    //void Destroy();
-    void OnLevelUpReaction();
-    //void Create();
+    public interface ICharacterCard {
+        void OnStatsChangedReaction();
+
+        //void Destroy();
+        void OnLevelUpReaction();
+
+        //void Create();
+    }
+
 }

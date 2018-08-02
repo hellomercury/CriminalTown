@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace CriminalTown {
 
-public interface ICharactersContainer
-{
-    void OnAddReaction(Character character);
-    void OnRemoveReaction(Character character);
+    public interface ICharactersContainer {
+        void OnAddReaction(Character character);
+
+        void OnRemoveReaction(Character character);
+    }
+
 }

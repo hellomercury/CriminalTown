@@ -1,77 +1,74 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class RobberyItemsWindow : MonoBehaviour
-{
-    public GameObject itemOptions;
-    public Image itemImage;
-    public Text description;
-    public Text itemName;
-    public Text countText;
-    public Text buttonText;
-    public Slider countSlider;
-    public Button addRemoveButton;
-    public GameObject itemsWindowObject;
+namespace CriminalTown {
+
+    public class RobberyItemsWindow : MonoBehaviour {
+        public GameObject itemOptions;
+        public Image itemImage;
+        public Text description;
+        public Text itemName;
+        public Text countText;
+        public Text buttonText;
+        public Slider countSlider;
+        public Button addRemoveButton;
+        public GameObject itemsWindowObject;
 
 
-    private int number;
-    private bool isAdding;
-    private RobberyType robType;
-    private int locNum;
+        private int number;
+        private bool isAdding;
+        private RobberyType robType;
+        private int locNum;
 
 
-    public static RobberyItemsWindow itemsWindow;
+        public static RobberyItemsWindow itemsWindow;
 
 
-    public void SetItemsWindow(int numberOfItem, bool isItemAdding, RobberyType robberyType, int locationNum)
-    {
-        number = numberOfItem;
-        isAdding = isItemAdding;
-        robType = robberyType;
-        locNum = locationNum;
+        public void SetItemsWindow(int numberOfItem, bool isItemAdding, RobberyType robberyType, int locationNum) {
+            number = numberOfItem;
+            isAdding = isItemAdding;
+            robType = robberyType;
+            locNum = locationNum;
 
-        itemImage.sprite = itemOptions.GetComponent<ItemsOptions>().itemsSprites[number];
-        itemName.text = ItemsOptions.GetItemData(number)[ItemProperty.name];
+            itemImage.sprite = itemOptions.GetComponent<ItemsOptions>().itemsSprites[number];
+            itemName.text = ItemsOptions.GetItemData(number)[ItemProperty.name];
 
-        countSlider.interactable = true;
-        addRemoveButton.interactable = false;
+            countSlider.interactable = true;
+            addRemoveButton.interactable = false;
 
-        if (isAdding)
-        {
-            buttonText.text = "Добавить";
-            countSlider.maxValue = DataScript.SData.ItemsCount[numberOfItem] <= 10 ?
-                DataScript.SData.ItemsCount[numberOfItem] : 10;
+            if (isAdding) {
+                buttonText.text = "Добавить";
+                countSlider.maxValue = DataScript.SData.ItemsCount[numberOfItem] <= 10 ? DataScript.SData.ItemsCount[numberOfItem] : 10;
+            } else {
+                buttonText.text = "Убрать";
+                countSlider.maxValue = DataScript.EData.RobberiesData[robType][locNum].Items[number] <= 10 ? DataScript.EData.RobberiesData[robType][locNum].Items[number] : 10;
+            }
+
+
+            countSlider.value = 0;
+            countText.text = "0";
+
+
+            itemsWindowObject.transform.SetAsLastSibling();
+            itemsWindowObject.SetActive(true);
         }
-        else
-        {
-            buttonText.text = "Убрать";
-            countSlider.maxValue = DataScript.EData.RobberiesData[robType][locNum].Items[number] <= 10 ?
-                DataScript.EData.RobberiesData[robType][locNum].Items[number] : 10;
+
+        public void AddOrRemoveButtonClick() {
+            if (isAdding)
+                WM1.robberyWindow.AddItemToRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
+            else
+                WM1.robberyWindow.RemoveItemFromRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
+            itemsWindowObject.SetActive(false);
         }
 
-        
-        countSlider.value = 0;
-        countText.text = "0";
+        public void OnSliderValueChanged() {
+            countText.text = countSlider.value.ToString();
+            if (countSlider.value > 0)
+                addRemoveButton.interactable = true;
+            else
+                addRemoveButton.interactable = false;
+        }
 
-
-        itemsWindowObject.transform.SetAsLastSibling();
-        itemsWindowObject.SetActive(true);
-    }
-
-    public void AddOrRemoveButtonClick()
-    {
-        if (isAdding) WM1.robberyWindow.AddItemToRobberyAndUpdate(number, (int)countSlider.value, robType, locNum);
-        else WM1.robberyWindow.RemoveItemFromRobberyAndUpdate(number, (int)countSlider.value, robType, locNum);
-        itemsWindowObject.SetActive(false);
-    }
-
-    public void OnSliderValueChanged()
-    {
-        countText.text = countSlider.value.ToString();
-        if (countSlider.value > 0) addRemoveButton.interactable = true;
-        else addRemoveButton.interactable = false;
     }
 
 }

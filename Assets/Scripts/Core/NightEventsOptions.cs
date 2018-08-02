@@ -1,274 +1,300 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Xml;
 using System;
 
-public enum SpriteType { characters, items, robberies, people, places }
-public enum CharacterSpriteType { comMale, comFemale, special }
-public enum EventStatus { success, fail, inProgress }
+namespace CriminalTown {
 
-public class NightEventButtonDetails
-{
-    public string buttonText;
-    public NightEventNode nextEventNode;
-    public int effect;
-    public int policeEffect;
-    public int hospitalEffect;
-    public int healthAffect;
-    public int policeKnowledge;
-    public Dictionary<int, int> awards;
-    public int money;
-}
-
-public class NightEventNode
-{
-    public string titleText;
-    public string description;
-    public SpriteType spriteType;
-    public CharacterSpriteType charSpriteType;
-    public int spriteId;
-    public List<NightEventButtonDetails> buttons;
-}
-
-public class NightEvent
-{
-    public NightEventNode rootNode;
-    public NightEventNode success;
-    public NightEventNode fail;
-}
-
-public class NightRobberyData
-{
-    private EventStatus eventStatus;
-    private Robbery robbery;
-
-    public NightEvent nightEvent;
-
-    private int money;
-    private Dictionary<int, int> awards;
-
-    private float chance;
-    private float hospitalChance;
-    private float policeChance;
-    private int healthAffect;
-    private int policeKnowledge;
-
-    public EventStatus Status { get { return eventStatus; } }
-    public Robbery Robbery { get { return robbery; } }
-
-    public int Money { get { return money; } }
-    public Dictionary<int, int> Awards { get { return awards; } }
-
-    public float Chance { get { return chance; } }
-
-    //Constructor
-    public NightRobberyData(Robbery robbery)
-    {
-        this.robbery = robbery;
-        nightEvent = NightEventsOptions.GetRandomEvent(robbery.RobberyType);
-        chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
-        policeChance = UnityEngine.Random.Range(0, 51);
-        hospitalChance = UnityEngine.Random.Range(0, 51);
-        money = RobberiesOptions.GetRobberyMoneyRewardAtTheCurrentMoment(robbery.RobberyType);
-        awards = RobberiesOptions.GetRobberyAwardsAtTheCurrentMoment(robbery.RobberyType);
-        policeKnowledge = 1;
+    public enum SpriteType {
+        characters,
+        items,
+        robberies,
+        people,
+        places
     }
 
-    public void ApplyChoice(NightEventButtonDetails buttonDetails)
-    {
-        chance += buttonDetails.effect;
-        hospitalChance += buttonDetails.hospitalEffect;
-        policeChance += buttonDetails.policeEffect;
-        policeKnowledge += buttonDetails.policeKnowledge;
-        money += buttonDetails.money;
-        healthAffect += buttonDetails.healthAffect;
+    public enum CharacterSpriteType {
+        comMale,
+        comFemale,
+        special
+    }
 
-        if (buttonDetails.awards != null)
-            foreach (int bKey in buttonDetails.awards.Keys)
-            {
-                if (awards.ContainsKey(bKey)) awards[bKey] += buttonDetails.awards[bKey];
-                else awards.Add(bKey, buttonDetails.awards[bKey]);
+    public enum EventStatus {
+        success,
+        fail,
+        inProgress
+    }
+
+    public class NightEventButtonDetails {
+        public string buttonText;
+        public NightEventNode nextEventNode;
+        public int effect;
+        public int policeEffect;
+        public int hospitalEffect;
+        public int healthAffect;
+        public int policeKnowledge;
+        public Dictionary<int, int> awards;
+        public int money;
+    }
+
+    public class NightEventNode {
+        public string titleText;
+        public string description;
+        public SpriteType spriteType;
+        public CharacterSpriteType charSpriteType;
+        public int spriteId;
+        public List<NightEventButtonDetails> buttons;
+    }
+
+    public class NightEvent {
+        public NightEventNode rootNode;
+        public NightEventNode success;
+        public NightEventNode fail;
+    }
+
+    public class NightRobberyData {
+        private EventStatus eventStatus;
+        private Robbery robbery;
+
+        public NightEvent nightEvent;
+
+        private int money;
+        private Dictionary<int, int> awards;
+
+        private float chance;
+        private float hospitalChance;
+        private float policeChance;
+        private int healthAffect;
+        private int policeKnowledge;
+
+        public EventStatus Status {
+            get {
+                return eventStatus;
             }
-    }
+        }
 
-    public void SetAsSuccesfull()
-    {
-        eventStatus = EventStatus.success;
-    }
+        public Robbery Robbery {
+            get {
+                return robbery;
+            }
+        }
 
-    public void SetAsFailed()
-    {
-        eventStatus = EventStatus.fail;
-    }
-}
+        public int Money {
+            get {
+                return money;
+            }
+        }
 
-public class NightEventsOptions : MonoBehaviour
-{
-    public Sprite[] placesSprites = new Sprite[5];
-    public Sprite[] peopleSprites = new Sprite[10];
+        public Dictionary<int, int> Awards {
+            get {
+                return awards;
+            }
+        }
 
-    private static TextAsset nightEventsCollectionDataXml;
-    private static XmlDocument xmlDoc;
-    private static Dictionary<RobberyType, List<int>> usedEvents;
+        public float Chance {
+            get {
+                return chance;
+            }
+        }
 
-    public static Sprite GetNightEventSprite(SpriteType spriteType, int spriteId, CharacterSpriteType charSpriteType = 0)
-    {
-        switch (spriteType)
-        {
-            case SpriteType.characters:
-                switch (charSpriteType)
-                {
-                    case CharacterSpriteType.comMale:
-                        return WM1.charactersOptions.ComMaleSprites[spriteId];
-                    case CharacterSpriteType.comFemale:
-                        return WM1.charactersOptions.ComFemaleSprites[spriteId];
-                    case CharacterSpriteType.special:
-                        return WM1.charactersOptions.SpecialSprites[spriteId];
-                    default:
-                        return null;
+        //Constructor
+        public NightRobberyData(Robbery robbery) {
+            this.robbery = robbery;
+            nightEvent = NightEventsOptions.GetRandomEvent(robbery.RobberyType);
+            chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
+            policeChance = UnityEngine.Random.Range(0, 51);
+            hospitalChance = UnityEngine.Random.Range(0, 51);
+            money = RobberiesOptions.GetRobberyMoneyRewardAtTheCurrentMoment(robbery.RobberyType);
+            awards = RobberiesOptions.GetRobberyAwardsAtTheCurrentMoment(robbery.RobberyType);
+            policeKnowledge = 1;
+        }
+
+        public void ApplyChoice(NightEventButtonDetails buttonDetails) {
+            chance += buttonDetails.effect;
+            hospitalChance += buttonDetails.hospitalEffect;
+            policeChance += buttonDetails.policeEffect;
+            policeKnowledge += buttonDetails.policeKnowledge;
+            money += buttonDetails.money;
+            healthAffect += buttonDetails.healthAffect;
+
+            if (buttonDetails.awards != null)
+                foreach (int bKey in buttonDetails.awards.Keys) {
+                    if (awards.ContainsKey(bKey))
+                        awards[bKey] += buttonDetails.awards[bKey];
+                    else
+                        awards.Add(bKey, buttonDetails.awards[bKey]);
                 }
-            case SpriteType.items:
-                return WM1.itemsOptions.itemsSprites[spriteId];
-            case SpriteType.robberies:
-                return WM1.robberiesOptions.RobberySprites[spriteId];
-            case SpriteType.people:
-                return WM1.nightEventsOptions.peopleSprites[spriteId];
-            case SpriteType.places:
-                return WM1.nightEventsOptions.placesSprites[spriteId];
-            default:
-                return null;
+        }
+
+        public void SetAsSuccesfull() {
+            eventStatus = EventStatus.success;
+        }
+
+        public void SetAsFailed() {
+            eventStatus = EventStatus.fail;
         }
     }
 
-    public int GetCharacterSpriteId(RobberyType robberyType, int locationNum)
-    {
-        return 0;
-    }
+    public class NightEventsOptions : MonoBehaviour {
+        public Sprite[] placesSprites = new Sprite[5];
+        public Sprite[] peopleSprites = new Sprite[10];
 
-    public static NightEvent GetRandomEvent(RobberyType robberyType)
-    {
-        NightEvent nightEvent = new NightEvent();
-        if (xmlDoc == null) GetNightEventsCollectionData();
-        XmlNode eventsOfNeededType = xmlDoc.SelectSingleNode("./eventsCollection/robbery[@type='" + robberyType.ToString("d") + "']");
+        private static TextAsset nightEventsCollectionDataXml;
+        private static XmlDocument xmlDoc;
+        private static Dictionary<RobberyType, List<int>> usedEvents;
 
-        int eventsCount = eventsOfNeededType.ChildNodes.Count;
-        int rndEventNum = UnityEngine.Random.Range(0, eventsCount);
-
-        //Avoid repetitions while it is possible
-        if (usedEvents.ContainsKey(robberyType))
-        {
-            if (usedEvents[robberyType].Count < eventsCount)
-                while (usedEvents[robberyType].Contains(rndEventNum))
-                {
-                    rndEventNum++;
-                    if (rndEventNum >= eventsCount) rndEventNum = 0;
-                }
-            usedEvents[robberyType].Add(rndEventNum);
-        }
-        else
-        {
-            usedEvents.Add(robberyType, new List<int> { rndEventNum });
-        }
-
-        XmlNode eventRootNode = eventsOfNeededType.SelectSingleNode("./event[@id='" + rndEventNum.ToString() + "']");
-
-        try
-        {
-            if (eventRootNode.SelectSingleNode("./node") != null) nightEvent.rootNode = ParseEventRandomTree(eventRootNode.SelectSingleNode("./node"), robberyType);
-            nightEvent.success = ParseEventRandomTree(eventRootNode.SelectSingleNode("./success"), robberyType);
-            nightEvent.fail = ParseEventRandomTree(eventRootNode.SelectSingleNode("./fail"), robberyType);
-        }
-        catch(FormatException)
-        {
-            Debug.LogWarning("Ошибка в XML-файле. RobberyType: " + robberyType + ", eventNum: " + rndEventNum);
-            nightEvent = GetRandomEvent(robberyType);
-        }
-        catch(ArgumentException)
-        {
-            Debug.LogWarning("Ошибка в XML-файле. RobberyType: " + robberyType + ", eventNum: " + rndEventNum);
-            nightEvent = GetRandomEvent(robberyType);
-        }
-        return nightEvent;
-    }
-
-    /// <summary>Get night event tree with random nodes from "NightEventsCollectionData.xml"</summary>
-    /// <param name="eventNode">A root node of event in "NightEventsCollectionData.xml"</param>
-    public static NightEventNode ParseEventRandomTree(XmlNode eventNode, RobberyType robberyType)
-    {
-        NightEventNode nightEvent = new NightEventNode();
-        foreach (XmlNode info in eventNode)
-        {
-            //Debug.Log(info.Name + " " + info.InnerText);
-            nightEvent.titleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
-            if (info.Name == "text") nightEvent.description = info.InnerText;
-            if (info.Name == "sprite")
-                foreach (XmlNode spriteInfo in info)
-                {
-                    if (spriteInfo.Name == "spriteType")
-                    {
-                        SpriteType sType = (SpriteType)Enum.Parse(typeof(SpriteType), spriteInfo.InnerText);
-                        if (Enum.IsDefined(typeof(SpriteType), sType))
-                            nightEvent.spriteType = sType;
-                        else Debug.LogError("No \"" + sType + "\" sprite type exists! Check NightEventsCollectionData.xml or SpriteType enum");
-                    };
-                    if (spriteInfo.Name == "spriteId") nightEvent.spriteId = int.Parse(spriteInfo.InnerText);
-                }
-            if (info.Name == "button")
-            {
-                if (nightEvent.buttons == null) nightEvent.buttons = new List<NightEventButtonDetails>();
-                NightEventButtonDetails button = new NightEventButtonDetails();
-                foreach (XmlNode buttonInfo in info)
-                {
-                    if (buttonInfo.Name == "text") button.buttonText = buttonInfo.InnerText;
-                    if (buttonInfo.Name == "effect") button.effect = int.Parse(buttonInfo.InnerText);
-                    if (buttonInfo.Name == "policeEffect") button.policeEffect = int.Parse(buttonInfo.InnerText);
-                    if (buttonInfo.Name == "hospitalEffect") button.hospitalEffect = int.Parse(buttonInfo.InnerText);
-                    if (buttonInfo.Name == "healthAffect") button.healthAffect = int.Parse(buttonInfo.InnerText);
-                    if (buttonInfo.Name == "policeKnowledge") button.policeKnowledge = int.Parse(buttonInfo.InnerText);
-                    if (buttonInfo.Name == "award")
-                    {
-                        int itemId;
-                        if (int.TryParse(buttonInfo.Attributes["itemId"].Value, out itemId))
-                        {
-                            if (button.awards == null) button.awards = new Dictionary<int, int>();
-                            {
-                                if (!button.awards.ContainsKey(itemId))
-                                    button.awards.Add(itemId, int.Parse(buttonInfo.InnerText));
-                                else button.awards[itemId] += int.Parse(buttonInfo.InnerText);
-                            };
-                        }
+        public static Sprite GetNightEventSprite(SpriteType spriteType, int spriteId, CharacterSpriteType charSpriteType = 0) {
+            switch (spriteType) {
+                case SpriteType.characters:
+                    switch (charSpriteType) {
+                        case CharacterSpriteType.comMale:
+                            return WM1.charactersOptions.ComMaleSprites[spriteId];
+                        case CharacterSpriteType.comFemale:
+                            return WM1.charactersOptions.ComFemaleSprites[spriteId];
+                        case CharacterSpriteType.special:
+                            return WM1.charactersOptions.SpecialSprites[spriteId];
+                        default:
+                            return null;
                     }
-                    if (buttonInfo.Name == "money") button.money = int.Parse(buttonInfo.InnerText);
-                }
-                if (info.SelectSingleNode("./node") != null) //is button contains next nodes
-                {
-                    Debug.Log("COUNT: " + info.SelectNodes("./node").Count);
-                    button.nextEventNode = ParseEventRandomTree(info.SelectNodes("./node")[UnityEngine.Random.Range(0, info.SelectNodes("./node").Count)], robberyType); //Recursion
-                }
-                nightEvent.buttons.Add(button);
-            };
-        }
-        return nightEvent;
-    }
-
-    public static void GetNightEventsCollectionData()
-    {
-        if (xmlDoc == null)
-        {
-            nightEventsCollectionDataXml = Resources.Load("NightEventsCollectionData") as TextAsset;
-            if (nightEventsCollectionDataXml)
-            {
-                xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(nightEventsCollectionDataXml.text);
-                usedEvents = new Dictionary<RobberyType, List<int>>();
+                case SpriteType.items:
+                    return WM1.itemsOptions.itemsSprites[spriteId];
+                case SpriteType.robberies:
+                    return WM1.robberiesOptions.RobberySprites[spriteId];
+                case SpriteType.people:
+                    return WM1.nightEventsOptions.peopleSprites[spriteId];
+                case SpriteType.places:
+                    return WM1.nightEventsOptions.placesSprites[spriteId];
+                default:
+                    return null;
             }
-            else Debug.LogError("Ошибка загрузки XML файла с данными о ночных событиях!");
+        }
+
+        public int GetCharacterSpriteId(RobberyType robberyType, int locationNum) {
+            return 0;
+        }
+
+        public static NightEvent GetRandomEvent(RobberyType robberyType) {
+            NightEvent nightEvent = new NightEvent();
+            if (xmlDoc == null)
+                GetNightEventsCollectionData();
+            XmlNode eventsOfNeededType = xmlDoc.SelectSingleNode("./eventsCollection/robbery[@type='" + robberyType.ToString("d") + "']");
+
+            int eventsCount = eventsOfNeededType.ChildNodes.Count;
+            int rndEventNum = UnityEngine.Random.Range(0, eventsCount);
+
+            //Avoid repetitions while it is possible
+            if (usedEvents.ContainsKey(robberyType)) {
+                if (usedEvents[robberyType].Count < eventsCount)
+                    while (usedEvents[robberyType].Contains(rndEventNum)) {
+                        rndEventNum++;
+                        if (rndEventNum >= eventsCount)
+                            rndEventNum = 0;
+                    }
+                usedEvents[robberyType].Add(rndEventNum);
+            } else {
+                usedEvents.Add(robberyType, new List<int> {rndEventNum});
+            }
+
+            XmlNode eventRootNode = eventsOfNeededType.SelectSingleNode("./event[@id='" + rndEventNum.ToString() + "']");
+
+            try {
+                if (eventRootNode.SelectSingleNode("./node") != null)
+                    nightEvent.rootNode = ParseEventRandomTree(eventRootNode.SelectSingleNode("./node"), robberyType);
+                nightEvent.success = ParseEventRandomTree(eventRootNode.SelectSingleNode("./success"), robberyType);
+                nightEvent.fail = ParseEventRandomTree(eventRootNode.SelectSingleNode("./fail"), robberyType);
+            } catch (FormatException) {
+                Debug.LogWarning("Ошибка в XML-файле. RobberyType: " + robberyType + ", eventNum: " + rndEventNum);
+                nightEvent = GetRandomEvent(robberyType);
+            } catch (ArgumentException) {
+                Debug.LogWarning("Ошибка в XML-файле. RobberyType: " + robberyType + ", eventNum: " + rndEventNum);
+                nightEvent = GetRandomEvent(robberyType);
+            }
+            return nightEvent;
+        }
+
+        /// <summary>Get night event tree with random nodes from "NightEventsCollectionData.xml"</summary>
+        /// <param name="eventNode">A root node of event in "NightEventsCollectionData.xml"</param>
+        public static NightEventNode ParseEventRandomTree(XmlNode eventNode, RobberyType robberyType) {
+            NightEventNode nightEvent = new NightEventNode();
+            foreach (XmlNode info in eventNode) {
+                //Debug.Log(info.Name + " " + info.InnerText);
+                nightEvent.titleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
+                if (info.Name == "text")
+                    nightEvent.description = info.InnerText;
+                if (info.Name == "sprite")
+                    foreach (XmlNode spriteInfo in info) {
+                        if (spriteInfo.Name == "spriteType") {
+                            SpriteType sType = (SpriteType) Enum.Parse(typeof(SpriteType), spriteInfo.InnerText);
+                            if (Enum.IsDefined(typeof(SpriteType), sType))
+                                nightEvent.spriteType = sType;
+                            else
+                                Debug.LogError("No \"" + sType + "\" sprite type exists! Check NightEventsCollectionData.xml or SpriteType enum");
+                        }
+                        ;
+                        if (spriteInfo.Name == "spriteId")
+                            nightEvent.spriteId = int.Parse(spriteInfo.InnerText);
+                    }
+                if (info.Name == "button") {
+                    if (nightEvent.buttons == null)
+                        nightEvent.buttons = new List<NightEventButtonDetails>();
+                    NightEventButtonDetails button = new NightEventButtonDetails();
+                    foreach (XmlNode buttonInfo in info) {
+                        if (buttonInfo.Name == "text")
+                            button.buttonText = buttonInfo.InnerText;
+                        if (buttonInfo.Name == "effect")
+                            button.effect = int.Parse(buttonInfo.InnerText);
+                        if (buttonInfo.Name == "policeEffect")
+                            button.policeEffect = int.Parse(buttonInfo.InnerText);
+                        if (buttonInfo.Name == "hospitalEffect")
+                            button.hospitalEffect = int.Parse(buttonInfo.InnerText);
+                        if (buttonInfo.Name == "healthAffect")
+                            button.healthAffect = int.Parse(buttonInfo.InnerText);
+                        if (buttonInfo.Name == "policeKnowledge")
+                            button.policeKnowledge = int.Parse(buttonInfo.InnerText);
+                        if (buttonInfo.Name == "award") {
+                            int itemId;
+                            if (int.TryParse(buttonInfo.Attributes["itemId"].Value, out itemId)) {
+                                if (button.awards == null)
+                                    button.awards = new Dictionary<int, int>();
+                                {
+                                    if (!button.awards.ContainsKey(itemId))
+                                        button.awards.Add(itemId, int.Parse(buttonInfo.InnerText));
+                                    else
+                                        button.awards[itemId] += int.Parse(buttonInfo.InnerText);
+                                }
+                                ;
+                            }
+                        }
+                        if (buttonInfo.Name == "money")
+                            button.money = int.Parse(buttonInfo.InnerText);
+                    }
+                    if (info.SelectSingleNode("./node") != null) //is button contains next nodes
+                    {
+                        Debug.Log("COUNT: " + info.SelectNodes("./node").Count);
+                        button.nextEventNode = ParseEventRandomTree(info.SelectNodes("./node")[UnityEngine.Random.Range(0, info.SelectNodes("./node").Count)], robberyType); //Recursion
+                    }
+                    nightEvent.buttons.Add(button);
+                }
+                ;
+            }
+            return nightEvent;
+        }
+
+        public static void GetNightEventsCollectionData() {
+            if (xmlDoc == null) {
+                nightEventsCollectionDataXml = Resources.Load("NightEventsCollectionData") as TextAsset;
+                if (nightEventsCollectionDataXml) {
+                    xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(nightEventsCollectionDataXml.text);
+                    usedEvents = new Dictionary<RobberyType, List<int>>();
+                } else
+                    Debug.LogError("Ошибка загрузки XML файла с данными о ночных событиях!");
+            }
+        }
+
+        public static void ClearUsedEvents() {
+            usedEvents.Clear();
         }
     }
 
-    public static void ClearUsedEvents()
-    {
-        usedEvents.Clear();
-    }
 }

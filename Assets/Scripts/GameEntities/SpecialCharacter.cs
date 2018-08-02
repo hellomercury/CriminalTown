@@ -3,43 +3,47 @@ using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using UnityEngine;
 
-[System.Serializable]
-public class SpecialCharacter : Character {
-    //todo: Implement nice way to store special character data
+namespace CriminalTown {
 
-    private readonly List<int> m_traitIds;
+    [System.Serializable]
+    public class SpecialCharacter : Character {
+        //todo: Implement nice way to store special character data
 
-    
-    public override string Name {
-        get {
-            return CharactersOptions.GetSpecialName(0, NameId);
-        }
-    }
+        private readonly List<int> m_traitIds;
 
-    public override string History {
-        get {
-            return CharactersOptions.GetSpecialHistory(0, HistoryId);
-        }
-    }
 
-    public override Sprite Sprite {
-        get {
-            return CharactersOptions.GetSpecialSprite(SpriteId);
-        }
-    }
-
-    public ReadOnlyCollection<Trait> Traits {
-        get {
-            List<Trait> traits = new List<Trait>();
-            for (int i = 0; i < m_traitIds.Count; i++) {
-                traits.Add(TraitsOptions.GetTrait(m_traitIds[i]));
+        public override string Name {
+            get {
+                return CharactersOptions.GetSpecialName(0, NameId);
             }
-            return traits.AsReadOnly();
         }
-    }
 
-    public SpecialCharacter(CharacterStats characterStats, Sex sex, int level, int spriteId, int nameId, int historyId, [CanBeNull] List<int> traitIds) : base(characterStats, sex, level, spriteId, nameId, historyId) {
-        m_traitIds = traitIds ?? new List<int>();
+        public override string History {
+            get {
+                return CharactersOptions.GetSpecialHistory(0, HistoryId);
+            }
+        }
+
+        public override Sprite Sprite {
+            get {
+                return CharactersOptions.GetSpecialSprite(SpriteId);
+            }
+        }
+
+        public ReadOnlyCollection<Trait> Traits {
+            get {
+                List<Trait> traits = new List<Trait>();
+                for (int i = 0; i < m_traitIds.Count; i++) {
+                    traits.Add(TraitsOptions.GetTrait(m_traitIds[i]));
+                }
+                return traits.AsReadOnly();
+            }
+        }
+
+        public SpecialCharacter(CharacterStats characterStats, Sex sex, int level, int spriteId, int nameId, int historyId, [CanBeNull] List<int> traitIds) : base(characterStats, sex, level, spriteId, nameId, historyId) {
+            m_traitIds = traitIds ?? new List<int>();
+        }
+
     }
 
 }

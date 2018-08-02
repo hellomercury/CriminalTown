@@ -4,218 +4,222 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class NightEventArgs : EventArgs {
-    private Character m_character;
+namespace CriminalTown {
 
-    public Character Character {
-        get {
-            return m_character;
-        }
-    }
-}
+    public class NightEventArgs : EventArgs {
+        private Character m_character;
 
-public class Night : MonoBehaviour {
-    private static Night m_instance;
-
-    private bool m_isNight;
-    private List<NightRobberyData> m_robberies;
-    private int m_currentEventNum;
-    //todo Разобраться со временем каждого ивента
-    private float eventTime = 4;
-
-    public static Night Instance {
-        get {
-            if (m_instance == null) {
-                m_instance = FindObjectOfType<Night>();
+        public Character Character {
+            get {
+                return m_character;
             }
-            return m_instance;
         }
     }
 
-    public bool IsNight {
-        get {
-            return m_isNight;
-        }
-    }
+    public class Night : MonoBehaviour {
+        private static Night m_instance;
 
-    private void Awake() {
-        m_instance = this;
-    }
+        private bool m_isNight;
+        private List<NightRobberyData> m_robberies;
+        private int m_currentEventNum;
+        //todo Разобраться со временем каждого ивента
+        private float eventTime = 4;
 
-    public delegate void NightEvent(); //NightEventArgs nightEventArgs);
-
-    public NightEvent OnNightBegan;
-    public NightEvent OnNightEnded;
-
-    public void TryToStartNight() {
-        foreach (Character character in DataScript.ChData.PanelCharacters) {
-            if (character.Status == CharacterStatus.Arrested)
-                if (character.DaysLeft < 2) {
-                    EventButtonDetails yesButton = new EventButtonDetails {
-                        buttonText = "Да",
-                        action = StartNight
-                    };
-                    EventButtonDetails noButton = new EventButtonDetails {
-                        buttonText = "Нет",
-                        action = WM1.modalPanel.ClosePanel
-                    };
-                    ModalPanelDetails details = new ModalPanelDetails {
-                        button0Details = yesButton,
-                        button1Details = noButton,
-                        imageSprite = character.Sprite,
-                        text = "Этот персонаж скоро нас сдаст. Босс, ты уверен, что стоит оставить его в грязных руках копов?",
-                        titletext = character.Name
-                    };
-                    WM1.modalPanel.CallModalPanel(details);
-                    return;
+        public static Night Instance {
+            get {
+                if (m_instance == null) {
+                    m_instance = FindObjectOfType<Night>();
                 }
-        }
-        StartNight();
-    }
-
-    private void StartNight() {
-        m_isNight = true;
-        OnNightBegan();
-        Debug.Log("Night began");
-        UpdateDataAfterDay();
-        PrepareEvents();
-        StartCoroutine(NightEvents());
-    }
-
-    private IEnumerator NightEvents() {
-        while (GetEventNum(out m_currentEventNum)) {
-            Debug.Log("Call robbery event: " + m_currentEventNum);
-            NightRobberyData rob = m_robberies[m_currentEventNum];
-
-            if (rob.nightEvent.rootNode != null) {
-                RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                    () => { WM1.nightEventWindow.ShowChoice(rob.nightEvent.rootNode); }, EventStatus.inProgress, eventTime);
-                yield return new WaitForSeconds(eventTime);
-                if (NightEventWindow.Choice == -1) {
-                    WM1.nightEventWindow.CloseWindow();
-                    MakeChoice(Random.Range(0, rob.nightEvent.rootNode.buttons.Count));
-                }
-                RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
-                ApplyChangesAfterChoice(m_currentEventNum);
-
-                if (rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode != null)
-                    rob.nightEvent.rootNode = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode;
-                else
-                    rob.nightEvent.rootNode = null;
-            } else {
-                switch (GetResult(m_currentEventNum)) {
-                    case false:
-                        RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                            () => { WM1.nightEventWindow.ShowFail(rob.nightEvent.fail); }, EventStatus.fail, eventTime);
-
-                        yield return new WaitForSeconds(eventTime);
-                        if (NightEventWindow.Choice == -1) {
-                            WM1.nightEventWindow.CloseWindow();
-                            MakeChoice(0);
-                        }
-                        RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
-                        rob.SetAsFailed();
-                        break;
-                    case true:
-                        RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                            () => { WM1.nightEventWindow.ShowSuccess(rob.nightEvent.success, rob.Awards, rob.Money); }, EventStatus.success, eventTime);
-
-                        yield return new WaitForSeconds(eventTime);
-                        if (NightEventWindow.Choice == -1) {
-                            MakeChoice(0);
-                            WM1.nightEventWindow.CloseWindow();
-                        }
-                        RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
-                        rob.SetAsSuccesfull();
-                        break;
-                }
-                rob.nightEvent = null;
+                return m_instance;
             }
         }
 
-        UpdateDataAfterNight();
-        FinishNight();
-    }
-
-    private void FinishNight() {
-        WM1.nightResumeWindow.SetActive(true);
-        m_isNight = false;
-        OnNightEnded();
-    }
-
-    private bool GetEventNum(out int eventNum) {
-        Debug.Log("robberies count: " + m_robberies.Count);
-        if (m_robberies.Count == 0) {
-            eventNum = -1;
-            return false;
+        public bool IsNight {
+            get {
+                return m_isNight;
+            }
         }
 
-        int rndEventNum = Random.Range(0, m_robberies.Count);
+        private void Awake() {
+            m_instance = this;
+        }
 
-        for (int i = 0; m_robberies[rndEventNum].nightEvent == null; i++) {
-            if (i > m_robberies.Count) {
-                Debug.Log("No more events");
+        public delegate void NightEvent(); //NightEventArgs nightEventArgs);
+
+        public NightEvent OnNightBegan;
+        public NightEvent OnNightEnded;
+
+        public void TryToStartNight() {
+            foreach (Character character in DataScript.ChData.PanelCharacters) {
+                if (character.Status == CharacterStatus.Arrested)
+                    if (character.DaysLeft < 2) {
+                        EventButtonDetails yesButton = new EventButtonDetails {
+                            buttonText = "Да",
+                            action = StartNight
+                        };
+                        EventButtonDetails noButton = new EventButtonDetails {
+                            buttonText = "Нет",
+                            action = WM1.modalPanel.ClosePanel
+                        };
+                        ModalPanelDetails details = new ModalPanelDetails {
+                            button0Details = yesButton,
+                            button1Details = noButton,
+                            imageSprite = character.Sprite,
+                            text = "Этот персонаж скоро нас сдаст. Босс, ты уверен, что стоит оставить его в грязных руках копов?",
+                            titletext = character.Name
+                        };
+                        WM1.modalPanel.CallModalPanel(details);
+                        return;
+                    }
+            }
+            StartNight();
+        }
+
+        private void StartNight() {
+            m_isNight = true;
+            OnNightBegan();
+            Debug.Log("Night began");
+            UpdateDataAfterDay();
+            PrepareEvents();
+            StartCoroutine(NightEvents());
+        }
+
+        private IEnumerator NightEvents() {
+            while (GetEventNum(out m_currentEventNum)) {
+                Debug.Log("Call robbery event: " + m_currentEventNum);
+                NightRobberyData rob = m_robberies[m_currentEventNum];
+
+                if (rob.nightEvent.rootNode != null) {
+                    RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
+                        () => { WM1.nightEventWindow.ShowChoice(rob.nightEvent.rootNode); }, EventStatus.inProgress, eventTime);
+                    yield return new WaitForSeconds(eventTime);
+                    if (NightEventWindow.Choice == -1) {
+                        WM1.nightEventWindow.CloseWindow();
+                        MakeChoice(Random.Range(0, rob.nightEvent.rootNode.buttons.Count));
+                    }
+                    RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
+                    ApplyChangesAfterChoice(m_currentEventNum);
+
+                    if (rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode != null)
+                        rob.nightEvent.rootNode = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode;
+                    else
+                        rob.nightEvent.rootNode = null;
+                } else {
+                    switch (GetResult(m_currentEventNum)) {
+                        case false:
+                            RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
+                                () => { WM1.nightEventWindow.ShowFail(rob.nightEvent.fail); }, EventStatus.fail, eventTime);
+
+                            yield return new WaitForSeconds(eventTime);
+                            if (NightEventWindow.Choice == -1) {
+                                WM1.nightEventWindow.CloseWindow();
+                                MakeChoice(0);
+                            }
+                            RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
+                            rob.SetAsFailed();
+                            break;
+                        case true:
+                            RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
+                                () => { WM1.nightEventWindow.ShowSuccess(rob.nightEvent.success, rob.Awards, rob.Money); }, EventStatus.success, eventTime);
+
+                            yield return new WaitForSeconds(eventTime);
+                            if (NightEventWindow.Choice == -1) {
+                                MakeChoice(0);
+                                WM1.nightEventWindow.CloseWindow();
+                            }
+                            RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
+                            rob.SetAsSuccesfull();
+                            break;
+                    }
+                    rob.nightEvent = null;
+                }
+            }
+
+            UpdateDataAfterNight();
+            FinishNight();
+        }
+
+        private void FinishNight() {
+            WM1.nightResumeWindow.SetActive(true);
+            m_isNight = false;
+            OnNightEnded();
+        }
+
+        private bool GetEventNum(out int eventNum) {
+            Debug.Log("robberies count: " + m_robberies.Count);
+            if (m_robberies.Count == 0) {
                 eventNum = -1;
                 return false;
             }
-            rndEventNum++;
-            if (rndEventNum >= m_robberies.Count)
-                rndEventNum = 0;
-        }
 
-        eventNum = rndEventNum;
-        return true;
-    }
+            int rndEventNum = Random.Range(0, m_robberies.Count);
 
-    private bool GetResult(int eventNum) {
-        return (Random.Range(0f, 1f) < m_robberies[eventNum].Chance);
-    }
-
-    public void MakeChoice(int choiceNum) {
-        NightEventWindow.Choice = choiceNum;
-        RobberyManager.RmInstance.ResetNightEvent(m_robberies[m_currentEventNum].Robbery.RobberyType,
-            m_robberies[m_currentEventNum].Robbery.LocationNum);
-    }
-
-    private void ApplyChangesAfterChoice(int eventNum) {
-        NightRobberyData rob = m_robberies[eventNum];
-        NightEventButtonDetails bd = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice];
-        rob.ApplyChoice(bd);
-    }
-
-    private void PrepareEvents() {
-        m_robberies = new List<NightRobberyData>();
-
-        foreach (Dictionary<int, Robbery> robberyType in DataScript.EData.RobberiesData.Values)
-            foreach (Robbery robbery in robberyType.Values)
-                if (!robbery.IsRobberyEmpty())
-                    m_robberies.Add(new NightRobberyData(robbery));
-    }
-
-    private void UpdateDataAfterDay() {
-        foreach (Character character in DataScript.ChData.PanelCharacters) {
-            //high: Implement!!!
-            //character.LiveOneDay();
-        }
-    }
-
-    private void UpdateDataAfterNight() {
-        foreach (NightRobberyData nightRobDat in m_robberies) {
-            DataScript.EData.PoliceKnowledge++;
-            DataScript.SData.Money += nightRobDat.Money;
-            foreach (int itemNum in nightRobDat.Awards.Keys)
-                DataScript.SData.ItemsCount[itemNum] += nightRobDat.Awards[itemNum];
-
-            foreach (Character character in nightRobDat.Robbery.Characters) {
-                if (character.Stats.Health <= 0) {
-                    character.AddToHospital();
+            for (int i = 0; m_robberies[rndEventNum].nightEvent == null; i++) {
+                if (i > m_robberies.Count) {
+                    Debug.Log("No more events");
+                    eventNum = -1;
+                    return false;
                 }
-                character.SetDefaultStatus();
+                rndEventNum++;
+                if (rndEventNum >= m_robberies.Count)
+                    rndEventNum = 0;
             }
-            WM1.robberyWindow.RemoveAllItemsFromRoobbery(nightRobDat.Robbery.RobberyType, nightRobDat.Robbery.LocationNum);
+
+            eventNum = rndEventNum;
+            return true;
         }
-        m_robberies.Clear();
-        NightEventsOptions.ClearUsedEvents();
-        RobberiesOptions.GetNewRobberies();
+
+        private bool GetResult(int eventNum) {
+            return (Random.Range(0f, 1f) < m_robberies[eventNum].Chance);
+        }
+
+        public void MakeChoice(int choiceNum) {
+            NightEventWindow.Choice = choiceNum;
+            RobberyManager.RmInstance.ResetNightEvent(m_robberies[m_currentEventNum].Robbery.RobberyType,
+                m_robberies[m_currentEventNum].Robbery.LocationNum);
+        }
+
+        private void ApplyChangesAfterChoice(int eventNum) {
+            NightRobberyData rob = m_robberies[eventNum];
+            NightEventButtonDetails bd = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice];
+            rob.ApplyChoice(bd);
+        }
+
+        private void PrepareEvents() {
+            m_robberies = new List<NightRobberyData>();
+
+            foreach (Dictionary<int, Robbery> robberyType in DataScript.EData.RobberiesData.Values)
+                foreach (Robbery robbery in robberyType.Values)
+                    if (!robbery.IsRobberyEmpty())
+                        m_robberies.Add(new NightRobberyData(robbery));
+        }
+
+        private void UpdateDataAfterDay() {
+            foreach (Character character in DataScript.ChData.PanelCharacters) {
+                //high: Implement!!!
+                //character.LiveOneDay();
+            }
+        }
+
+        private void UpdateDataAfterNight() {
+            foreach (NightRobberyData nightRobDat in m_robberies) {
+                DataScript.EData.PoliceKnowledge++;
+                DataScript.SData.Money += nightRobDat.Money;
+                foreach (int itemNum in nightRobDat.Awards.Keys)
+                    DataScript.SData.ItemsCount[itemNum] += nightRobDat.Awards[itemNum];
+
+                foreach (Character character in nightRobDat.Robbery.Characters) {
+                    if (character.Stats.Health <= 0) {
+                        character.AddToHospital();
+                    }
+                    character.SetDefaultStatus();
+                }
+                WM1.robberyWindow.RemoveAllItemsFromRoobbery(nightRobDat.Robbery.RobberyType, nightRobDat.Robbery.LocationNum);
+            }
+            m_robberies.Clear();
+            NightEventsOptions.ClearUsedEvents();
+            RobberiesOptions.GetNewRobberies();
+        }
     }
+
 }

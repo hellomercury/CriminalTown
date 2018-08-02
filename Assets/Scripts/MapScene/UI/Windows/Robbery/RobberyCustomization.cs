@@ -5,87 +5,88 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 
+namespace CriminalTown {
 
-public class RobberyCustomization : MonoBehaviour
-{
-    #region References
-    public Image nightEvent;
-    public Button nightEventButton;
-    public Slider timerSlider;
-    public Transform counter;
-    public GameObject charCounterIconPrefab;
-    #endregion
+    public class RobberyCustomization : MonoBehaviour {
 
-    private List<GameObject> charCounterIcons = new List<GameObject>();
+        #region References
 
-    private Robbery robbery;
-    public RobberyType robberyType;
-    public int number;
-    public bool isAvailable;
+        public Image nightEvent;
+        public Button nightEventButton;
+        public Slider timerSlider;
+        public Transform counter;
+        public GameObject charCounterIconPrefab;
+
+        #endregion
+
+        private List<GameObject> charCounterIcons = new List<GameObject>();
+
+        private Robbery robbery;
+        public RobberyType robberyType;
+        public int number;
+        public bool isAvailable;
 
 
-    public void CounterMinus() { Destroy(charCounterIcons[0].gameObject); charCounterIcons.RemoveAt(0); }
+        public void CounterMinus() {
+            Destroy(charCounterIcons[0].gameObject);
+            charCounterIcons.RemoveAt(0);
+        }
 
-    public void CounterPlus() { charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter)); }
+        public void CounterPlus() {
+            charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
+        }
 
-    public void OnClick()
-    {
-        WM1.robberyWindow.SetRobberyWindow(robberyType, number);
-    }
+        public void OnClick() {
+            WM1.robberyWindow.SetRobberyWindow(robberyType, number);
+        }
 
-    public void CustomizeRobbery(int num, RobberyType robType)
-    {
-        number = num;
-        robberyType = robType;
-        robbery = DataScript.EData.RobberiesData[robType][number];
-        SetCounter();
-    }
+        public void CustomizeRobbery(int num, RobberyType robType) {
+            number = num;
+            robberyType = robType;
+            robbery = DataScript.EData.RobberiesData[robType][number];
+            SetCounter();
+        }
 
-    private void SetCounter()
-    {
-        if (robbery.IsRobberyEmpty() == false)
-        {
-            for (int i = 0; i < robbery.Characters.Count; i++)
-                charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
+        private void SetCounter() {
+            if (robbery.IsRobberyEmpty() == false) {
+                for (int i = 0; i < robbery.Characters.Count; i++)
+                    charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
+            }
+        }
+
+        public void AddNightEvent(UnityAction windowSettings, EventStatus eventStatus, float eventTime) {
+            nightEventButton.onClick.AddListener(windowSettings);
+            switch (eventStatus) {
+                case EventStatus.success:
+                    nightEvent.color = Color.green;
+                    break;
+                case EventStatus.fail:
+                    nightEvent.color = Color.red;
+                    break;
+                case EventStatus.inProgress:
+                    nightEvent.color = Color.yellow;
+                    break;
+            }
+
+            StartCoroutine(Timer(eventTime));
+            nightEvent.gameObject.SetActive(true);
+        }
+
+        private IEnumerator Timer(float eventTime) {
+            float timer = eventTime;
+            timerSlider.maxValue = eventTime;
+
+            while (timer > 0) {
+                timer -= Time.deltaTime;
+                timerSlider.value = timer;
+                yield return null;
+            }
+        }
+
+        public void ResetNightButton() {
+            nightEvent.gameObject.SetActive(false);
+            nightEventButton.onClick.RemoveAllListeners();
         }
     }
 
-    public void AddNightEvent(UnityAction windowSettings, EventStatus eventStatus, float eventTime)
-    {
-        nightEventButton.onClick.AddListener(windowSettings);
-        switch (eventStatus)
-        {
-            case EventStatus.success:
-                nightEvent.color = Color.green;
-                break;
-            case EventStatus.fail:
-                nightEvent.color = Color.red;
-                break;
-            case EventStatus.inProgress:
-                nightEvent.color = Color.yellow;
-                break;
-        }
-
-        StartCoroutine(Timer(eventTime));
-        nightEvent.gameObject.SetActive(true);
-    }
-
-    private IEnumerator Timer(float eventTime)
-    {
-        float timer = eventTime;
-        timerSlider.maxValue = eventTime;
-
-        while (timer > 0)
-        {
-            timer -= Time.deltaTime;
-            timerSlider.value = timer;
-            yield return null;
-        }
-    }
-
-    public void ResetNightButton()
-    {
-        nightEvent.gameObject.SetActive(false);
-        nightEventButton.onClick.RemoveAllListeners();
-    }
 }

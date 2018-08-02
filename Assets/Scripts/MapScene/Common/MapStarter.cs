@@ -1,11 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MapStarter : MonoBehaviour {
+namespace CriminalTown {
 
-	private void Start () {
-		
+	public class MapStarter : MonoBehaviour {
+
+		private void Start() {
+
+		}
+
 	}
-	
+
 }
