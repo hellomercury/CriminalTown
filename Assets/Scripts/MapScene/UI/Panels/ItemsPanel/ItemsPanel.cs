@@ -17,7 +17,7 @@ public class ItemsPanel : MonoBehaviour, IItemsContainer
             return items;
         }
     }
-    private GameObject[] items = new GameObject[ItemsOptions.totalAmount];
+    private readonly GameObject[] items = new GameObject[ItemsOptions.totalAmount];
 
     private void Start()
     {

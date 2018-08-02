@@ -96,6 +96,10 @@ public class WM1 : MonoBehaviour
 
         nightEventWindow = nightEventWindowObject.GetComponent<NightEventWindow>();
         nightResumeWindow = nightResumeWindowObject;
+
+        Night.Instance.OnNightBegan += CloseAllDayWindows;
+        Night.Instance.OnNightBegan += () =>  SetActivePanels(false);
+        Night.Instance.OnNightEnded += () =>  SetActivePanels(true);
     }
 
     private void Start()
@@ -122,6 +126,7 @@ public class WM1 : MonoBehaviour
 
     public static void SetActivePanels(bool status)
     {
+        Debug.Log("SetActivePanels: " + status);
         charactersPanel.SetActive(status);
         //SetActiveItemsPanel(false);
 

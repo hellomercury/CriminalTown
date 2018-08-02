@@ -1,61 +1,75 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
 public class NightEventWindow : MonoBehaviour
 {
     #region References
-    public Button button0;
-    public Button button1;
-    public Text button0Text;
-    public Text button1Text;
+    [SerializeField]
+    public Button Button0;
+    [SerializeField]
+    public Button Button1;
+    [SerializeField]
+    public Text Button0Text;
+    [SerializeField]
+    public Text Button1Text;
 
-    public Image background;
+    [SerializeField]
+    public Image Background;
 
-    public Text titleText;
-    public Text descriptionText;
-    public Image image;
+    [SerializeField]
+    public Text TitleText;
+    [SerializeField]
+    public Text DescriptionText;
+    [SerializeField]
+    public Image Image;
 
-    public GameObject awardsAndMoney;
-    public Text moneyText;
-    public Image moneyImage;
-    public Image[] awardsImages = new Image[4];
-    public Text[] awardsTexts = new Text[4];
+    [SerializeField]
+    public GameObject AwardsAndMoney;
+    [SerializeField]
+    public Text MoneyText;
+    [SerializeField]
+    public Image MoneyImage;
+    [SerializeField]
+    public Image[] AwardsImages = new Image[4];
+    [SerializeField]
+    public Text[] AwardsTexts = new Text[4];
     #endregion
 
-    public static int choice;
+    public static int Choice;
 
     private void ShowNode(NightEventNode eventNode)
     {
-        choice = -1;
+        Choice = -1;
 
-        button0.gameObject.SetActive(false);
-        button1.gameObject.SetActive(false);
+        Button0.gameObject.SetActive(false);
+        Button1.gameObject.SetActive(false);
 
 
-        awardsAndMoney.gameObject.SetActive(false);
+        AwardsAndMoney.gameObject.SetActive(false);
 
-        titleText.text = eventNode.titleText;
-        descriptionText.text = eventNode.description;
-        image.sprite = NightEventsOptions.GetNightEventSprite(eventNode.spriteType, eventNode.spriteId, eventNode.charSpriteType);
+        TitleText.text = eventNode.titleText;
+        DescriptionText.text = eventNode.description;
+        Image.sprite = NightEventsOptions.GetNightEventSprite(eventNode.spriteType, eventNode.spriteId, eventNode.charSpriteType);
 
         if (eventNode.buttons.Count > 0)
         {
-            button0.onClick.RemoveAllListeners();
-            button0.onClick.AddListener(() => { WM1.nightButton.MakeChoice(0); });
-            button0.onClick.AddListener(CloseWindow);
-            button0Text.text = eventNode.buttons[0].buttonText;
-            button0.gameObject.SetActive(true);
+            Button0.onClick.RemoveAllListeners();
+            Button0.onClick.AddListener(() => { Night.Instance.MakeChoice(0); });
+            Button0.onClick.AddListener(CloseWindow);
+            Button0Text.text = eventNode.buttons[0].buttonText;
+            Button0.gameObject.SetActive(true);
         }
         if (eventNode.buttons.Count > 1)
         {
-            button1.onClick.RemoveAllListeners();
-            button1.onClick.AddListener(() => { WM1.nightButton.MakeChoice(1); });
-            button1.onClick.AddListener(CloseWindow);
-            button1Text.text = eventNode.buttons[1].buttonText;
-            button1.gameObject.SetActive(true);
+            Button1.onClick.RemoveAllListeners();
+            Button1.onClick.AddListener(() => { Night.Instance.MakeChoice(1); });
+            Button1.onClick.AddListener(CloseWindow);
+            Button1Text.text = eventNode.buttons[1].buttonText;
+            Button1.gameObject.SetActive(true);
         }
 
         gameObject.transform.SetAsLastSibling();
@@ -64,13 +78,13 @@ public class NightEventWindow : MonoBehaviour
 
     public void ShowChoice(NightEventNode eventNode)
     {
-        background.color = new Color(216f, 216f, 216f);
+        Background.color = new Color(216f, 216f, 216f);
         ShowNode(eventNode);
     }
 
     public void ShowSuccess(NightEventNode successNode, Dictionary<int, int> awards, int money)
     {
-        background.color = new Color(0, 255f, 0);
+        Background.color = new Color(0, 255f, 0);
         ShowNode(successNode);
 
         int i = 0;
@@ -78,26 +92,26 @@ public class NightEventWindow : MonoBehaviour
         {
             if (awards[itemNum] > 0)
             {
-                awardsImages[i].gameObject.SetActive(true);
-                awardsImages[i].sprite = WM1.itemsOptions.itemsSprites[itemNum];
-                awardsTexts[i].text = awards[itemNum].ToString();
+                AwardsImages[i].gameObject.SetActive(true);
+                AwardsImages[i].sprite = WM1.itemsOptions.itemsSprites[itemNum];
+                AwardsTexts[i].text = awards[itemNum].ToString();
             }
-            else awardsImages[i].gameObject.SetActive(false);
+            else AwardsImages[i].gameObject.SetActive(false);
             i++;
         }
 
-        for (; i < awardsImages.Length; i++)
+        for (; i < AwardsImages.Length; i++)
         {
-            awardsImages[i].gameObject.SetActive(false);
+            AwardsImages[i].gameObject.SetActive(false);
         }
 
-        moneyText.text = money.ToString();
-        awardsAndMoney.SetActive(true);
+        MoneyText.text = money.ToString();
+        AwardsAndMoney.SetActive(true);
     }
 
     public void ShowFail(NightEventNode failNode)
     {
-        background.color = new Color(255f, 0, 0);
+        Background.color = new Color(255f, 0, 0);
         ShowNode(failNode);
     }
 

@@ -15,6 +15,7 @@ public class CharactersPanel : MonoBehaviour, ICharactersContainer
     {
         DataScript.ChData.OnAddEvent += OnAddReaction;
         DataScript.ChData.OnRemoveEvent += OnRemoveReaction;
+        Night.Instance.OnNightEnded += UpdateCharactersPanel;
     }
 
     public void UpdateCharactersPanel()

@@ -33,7 +33,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     Drop.DropObject(out charCust);
 
                     if (charCust != null)
-                        if (charCust.Status == CharacterStatus.Normal)
+                        if (charCust.Character.Status == CharacterStatus.Normal)
                             WM1.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
                 }
                 if (Drag.ItemType == DraggeableItemType.Item)
@@ -53,7 +53,7 @@ public class DropToRobberyWindow : MonoBehaviour, IPointerEnterHandler, IPointer
                     CharacterCustomization charCust;
                     Drop.DropObject(out charCust);
 
-                    if (charCust.Status == CharacterStatus.Robbery)
+                    if (charCust.Character.Status == CharacterStatus.Robbery)
                         if (Drag.Location == DraggableObjectsLocations.robbery)
                             RobberyWindow.robberyData.RemoveCharacter(charCust.Character);
                 }

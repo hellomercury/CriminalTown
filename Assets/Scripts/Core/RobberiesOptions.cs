@@ -56,8 +56,7 @@ public class Robbery {
     }
 
     public bool IsRobberyEmpty() {
-        //high: Implement!
-        return false;
+        return Characters.Count == 0;
     }
 
     public void AddCharacter(Character character) {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PM : MonoBehaviour
+public class PlacesManager : MonoBehaviour
 {
     public GameObject hospitalObject;
     public GameObject policeStationObject;
@@ -24,6 +24,9 @@ public class PM : MonoBehaviour
         blackMarket = blackMarketObject.GetComponent<Button>();
         banditCamp = banditCampObject.GetComponent<Button>();
         testPanel = testPanelObject.GetComponent<Button>();
+        
+        Night.Instance.OnNightBegan += () =>  SetActiveAllPlaces(false);
+        Night.Instance.OnNightEnded += () =>  SetActiveAllPlaces(true);
     }
 
     public static void SetActiveAllPlaces(bool status)

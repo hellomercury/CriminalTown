@@ -12,12 +12,11 @@ public class DragAndDropUpdate : MonoBehaviour
     public GameObject robberies;
     
 
-    public RM robUpdate;
+    public RobberyManager robUpdate;
 
-
-    void Update()
+    private void Update()
     {
-        if (!NightButton.isNight)
+        if (!Night.Instance.IsNight)
         {
             //Update drop
             if (Drag.IsObjectDragging)

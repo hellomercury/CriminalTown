@@ -32,7 +32,7 @@ public class DropToHospitalWindow : MonoBehaviour, IPointerEnterHandler, IPointe
                     Drop.DropObject(out charCust);
 
                     if (charCust != null)
-                        if (charCust.Status == CharacterStatus.Normal)
+                        if (charCust.Character.Status == CharacterStatus.Normal)
                             hospital.GetComponent<Hospital>().TryToAddCharacterToHospital(charCust.Character);
                 }
                 isEntered = false;

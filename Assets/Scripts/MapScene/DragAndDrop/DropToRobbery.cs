@@ -33,7 +33,7 @@ public class DropToRobbery : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     Drop.DropObject(out charCust);
 
                     if (charCust != null)
-                        if (charCust.Status == CharacterStatus.Normal)
+                        if (charCust.Character.Status == CharacterStatus.Normal)
                             WM1.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
 
                     isEntered = false;

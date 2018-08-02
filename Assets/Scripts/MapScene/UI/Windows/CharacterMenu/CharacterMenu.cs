@@ -91,7 +91,7 @@ public class CharacterMenu : MonoBehaviour {
     public void SetCharacterMenu([NotNull] Character characterReference) {
         m_character = characterReference;
         SetSlidersMaxValues();
-        
+
         portrait.sprite = m_character.Sprite;
         characterName.text = m_character.Name;
         historyText.text = m_character.History;
@@ -102,7 +102,7 @@ public class CharacterMenu : MonoBehaviour {
         SetTraits();
         CommonWindowSettings();
 
-        DataScript.ChData.OnRemoveEvent += ch =>  OnKickCharacterWindowReaction();
+        DataScript.ChData.OnRemoveEvent += ch => OnKickCharacterWindowReaction();
         m_character.OnStatsChangedEvent += UpdatePointsAndStats;
     }
 
@@ -229,6 +229,7 @@ public class CharacterMenu : MonoBehaviour {
                 break;
             }
         }
+        m_newCharacterStats.Points--;
         UpdatePointsAndStats();
     }
 
@@ -256,12 +257,9 @@ public class CharacterMenu : MonoBehaviour {
 
     public void CloseAndSave() {
         characterMenuObject.SetActive(false);
-        if (m_newCharacterStats == m_character.Stats) {
-            m_character.Stats = m_newCharacterStats;
-        }
+        m_character.Stats = m_newCharacterStats;
         DataScript.ChData.OnRemoveEvent -= (ch) => OnKickCharacterWindowReaction();
         m_character.OnStatsChangedEvent -= UpdatePointsAndStats;
-
     }
 
     public void BoostRecovery() {

@@ -4,9 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class RM : MonoBehaviour
-{
-    public static RM rmInstance;
+public class RobberyManager : MonoBehaviour {
+    private static RobberyManager m_rmInstance;
+
+    public static RobberyManager RmInstance {
+        get {
+            return m_rmInstance;
+        }
+    }
 
     public RobberyCustomization GetRobberyCustomization(RobberyType robType, int number)
     {
@@ -32,7 +37,7 @@ public class RM : MonoBehaviour
 
     private void Awake()
     {
-        rmInstance = gameObject.GetComponent<RM>();
+        m_rmInstance = gameObject.GetComponent<RobberyManager>();
         CustomizeRobberies();
 
         /*Добавить виды ограблений:
@@ -43,6 +48,9 @@ public class RM : MonoBehaviour
          */
 
         UpdateRobberies();
+        
+        Night.Instance.OnNightBegan += DeactivateAllRobberies;
+        Night.Instance.OnNightEnded += UpdateRobberies;
     }
 
     public void UpdateRobberies()

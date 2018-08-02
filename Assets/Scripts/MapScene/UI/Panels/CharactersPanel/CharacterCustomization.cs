@@ -1,9 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class CharacterCustomization : MonoBehaviour, ICharacterCard {
     [SerializeField]
@@ -67,8 +65,13 @@ public class CharacterCustomization : MonoBehaviour, ICharacterCard {
 
     #endregion
 
-    public Character Character;
-    public CharacterStatus Status;
+    private Character m_character;
+
+    public Character Character {
+        get {
+            return m_character;
+        }
+    }
 
     //private Color defaultSpColor = Color.yellow;
     //private Color defaultComColor = Color.white;
@@ -101,14 +104,13 @@ public class CharacterCustomization : MonoBehaviour, ICharacterCard {
     }
 
     public void CustomizeCharacter([NotNull] Character character) {
-        Character = character;
+        m_character = character;
 
         m_tiredness.maxValue = CharactersOptions.MaxTiredness;
         m_health.maxValue = CharactersOptions.MaxHealth;
 
         m_portrait.sprite = character.Sprite;
         m_characterName.text = character.Name;
-        Status = character.Status;
 
         SetCharStats();
         character.OnStatsChangedEvent += OnStatsChangedReaction;
@@ -121,7 +123,7 @@ public class CharacterCustomization : MonoBehaviour, ICharacterCard {
         m_arrestStats.SetActive(false);
         m_hospitalStats.SetActive(false);
 
-        switch (Status) {
+        switch (m_character.Status) {
             case CharacterStatus.Normal: {
                 m_characterObject.GetComponent<Image>().sprite = m_normalIcon;
                 Animator.SetTrigger("Normal");
