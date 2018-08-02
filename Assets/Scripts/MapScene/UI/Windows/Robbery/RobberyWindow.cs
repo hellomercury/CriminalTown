@@ -19,9 +19,6 @@ namespace CriminalTown {
         public Text nameText;
         public Image robberyImage;
 
-        public GameObject itemsPanel;
-        public GameObject charactersPanel;
-
         #endregion
 
         private RobberyType robType;
