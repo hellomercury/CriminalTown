@@ -9,42 +9,40 @@ using System.Collections.ObjectModel;
 [Serializable]
 public class SData
 {
-    public int[] itemsCount;
-    public int money;
+    public int[] ItemsCount;
+    public int Money;
 }
 
 [Serializable]
 public class ChData
 {
-    private List<Character> campCharacters;
-    private List<Character> panelCharacters;
+    private readonly List<Character> m_campCharacters;
+    private readonly List<Character> m_panelCharacters;
 
-    public ReadOnlyCollection<Character> PanelCharacters { get { return panelCharacters.AsReadOnly(); } }
-    public List<Character> CampCharacters { get { return campCharacters; } }
+    public ReadOnlyCollection<Character> PanelCharacters { get { return m_panelCharacters.AsReadOnly(); } }
+    public List<Character> CampCharacters { get { return m_campCharacters; } }
 
     public delegate void ChDataEvent(Character character);
 
-    public event ChDataEvent OnRemoveEvent;
-    public event ChDataEvent OnAddEvent;
+    public event ChDataEvent OnRemoveEvent= delegate { };
+    public event ChDataEvent OnAddEvent= delegate { };
 
     //Constructor
     public ChData()
     {
-        campCharacters = new List<Character>();
-        panelCharacters = new List<Character>();
-        OnAddEvent = delegate { };
-        OnRemoveEvent = delegate { };
+        m_campCharacters = new List<Character>();
+        m_panelCharacters = new List<Character>();
     }
 
     public void RemoveCharacter(Character character)
     {
-        panelCharacters.Remove(character);
+        m_panelCharacters.Remove(character);
         OnRemoveEvent(character);
     }
 
     public void AddCharacter(Character character)
     {
-        panelCharacters.Add(character);
+        m_panelCharacters.Add(character);
         OnAddEvent(character);
     }
 
@@ -53,31 +51,31 @@ public class ChData
 [Serializable]
 public class PData
 {
-    public bool[] isItemAvailable;
-    public bool isBlackMarketAvailable;
-    public bool isBanditCampAvailable;
-    public bool isHospitalAvailable;
-    public bool isPoliceStationAvailable;
-    public bool isRobberyAvailable; //В дальнейшем добавить виды ограблений
+    public bool[] IsItemAvailable;
+    public bool IsBlackMarketAvailable;
+    public bool IsBanditCampAvailable;
+    public bool IsHospitalAvailable;
+    public bool IsPoliceStationAvailable;
+    public bool IsRobberyAvailable; //В дальнейшем добавить виды ограблений
 
-    public int authority;
-    public int day;
+    public int Authority;
+    public int Day;
 }
 
 [Serializable]
 public class EData
 {
-    public int policeKnowledge;
+    public int PoliceKnowledge;
 
-    public Dictionary<RobberyType, Dictionary<int, Robbery>> robberiesData;
+    public Dictionary<RobberyType, Dictionary<int, Robbery>> RobberiesData;
 }
 
 public class DataScript : MonoBehaviour
 {
-    public static SData sData = new SData();
-    public static ChData chData = new ChData();
-    public static PData pData = new PData();
-    public static EData eData = new EData();
+    public static SData SData = new SData();
+    public static ChData ChData = new ChData();
+    public static PData PData = new PData();
+    public static EData EData = new EData();
 
     private void Awake()
     {
@@ -101,52 +99,51 @@ public class DataScript : MonoBehaviour
     public static void AssignDefaultData()
     {
         //sData
-        sData.itemsCount = new int[ItemsOptions.totalAmount];
-        for (int i = 0; i < ItemsOptions.totalAmount; i++) sData.itemsCount[i] = 5;
-        sData.money = 1000000;
+        SData.ItemsCount = new int[ItemsOptions.totalAmount];
+        for (int i = 0; i < ItemsOptions.totalAmount; i++) SData.ItemsCount[i] = 5;
+        SData.Money = 1000000;
 
         //chData
-        CommonCharacter arrestedChar = CharactersOptions.GetRandomCommonCharacter(5);
+        Character arrestedChar = CharactersOptions.GetRandomCharacter(5);
         arrestedChar.AddToPolice();
-        chData.AddCharacter(arrestedChar);
+        ChData.AddCharacter(arrestedChar);
 
-        CommonCharacter hospitalChar = CharactersOptions.GetRandomCommonCharacter(6);
+        Character hospitalChar = CharactersOptions.GetRandomCharacter(6);
         hospitalChar.AddToHospital();
-        chData.AddCharacter(hospitalChar);
+        ChData.AddCharacter(hospitalChar);
 
 
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
         //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));
         //chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 0));
-        chData.AddCharacter(CharactersOptions.GetSpecialCharacter(9, 1));
+        ChData.AddCharacter(CharactersOptions.GetSpecialCharacter(9, 1));
 
         //eData
-        eData.policeKnowledge = 0;
+        EData.PoliceKnowledge = 0;
 
         RobberiesOptions.GetNewRobberies();
 
         //pData
-        pData.isItemAvailable = new bool[ItemsOptions.totalAmount];
-        for (int i = 0; i < ItemsOptions.totalAmount; i++) pData.isItemAvailable[i] = true;
-        pData.authority = 9;
+        PData.IsItemAvailable = new bool[ItemsOptions.totalAmount];
+        for (int i = 0; i < ItemsOptions.totalAmount; i++) PData.IsItemAvailable[i] = true;
+        PData.Authority = 9;
 
-        CharactersOptions.FillCampCells();
         SaveAll();
     }
 
     public static void LoadData()
     {
-        sData = (SData)LoadData("/sourcesDataFile.dat");
-        chData = (ChData)LoadData("/charactersDataFile.dat");
-        pData = (PData)LoadData("/progressDataFile.dat");
-        eData = (EData)LoadData("/eventsDataFile.dat");
+        SData = (SData)LoadData("/sourcesDataFile.dat");
+        ChData = (ChData)LoadData("/charactersDataFile.dat");
+        PData = (PData)LoadData("/progressDataFile.dat");
+        EData = (EData)LoadData("/eventsDataFile.dat");
     }
 
     public static void SaveSourcesData()
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream dataFile = File.Create(Application.persistentDataPath + "/sourcesDataFile.dat");
-        bf.Serialize(dataFile, sData);
+        bf.Serialize(dataFile, SData);
         dataFile.Close();
     }
 
@@ -154,7 +151,7 @@ public class DataScript : MonoBehaviour
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream dataFile = File.Create(Application.persistentDataPath + "/charactersDataFile.dat");
-        bf.Serialize(dataFile, chData);
+        bf.Serialize(dataFile, ChData);
         dataFile.Close();
     }
 
@@ -162,7 +159,7 @@ public class DataScript : MonoBehaviour
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream dataFile = File.Create(Application.persistentDataPath + "/progressDataFile.dat");
-        bf.Serialize(dataFile, pData);
+        bf.Serialize(dataFile, PData);
         dataFile.Close();
     }
 
@@ -170,7 +167,7 @@ public class DataScript : MonoBehaviour
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream dataFile = File.Create(Application.persistentDataPath + "/eventsDataFile.dat");
-        bf.Serialize(dataFile, eData);
+        bf.Serialize(dataFile, EData);
         dataFile.Close();
     }
 

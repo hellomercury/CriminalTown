@@ -120,18 +120,18 @@ public class NightEventsOptions : MonoBehaviour
                 switch (charSpriteType)
                 {
                     case CharacterSpriteType.comMale:
-                        return WM1.charactersOptions.comMaleSprites[spriteId];
+                        return WM1.charactersOptions.ComMaleSprites[spriteId];
                     case CharacterSpriteType.comFemale:
-                        return WM1.charactersOptions.comFemaleSprites[spriteId];
+                        return WM1.charactersOptions.ComFemaleSprites[spriteId];
                     case CharacterSpriteType.special:
-                        return WM1.charactersOptions.specialSprites[spriteId];
+                        return WM1.charactersOptions.SpecialSprites[spriteId];
                     default:
                         return null;
                 }
             case SpriteType.items:
                 return WM1.itemsOptions.itemsSprites[spriteId];
             case SpriteType.robberies:
-                return WM1.robberiesOptions.robberySprites[spriteId];
+                return WM1.robberiesOptions.RobberySprites[spriteId];
             case SpriteType.people:
                 return WM1.nightEventsOptions.peopleSprites[spriteId];
             case SpriteType.places:
@@ -200,7 +200,7 @@ public class NightEventsOptions : MonoBehaviour
         foreach (XmlNode info in eventNode)
         {
             //Debug.Log(info.Name + " " + info.InnerText);
-            nightEvent.titleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.name);
+            nightEvent.titleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
             if (info.Name == "text") nightEvent.description = info.InnerText;
             if (info.Name == "sprite")
                 foreach (XmlNode spriteInfo in info)

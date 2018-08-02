@@ -41,10 +41,10 @@ public partial class CharactersOptions : MonoBehaviour
                             specialCharacter = new Dictionary<CharacterProperty, string>();
                             foreach (XmlNode stat in character)
                             {
-                                if (stat.Name == "name") specialCharacter.Add(CharacterProperty.name, stat.InnerText);
-                                if (stat.Name == "spriteId") specialCharacter.Add(CharacterProperty.spriteId, stat.InnerText);
-                                if (stat.Name == "traitId") specialCharacter.Add(CharacterProperty.traitId, stat.InnerText);
-                                if (stat.Name == "history") specialCharacter.Add(CharacterProperty.history, stat.InnerText);
+                                if (stat.Name == "name") specialCharacter.Add(CharacterProperty.Name, stat.InnerText);
+                                if (stat.Name == "spriteId") specialCharacter.Add(CharacterProperty.SpriteId, stat.InnerText);
+                                if (stat.Name == "traitId") specialCharacter.Add(CharacterProperty.TraitId, stat.InnerText);
+                                if (stat.Name == "history") specialCharacter.Add(CharacterProperty.History, stat.InnerText);
                             }
                             specialCharactersDict.Add(int.Parse(character.Attributes["id"].Value), specialCharacter);
                         }
