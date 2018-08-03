@@ -5,12 +5,12 @@ using System.Xml;
 namespace CriminalTown {
 
     public enum RobberyType {
-        None,
-        DarkStreet,
-        Stall,
-        House,
-        Shop,
-        Band
+        None = -1,
+        DarkStreet = 0,
+        Stall = 1,
+        House = 2,
+        Shop = 3,
+        Band = 4,
     }
 
     public enum RobberyProperty {
