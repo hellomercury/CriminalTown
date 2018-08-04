@@ -85,7 +85,7 @@ namespace CriminalTown {
             ItemsOptions.GetItemsCollectionData();
             CharactersOptions.GetCharactersCollectionData();
             RobberiesOptions.GetRobberiesCollectionData();
-            NightEventsOptions.GetNightEventsCollectionData();
+            NightEventsOptions.InitializeNightEventsCollection();
             TraitsOptions.GetTraitsCollectionData();
         }
 

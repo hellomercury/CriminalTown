@@ -51,22 +51,22 @@ namespace CriminalTown {
 
             AwardsAndMoney.gameObject.SetActive(false);
 
-            TitleText.text = eventNode.titleText;
-            DescriptionText.text = eventNode.description;
-            Image.sprite = NightEventsOptions.GetNightEventSprite(eventNode.spriteType, eventNode.spriteId, eventNode.charSpriteType);
+            TitleText.text = eventNode.TitleText;
+            DescriptionText.text = eventNode.Description;
+            Image.sprite = NightEventsOptions.GetNightEventSprite(eventNode.SpriteType, eventNode.SpriteId, eventNode.CharSpriteType);
 
-            if (eventNode.buttons.Count > 0) {
+            if (eventNode.Buttons.Count > 0) {
                 Button0.onClick.RemoveAllListeners();
                 Button0.onClick.AddListener(() => { Night.Instance.MakeChoice(0); });
                 Button0.onClick.AddListener(CloseWindow);
-                Button0Text.text = eventNode.buttons[0].buttonText;
+                Button0Text.text = eventNode.Buttons[0].ButtonText;
                 Button0.gameObject.SetActive(true);
             }
-            if (eventNode.buttons.Count > 1) {
+            if (eventNode.Buttons.Count > 1) {
                 Button1.onClick.RemoveAllListeners();
                 Button1.onClick.AddListener(() => { Night.Instance.MakeChoice(1); });
                 Button1.onClick.AddListener(CloseWindow);
-                Button1Text.text = eventNode.buttons[1].buttonText;
+                Button1Text.text = eventNode.Buttons[1].ButtonText;
                 Button1.gameObject.SetActive(true);
             }
 
