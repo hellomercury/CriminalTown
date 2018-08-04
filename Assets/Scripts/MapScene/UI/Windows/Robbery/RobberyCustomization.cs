@@ -57,13 +57,13 @@ namespace CriminalTown {
         public void AddNightEvent(UnityAction windowSettings, EventStatus eventStatus, float eventTime) {
             nightEventButton.onClick.AddListener(windowSettings);
             switch (eventStatus) {
-                case EventStatus.success:
+                case EventStatus.Success:
                     nightEvent.color = Color.green;
                     break;
-                case EventStatus.fail:
+                case EventStatus.Fail:
                     nightEvent.color = Color.red;
                     break;
-                case EventStatus.inProgress:
+                case EventStatus.InProgress:
                     nightEvent.color = Color.yellow;
                     break;
             }

@@ -89,26 +89,26 @@ namespace CriminalTown {
                 Debug.Log("Call robbery event: " + m_currentEventNum);
                 NightRobberyData rob = m_robberies[m_currentEventNum];
 
-                if (rob.nightEvent.rootNode != null) {
+                if (rob.nightEvent.RootNode != null) {
                     RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                        () => { WM1.nightEventWindow.ShowChoice(rob.nightEvent.rootNode); }, EventStatus.inProgress, eventTime);
+                        () => { WM1.nightEventWindow.ShowChoice(rob.nightEvent.RootNode); }, EventStatus.InProgress, eventTime);
                     yield return new WaitForSeconds(eventTime);
                     if (NightEventWindow.Choice == -1) {
                         WM1.nightEventWindow.CloseWindow();
-                        MakeChoice(Random.Range(0, rob.nightEvent.rootNode.buttons.Count));
+                        MakeChoice(Random.Range(0, rob.nightEvent.RootNode.Buttons.Count));
                     }
                     RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
                     ApplyChangesAfterChoice(m_currentEventNum);
 
-                    if (rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode != null)
-                        rob.nightEvent.rootNode = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice].nextEventNode;
+                    if (rob.nightEvent.RootNode.Buttons[NightEventWindow.Choice].NextEventNode != null)
+                        rob.nightEvent.RootNode = rob.nightEvent.RootNode.Buttons[NightEventWindow.Choice].NextEventNode;
                     else
-                        rob.nightEvent.rootNode = null;
+                        rob.nightEvent.RootNode = null;
                 } else {
                     switch (GetResult(m_currentEventNum)) {
                         case false:
                             RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                                () => { WM1.nightEventWindow.ShowFail(rob.nightEvent.fail); }, EventStatus.fail, eventTime);
+                                () => { WM1.nightEventWindow.ShowFail(rob.nightEvent.Fail); }, EventStatus.Fail, eventTime);
 
                             yield return new WaitForSeconds(eventTime);
                             if (NightEventWindow.Choice == -1) {
@@ -120,7 +120,7 @@ namespace CriminalTown {
                             break;
                         case true:
                             RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                                () => { WM1.nightEventWindow.ShowSuccess(rob.nightEvent.success, rob.Awards, rob.Money); }, EventStatus.success, eventTime);
+                                () => { WM1.nightEventWindow.ShowSuccess(rob.nightEvent.Success, rob.Awards, rob.Money); }, EventStatus.Success, eventTime);
 
                             yield return new WaitForSeconds(eventTime);
                             if (NightEventWindow.Choice == -1) {
@@ -181,7 +181,7 @@ namespace CriminalTown {
 
         private void ApplyChangesAfterChoice(int eventNum) {
             NightRobberyData rob = m_robberies[eventNum];
-            NightEventButtonDetails bd = rob.nightEvent.rootNode.buttons[NightEventWindow.Choice];
+            NightEventButtonDetails bd = rob.nightEvent.RootNode.Buttons[NightEventWindow.Choice];
             rob.ApplyChoice(bd);
         }
 
