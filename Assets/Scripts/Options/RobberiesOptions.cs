@@ -1,137 +1,44 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Xml;
+using System.Xml.Serialization;
+using CriminalTown.Serialization;
 
 namespace CriminalTown {
 
     public enum RobberyType {
         None = -1,
+        [XmlEnum("0")]
         DarkStreet = 0,
+        [XmlEnum("1")]
         Stall = 1,
+        [XmlEnum("2")]
         House = 2,
+        [XmlEnum("3")]
         Shop = 3,
+        [XmlEnum("4")]
         Band = 4,
-    }
-
-    public enum RobberyProperty {
-        Description,
-        Name,
-        DescriptionFull,
-        StrenghtInfluence,
-        AgilityInfluence,
-        SkillInfluence,
-        LuckInfluence
-    }
-
-    [System.Serializable]
-    public class Robbery {
-        private readonly RobberyType m_robberyType;
-        private readonly int m_locationNum;
-
-        private readonly int m_strength;
-        private readonly int m_agility;
-        private readonly int m_skill;
-        private readonly int m_luck;
-
-        public List<Character> Characters {
-            get {
-                List<Character> characters = new List<Character>();
-                foreach (Character character in DataScript.ChData.PanelCharacters) {
-                    if (character.RobberyType == m_robberyType && character.LocationNum == m_locationNum) {
-                        characters.Add(character);
-                    }
-                }
-                return characters;
-            }
-        }
-
-        //Constructor
-        public Robbery(RobberyType robberyType, int locationNum, int strength, int agility, int skill, int luck) {
-            m_robberyType = robberyType;
-            m_locationNum = locationNum;
-            m_strength = strength;
-            m_agility = agility;
-            m_skill = skill;
-            m_luck = luck;
-            Items = new Dictionary<int, int>();
-        }
-
-        public bool IsRobberyEmpty() {
-            return Characters.Count == 0;
-        }
-
-        public void AddCharacter(Character character) {
-            character.AddToRobbery(m_robberyType, m_locationNum);
-            OnAddToRobEvent(character);
-        }
-
-        public void RemoveCharacter(Character character) {
-            character.SetDefaultStatus();
-            OnRemoveFromRobEvent(character);
-        }
-
-        public RobberyType RobberyType {
-            get {
-                return m_robberyType;
-            }
-        }
-
-        public int LocationNum {
-            get {
-                return m_locationNum;
-            }
-        }
-
-        public int Strength {
-            get {
-                return m_strength;
-            }
-        }
-
-        public int Agility {
-            get {
-                return m_agility;
-            }
-        }
-
-        public int Skill {
-            get {
-                return m_skill;
-            }
-        }
-
-        public int Luck {
-            get {
-                return m_luck;
-            }
-        }
-
-        public Dictionary<int, int> Items { get; set; }
-
-        public delegate void RobberyEvent(Character character);
-
-        public event RobberyEvent OnAddToRobEvent = delegate { };
-
-        public event RobberyEvent OnRemoveFromRobEvent = delegate { };
     }
 
     public class RobberiesOptions : MonoBehaviour {
         public Sprite[] RobberySprites = new Sprite[5];
 
-        public static int TypesAmount;
-        public const int DarkStreetsAmount = 3;
-        public const int StallsAmount = 3;
+        private static RobberiesCollection m_robberiesCollection;
 
-        private static TextAsset m_robberiesCollectionDataXml;
-        private static XmlDocument m_xmlDoc;
-
-        private static List<Dictionary<RobberyProperty, string>> m_robberiesCollection = new List<Dictionary<RobberyProperty, string>>();
-
-        public static string GetRobberyData(RobberyType robberyType, RobberyProperty robberyProperty) {
-            return m_robberiesCollection[(int) robberyType][robberyProperty];
+        public static void InitializeRobberiesCollection() {
+            m_robberiesCollection = RobberiesSerialization.GetRobberiesCollection();
         }
 
-        private static Dictionary<RobberyProperty, string> m_robberyDict;
+        public static string GetRobberyName(RobberyType robberyType) {
+            return m_robberiesCollection.Robberies[(int) robberyType].Name;
+        }
+
+        public static string GetRobberyDescription(RobberyType robberyType) {
+            return m_robberiesCollection.Robberies[(int) robberyType].Description;
+        }
+
+        public static string GetRobberyFullDescription(RobberyType robberyType) {
+            return m_robberiesCollection.Robberies[(int) robberyType].DescriptionFull;
+        }
 
         public static void GetNewRobberies() {
             if (DataScript.EData.RobberiesData != null)
@@ -207,7 +114,6 @@ namespace CriminalTown {
         }
 
         public static float CalculatePreliminaryChance(Robbery robbery) {
-            float chance;
             List<Trait> chanceTraits;
 
             int rStrength = robbery.Strength;
@@ -224,7 +130,7 @@ namespace CriminalTown {
             Debug.Log("robberyStats: " + robberyStats);
             Debug.Log("equipmentStats: " + equipmentStats);
 
-            chance = (banditsStats + equipmentStats) / (banditsStats + equipmentStats + robberyStats);
+            float chance = (banditsStats + equipmentStats) / (banditsStats + equipmentStats + robberyStats);
 
             Debug.Log(chance);
 
@@ -232,8 +138,6 @@ namespace CriminalTown {
                 switch (chanceTrait.stat) {
                     case Stat.chance:
                         chance *= chanceTrait.value;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -281,8 +185,6 @@ namespace CriminalTown {
                                     case Stat.agility:
                                         coefAg = trait.value;
                                         break;
-                                    default:
-                                        break;
                                 }
                                 break;
                             case TraitType.group:
@@ -319,16 +221,14 @@ namespace CriminalTown {
                     case Stat.agility:
                         cAgility *= groupTrait.value;
                         break;
-                    default:
-                        break;
                 }
             }
 
             return
-                (cStrength * float.Parse(GetRobberyData(rType, RobberyProperty.StrenghtInfluence)) +
-                    cLuck * float.Parse(GetRobberyData(rType, RobberyProperty.LuckInfluence)) +
-                    cAgility * float.Parse(GetRobberyData(rType, RobberyProperty.AgilityInfluence)) +
-                    cSkill * float.Parse(GetRobberyData(rType, RobberyProperty.SkillInfluence)))
+                (cStrength * m_robberiesCollection.Robberies[(int) rType].StrenghtInfluence +
+                    cLuck * m_robberiesCollection.Robberies[(int) rType].LuckInfluence +
+                    cAgility * m_robberiesCollection.Robberies[(int) rType].AgilityInfluence +
+                    cSkill * m_robberiesCollection.Robberies[(int) rType].SkillInfluence)
                 *
                 (1 - cFear / (110 * count));
         }
@@ -357,43 +257,9 @@ namespace CriminalTown {
                         break;
                 }
             }
-
             return itemsStats;
         }
 
-        public static void GetRobberiesCollectionData() {
-            m_robberiesCollectionDataXml = Resources.Load("RobberiesCollectionData") as TextAsset;
-
-            m_xmlDoc = new XmlDocument();
-            if (m_robberiesCollectionDataXml) {
-                m_xmlDoc.LoadXml(m_robberiesCollectionDataXml.text);
-                XmlNode allRobberies = m_xmlDoc.SelectSingleNode("./robberies");
-                foreach (XmlNode robbery in allRobberies) {
-                    m_robberyDict = new Dictionary<RobberyProperty, string>();
-                    XmlNodeList robOptions = robbery.ChildNodes;
-                    foreach (XmlNode rOption in robOptions) {
-                        if (rOption.Name == "name")
-                            m_robberyDict.Add(RobberyProperty.Name, rOption.InnerText);
-                        if (rOption.Name == "description")
-                            m_robberyDict.Add(RobberyProperty.Description, rOption.InnerText);
-                        if (rOption.Name == "descriptionFull")
-                            m_robberyDict.Add(RobberyProperty.DescriptionFull, rOption.InnerText);
-                        if (rOption.Name == "strenghtInfluence")
-                            m_robberyDict.Add(RobberyProperty.StrenghtInfluence, rOption.InnerText);
-                        if (rOption.Name == "agilityInfluence")
-                            m_robberyDict.Add(RobberyProperty.AgilityInfluence, rOption.InnerText);
-                        if (rOption.Name == "skillInfluence")
-                            m_robberyDict.Add(RobberyProperty.SkillInfluence, rOption.InnerText);
-                        if (rOption.Name == "luckInfluence")
-                            m_robberyDict.Add(RobberyProperty.LuckInfluence, rOption.InnerText);
-                    }
-                    m_robberiesCollection.Add(m_robberyDict);
-                    TypesAmount++;
-                }
-            } else {
-                Debug.LogError("Ошибка загрузки XML файла с данными об ограблениях!");
-            }
-        }
     }
 
 }

@@ -84,7 +84,7 @@ namespace CriminalTown {
             DontDestroyOnLoad(gameObject);
             ItemsOptions.GetItemsCollectionData();
             CharactersOptions.GetCharactersCollectionData();
-            RobberiesOptions.GetRobberiesCollectionData();
+            RobberiesOptions.InitializeRobberiesCollection();
             NightEventsOptions.InitializeNightEventsCollection();
             TraitsOptions.GetTraitsCollectionData();
         }

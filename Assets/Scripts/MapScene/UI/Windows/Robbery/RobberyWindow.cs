@@ -38,8 +38,8 @@ namespace CriminalTown {
             UpdateItems();
 
             robberyImage.sprite = WM1.robberiesOptions.RobberySprites[(int) robType];
-            descriptionText.text = RobberiesOptions.GetRobberyData(robType, RobberyProperty.Description);
-            nameText.text = RobberiesOptions.GetRobberyData(robType, RobberyProperty.Name);
+            descriptionText.text = RobberiesOptions.GetRobberyDescription(robType);
+            nameText.text = RobberiesOptions.GetRobberyName(robType);
 
             robberyWindowObject.SetActive(true);
             robberyWindowObject.transform.SetAsLastSibling();

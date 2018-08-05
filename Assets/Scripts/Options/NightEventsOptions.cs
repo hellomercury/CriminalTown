@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Xml;
-using System;
 using Random = UnityEngine.Random;
 
 namespace CriminalTown {
@@ -105,8 +103,8 @@ namespace CriminalTown {
             nightEvent = NightEventsOptions.GetRandomEvent(robbery.RobberyType);
             m_eventStatus = EventStatus.InProgress;
             m_chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
-            m_policeChance = UnityEngine.Random.Range(0, 51);
-            m_hospitalChance = UnityEngine.Random.Range(0, 51);
+            m_policeChance = Random.Range(0, 51);
+            m_hospitalChance = Random.Range(0, 51);
             m_money = RobberiesOptions.GetRobberyMoneyRewardAtTheCurrentMoment(robbery.RobberyType);
             m_awards = RobberiesOptions.GetRobberyAwardsAtTheCurrentMoment(robbery.RobberyType);
             m_policeKnowledge = 1;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CriminalTown {
 
-    public class NightEventsSerialization : MonoBehaviour {
+    public class NightEventsSerialization {
 
         private static TextAsset m_nightEventsCollectionDataXml;
         private static XmlDocument m_xmlDoc;
@@ -44,13 +44,8 @@ namespace CriminalTown {
         /// <summary>Get night event tree with random nodes from "NightEventsCollectionData.xml"</summary>
         /// <param name="eventNode">A root node of event in "NightEventsCollectionData.xml"</param>
         public static NightEventNode ParseEventRandomTree(XmlNode eventNode, RobberyType robberyType) {
-            foreach (XmlNode node in eventNode.ChildNodes) {
-                Debug.Log(node.Name);
-            }
             NightEventNode nightEvent = new NightEventNode();
             foreach (XmlNode info in eventNode) {
-                nightEvent.TitleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
-                Debug.Log(info.Name + " " + info.InnerText);
                 switch (info.Name) {
                     case "text":
                         nightEvent.Description = info.InnerText;
@@ -120,7 +115,6 @@ namespace CriminalTown {
                         }
                         if (info.SelectSingleNode("./node") != null) //is button contains next nodes
                         {
-                            Debug.Log("COUNT: " + info.SelectNodes("./node").Count);
                             button.NextEventNode = ParseEventRandomTree(info.SelectNodes("./node")[UnityEngine.Random.Range(0, info.SelectNodes("./node").Count)], robberyType); //Recursion
                         }
                         nightEvent.Buttons.Add(button);

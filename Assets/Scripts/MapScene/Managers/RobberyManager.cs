@@ -15,9 +15,9 @@ namespace CriminalTown {
         }
 
         [SerializeField]
-        private GameObject[] m_darkStreets = new GameObject[RobberiesOptions.DarkStreetsAmount];
+        private GameObject[] m_darkStreets;
         [SerializeField]
-        private GameObject[] m_stalls = new GameObject[RobberiesOptions.StallsAmount];
+        private GameObject[] m_stalls;
         private Dictionary<RobberyType, GameObject[]> m_robberiesObjects;
 
         public Dictionary<RobberyType, GameObject[]> RobberiesObjects {
