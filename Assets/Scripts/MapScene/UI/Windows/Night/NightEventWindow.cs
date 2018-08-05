@@ -74,12 +74,18 @@ namespace CriminalTown {
             gameObject.SetActive(true);
         }
 
-        public void ShowChoice(NightEventNode eventNode) {
+        private void SetPosition(Vector2 position) {
+            transform.position = position;
+        }
+        
+        public void ShowChoice(NightEventNode eventNode, Vector2 windowPosition) {
+            SetPosition(windowPosition);
             Background.color = new Color(216f, 216f, 216f);
             ShowNode(eventNode);
         }
 
-        public void ShowSuccess(NightEventNode successNode, Dictionary<int, int> awards, int money) {
+        public void ShowSuccess(NightEventNode successNode, Dictionary<int, int> awards, int money, Vector2 windowPosition) {
+            SetPosition(windowPosition);
             Background.color = new Color(0, 255f, 0);
             ShowNode(successNode);
 
@@ -102,7 +108,8 @@ namespace CriminalTown {
             AwardsAndMoney.SetActive(true);
         }
 
-        public void ShowFail(NightEventNode failNode) {
+        public void ShowFail(NightEventNode failNode, Vector2 windowPosition) {
+            SetPosition(windowPosition);
             Background.color = new Color(255f, 0, 0);
             ShowNode(failNode);
         }

@@ -63,11 +63,11 @@ namespace CriminalTown {
         private int m_money;
         private readonly Dictionary<int, int> m_awards;
 
-        private float chance;
-        private float hospitalChance;
-        private float policeChance;
-        private int healthAffect;
-        private int policeKnowledge;
+        private float m_chance;
+        private float m_hospitalChance;
+        private float m_policeChance;
+        private int m_healthAffect;
+        private int m_policeKnowledge;
 
         public EventStatus Status {
             get {
@@ -95,7 +95,7 @@ namespace CriminalTown {
 
         public float Chance {
             get {
-                return chance;
+                return m_chance;
             }
         }
 
@@ -103,21 +103,22 @@ namespace CriminalTown {
         public NightRobberyData(Robbery robbery) {
             this.m_robbery = robbery;
             nightEvent = NightEventsOptions.GetRandomEvent(robbery.RobberyType);
-            chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
-            policeChance = UnityEngine.Random.Range(0, 51);
-            hospitalChance = UnityEngine.Random.Range(0, 51);
+            m_eventStatus = EventStatus.InProgress;
+            m_chance = RobberiesOptions.CalculatePreliminaryChance(robbery);
+            m_policeChance = UnityEngine.Random.Range(0, 51);
+            m_hospitalChance = UnityEngine.Random.Range(0, 51);
             m_money = RobberiesOptions.GetRobberyMoneyRewardAtTheCurrentMoment(robbery.RobberyType);
             m_awards = RobberiesOptions.GetRobberyAwardsAtTheCurrentMoment(robbery.RobberyType);
-            policeKnowledge = 1;
+            m_policeKnowledge = 1;
         }
 
         public void ApplyChoice(NightEventButtonDetails buttonDetails) {
-            chance += buttonDetails.Effect;
-            hospitalChance += buttonDetails.HospitalEffect;
-            policeChance += buttonDetails.PoliceEffect;
-            policeKnowledge += buttonDetails.PoliceKnowledge;
+            m_chance += buttonDetails.Effect;
+            m_hospitalChance += buttonDetails.HospitalEffect;
+            m_policeChance += buttonDetails.PoliceEffect;
+            m_policeKnowledge += buttonDetails.PoliceKnowledge;
             m_money += buttonDetails.Money;
-            healthAffect += buttonDetails.HealthAffect;
+            m_healthAffect += buttonDetails.HealthAffect;
 
             if (buttonDetails.Awards != null)
                 foreach (int bKey in buttonDetails.Awards.Keys) {
@@ -134,6 +135,10 @@ namespace CriminalTown {
 
         public void SetAsFailed() {
             m_eventStatus = EventStatus.Fail;
+        }
+
+        public void SetAsInProgress() {
+            m_eventStatus = EventStatus.InProgress;
         }
     }
 

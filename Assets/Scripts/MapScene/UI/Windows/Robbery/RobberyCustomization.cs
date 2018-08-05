@@ -1,91 +1,115 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-
 
 namespace CriminalTown {
 
     public class RobberyCustomization : MonoBehaviour {
 
-        #region References
+        [SerializeField]
+        private Image m_nightEvent;
+        [SerializeField]
+        private Button m_nightEventButton;
+        [SerializeField]
+        private Slider m_timerSlider;
+        [SerializeField]
+        private Transform m_counter;
+        [SerializeField]
+        private GameObject m_charCounterIconPrefab;
 
-        public Image nightEvent;
-        public Button nightEventButton;
-        public Slider timerSlider;
-        public Transform counter;
-        public GameObject charCounterIconPrefab;
+        private readonly List<GameObject> m_charCounterIcons = new List<GameObject>();
 
-        #endregion
+        private Robbery m_robbery;
+        private RobberyType m_robberyType;
+        private int m_number;
+        private bool m_isAvailable;
 
-        private List<GameObject> charCounterIcons = new List<GameObject>();
+        public RobberyType RobberyType {
+            get {
+                return m_robberyType;
+            }
+        }
 
-        private Robbery robbery;
-        public RobberyType robberyType;
-        public int number;
-        public bool isAvailable;
+        public int Number {
+            get {
+                return m_number;
+            }
+        }
+
+        public bool IsAvailable {
+            get {
+                return m_isAvailable;
+            }
+        }
 
 
+        public void ActivateRobbery(bool value) {
+            m_isAvailable = value;
+        }
+        
         public void CounterMinus() {
-            Destroy(charCounterIcons[0].gameObject);
-            charCounterIcons.RemoveAt(0);
+            Destroy(m_charCounterIcons[0].gameObject);
+            m_charCounterIcons.RemoveAt(0);
         }
 
         public void CounterPlus() {
-            charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
+            m_charCounterIcons.Add(Instantiate(m_charCounterIconPrefab, m_counter));
         }
 
+        [UsedImplicitly]
         public void OnClick() {
-            WM1.robberyWindow.SetRobberyWindow(robberyType, number);
+            WM1.robberyWindow.SetRobberyWindow(m_robberyType, m_number);
         }
 
         public void CustomizeRobbery(int num, RobberyType robType) {
-            number = num;
-            robberyType = robType;
-            robbery = DataScript.EData.RobberiesData[robType][number];
+            m_number = num;
+            m_robberyType = robType;
+            m_robbery = DataScript.EData.RobberiesData[robType][m_number];
             SetCounter();
         }
 
         private void SetCounter() {
-            if (robbery.IsRobberyEmpty() == false) {
-                for (int i = 0; i < robbery.Characters.Count; i++)
-                    charCounterIcons.Add(Instantiate(charCounterIconPrefab, counter));
+            if (m_robbery.IsRobberyEmpty() == false) {
+                for (int i = 0; i < m_robbery.Characters.Count; i++)
+                    m_charCounterIcons.Add(Instantiate(m_charCounterIconPrefab, m_counter));
             }
         }
 
         public void AddNightEvent(UnityAction windowSettings, EventStatus eventStatus, float eventTime) {
-            nightEventButton.onClick.AddListener(windowSettings);
+            m_nightEventButton.onClick.AddListener(windowSettings);
             switch (eventStatus) {
                 case EventStatus.Success:
-                    nightEvent.color = Color.green;
+                    m_nightEvent.color = Color.green;
                     break;
                 case EventStatus.Fail:
-                    nightEvent.color = Color.red;
+                    m_nightEvent.color = Color.red;
                     break;
                 case EventStatus.InProgress:
-                    nightEvent.color = Color.yellow;
+                    m_nightEvent.color = Color.yellow;
                     break;
             }
 
             StartCoroutine(Timer(eventTime));
-            nightEvent.gameObject.SetActive(true);
+            m_nightEvent.gameObject.SetActive(true);
         }
 
         private IEnumerator Timer(float eventTime) {
             float timer = eventTime;
-            timerSlider.maxValue = eventTime;
+            m_timerSlider.maxValue = eventTime;
 
             while (timer > 0) {
                 timer -= Time.deltaTime;
-                timerSlider.value = timer;
+                m_timerSlider.value = timer;
                 yield return null;
             }
         }
 
-        public void ResetNightButton() {
-            nightEvent.gameObject.SetActive(false);
-            nightEventButton.onClick.RemoveAllListeners();
+        public void ResetNightEvent() {
+            m_nightEvent.gameObject.SetActive(false);
+            m_nightEventButton.onClick.RemoveAllListeners();
         }
     }
 

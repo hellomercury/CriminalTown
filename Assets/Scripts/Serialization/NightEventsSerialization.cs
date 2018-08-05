@@ -48,8 +48,8 @@ namespace CriminalTown {
                 Debug.Log(node.Name);
             }
             NightEventNode nightEvent = new NightEventNode();
-            nightEvent.TitleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
             foreach (XmlNode info in eventNode) {
+                nightEvent.TitleText = RobberiesOptions.GetRobberyData(robberyType, RobberyProperty.Name);
                 Debug.Log(info.Name + " " + info.InnerText);
                 switch (info.Name) {
                     case "text":

@@ -4,8 +4,8 @@ namespace CriminalTown {
 
 	public class MapStarter : MonoBehaviour {
 
-		private void Start() {
-
+		private void Awake() {
+			
 		}
 
 	}

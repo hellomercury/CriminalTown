@@ -21,12 +21,14 @@ namespace CriminalTown {
                     if (WM1.robberyWindow.gameObject.activeInHierarchy)
                         WM1.robberyWindow.GetComponent<DropToRobberyWindow>().DropToRobberyWindowUpdate();
 
-                    foreach (GameObject stall in robUpdate.stalls)
-                        if (stall.GetComponent<RobberyCustomization>().isAvailable)
-                            stall.GetComponent<DropToRobbery>().DropToRobberyUpdate();
-                    foreach (GameObject darkStreet in robUpdate.darkStreets)
-                        if (darkStreet.GetComponent<RobberyCustomization>().isAvailable)
-                            darkStreet.GetComponent<DropToRobbery>().DropToRobberyUpdate();
+                    foreach (RobberyType robberyType in robUpdate.RobberiesObjects.Keys) {
+                        for (int i = 0; i < robUpdate.RobberiesObjects[robberyType].Length; i++) {
+                            GameObject robbery = robUpdate.RobberiesObjects[robberyType][i];
+                            if (robbery.GetComponent<RobberyCustomization>().IsAvailable) {
+                                robbery.GetComponent<DropToRobbery>().DropToRobberyUpdate();
+                            }
+                        }
+                    }
                 }
 
                 //Then update drag

@@ -145,8 +145,8 @@ namespace CriminalTown {
             Robbery robbery0 = GetRandomRobbery(RobberyType.DarkStreet, 0);
             DataScript.EData.RobberiesData[RobberyType.DarkStreet].Add(0, robbery0);
 
-            Robbery robbery1 = GetRandomRobbery(RobberyType.Stall, 0);
-            DataScript.EData.RobberiesData[RobberyType.Stall].Add(0, robbery1);
+//            Robbery robbery1 = GetRandomRobbery(RobberyType.Stall, 0);
+//            DataScript.EData.RobberiesData[RobberyType.Stall].Add(0, robbery1);
 
             Robbery robbery2 = GetRandomRobbery(RobberyType.DarkStreet, 1);
             DataScript.EData.RobberiesData[RobberyType.DarkStreet].Add(1, robbery2);
@@ -154,11 +154,11 @@ namespace CriminalTown {
             Robbery robbery3 = GetRandomRobbery(RobberyType.DarkStreet, 2);
             DataScript.EData.RobberiesData[RobberyType.DarkStreet].Add(2, robbery3);
 
-            Robbery robbery4 = GetRandomRobbery(RobberyType.Stall, 1);
-            DataScript.EData.RobberiesData[RobberyType.Stall].Add(1, robbery4);
-
-            Robbery robbery5 = GetRandomRobbery(RobberyType.Stall, 2);
-            DataScript.EData.RobberiesData[RobberyType.Stall].Add(2, robbery5);
+//            Robbery robbery4 = GetRandomRobbery(RobberyType.Stall, 1);
+//            DataScript.EData.RobberiesData[RobberyType.Stall].Add(1, robbery4);
+//
+//            Robbery robbery5 = GetRandomRobbery(RobberyType.Stall, 2);
+//            DataScript.EData.RobberiesData[RobberyType.Stall].Add(2, robbery5);
         }
 
         public static Robbery GetRandomRobbery(RobberyType robberyType, int locationNum) {

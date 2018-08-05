@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
@@ -13,37 +14,25 @@ namespace CriminalTown {
             }
         }
 
-        public RobberyCustomization GetRobberyCustomization(RobberyType robType, int number) {
-            switch (robType) {
-                case RobberyType.DarkStreet:
-                    return darkStreets[number].GetComponent<RobberyCustomization>();
-                case RobberyType.Stall:
-                    return stalls[number].GetComponent<RobberyCustomization>();
-                case RobberyType.House:
-                    return null;
-                case RobberyType.Shop:
-                    return null;
-                case RobberyType.Band:
-                    return null;
-                default:
-                    return null;
+        [SerializeField]
+        private GameObject[] m_darkStreets = new GameObject[RobberiesOptions.DarkStreetsAmount];
+        [SerializeField]
+        private GameObject[] m_stalls = new GameObject[RobberiesOptions.StallsAmount];
+        private Dictionary<RobberyType, GameObject[]> m_robberiesObjects;
+
+        public Dictionary<RobberyType, GameObject[]> RobberiesObjects {
+            get {
+                return m_robberiesObjects;
             }
         }
-
-        public GameObject[] darkStreets = new GameObject[RobberiesOptions.DarkStreetsAmount];
-        public GameObject[] stalls = new GameObject[RobberiesOptions.StallsAmount];
-
+        
         private void Awake() {
+            m_robberiesObjects = new Dictionary<RobberyType, GameObject[]>() {
+                {RobberyType.DarkStreet, m_darkStreets},
+//                {RobberyType.Stall, m_stalls}
+            };
             m_rmInstance = gameObject.GetComponent<RobberyManager>();
             CustomizeRobberies();
-
-            /*Добавить виды ограблений:
-             * 1. OnRobberiesUpdate -> Awake()
-             * 2. OnRobberiesUpdate -> ActivateRobbery()
-             * 3. OnRobberiesUpdate -> UpdateRobberies()
-             * 4. Drag and Drop -> Update()
-             */
-
             UpdateRobberies();
 
             Night.Instance.OnNightBegan += DeactivateAllRobberies;
@@ -59,75 +48,35 @@ namespace CriminalTown {
         }
 
         public void DeactivateAllRobberies() {
-            DeactivateRobberiesOfType(darkStreets);
-            DeactivateRobberiesOfType(stalls);
-        }
-
-        private void DeactivateRobberiesOfType(GameObject[] robberies) {
-            for (int i = 0; i < robberies.Length; i++) {
-                robberies[i].GetComponentInChildren<Button>().interactable = false;
-                robberies[i].GetComponent<RobberyCustomization>().isAvailable = false;
+            foreach (RobberyType robberyType in m_robberiesObjects.Keys) {
+                for (int i = 0; i < m_robberiesObjects[robberyType].Length; i++) {
+                    GameObject robbery = m_robberiesObjects[robberyType][i];
+                    robbery.GetComponentInChildren<Button>().interactable = false;
+                    robbery.GetComponent<RobberyCustomization>().ActivateRobbery(false);
+                }
             }
         }
 
-        public void CustomizeRobberies() {
-            for (int i = 0; i < darkStreets.Length; i++)
-                darkStreets[i].GetComponent<RobberyCustomization>().CustomizeRobbery(i, RobberyType.DarkStreet);
-            for (int i = 0; i < stalls.Length; i++)
-                stalls[i].GetComponent<RobberyCustomization>().CustomizeRobbery(i, RobberyType.Stall);
+        private void CustomizeRobberies() {
+            foreach (RobberyType robberyType in m_robberiesObjects.Keys) {
+                for (int i = 0; i < m_robberiesObjects[robberyType].Length; i++) {
+                    GameObject robbery = m_robberiesObjects[robberyType][i];
+                    robbery.GetComponent<RobberyCustomization>().CustomizeRobbery(i, RobberyType.DarkStreet);
+                }
+            }
         }
 
         public void ActivateRobbery(RobberyType robType, int locationNum) {
-            switch (robType) {
-                case RobberyType.DarkStreet:
-                    darkStreets[locationNum].GetComponentInChildren<Button>().interactable = true;
-                    darkStreets[locationNum].GetComponent<RobberyCustomization>().isAvailable = true;
-                    break;
-                case RobberyType.Stall:
-                    stalls[locationNum].GetComponentInChildren<Button>().interactable = true;
-                    stalls[locationNum].GetComponent<RobberyCustomization>().isAvailable = true;
-                    break;
-                case RobberyType.House:
-                    break;
-                case RobberyType.Shop:
-                    break;
-                case RobberyType.Band:
-                    break;
-            }
+            m_robberiesObjects[robType][locationNum].GetComponentInChildren<Button>().interactable = true;
+            m_robberiesObjects[robType][locationNum].GetComponent<RobberyCustomization>().ActivateRobbery(true);
         }
 
         public void AddNightEvent(RobberyType robType, int locationNum, UnityAction windowSettings, EventStatus eventStatus, float eventTime) {
-            switch (robType) {
-                case RobberyType.DarkStreet:
-                    darkStreets[locationNum].GetComponentInChildren<RobberyCustomization>().AddNightEvent(windowSettings, eventStatus, eventTime);
-                    break;
-                case RobberyType.Stall:
-                    stalls[locationNum].GetComponentInChildren<RobberyCustomization>().AddNightEvent(windowSettings, eventStatus, eventTime);
-                    break;
-                case RobberyType.House:
-                    break;
-                case RobberyType.Shop:
-                    break;
-                case RobberyType.Band:
-                    break;
-            }
+            m_robberiesObjects[robType][locationNum].GetComponentInChildren<RobberyCustomization>().AddNightEvent(windowSettings, eventStatus, eventTime);
         }
 
         public void ResetNightEvent(RobberyType robType, int locationNum) {
-            switch (robType) {
-                case RobberyType.DarkStreet:
-                    darkStreets[locationNum].GetComponentInChildren<RobberyCustomization>().ResetNightButton();
-                    break;
-                case RobberyType.Stall:
-                    stalls[locationNum].GetComponentInChildren<RobberyCustomization>().ResetNightButton();
-                    break;
-                case RobberyType.House:
-                    break;
-                case RobberyType.Shop:
-                    break;
-                case RobberyType.Band:
-                    break;
-            }
+            m_robberiesObjects[robType][locationNum].GetComponentInChildren<RobberyCustomization>().ResetNightEvent();
         }
     }
 

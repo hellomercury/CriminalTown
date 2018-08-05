@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace CriminalTown {
@@ -44,10 +45,10 @@ namespace CriminalTown {
             m_instance = this;
         }
 
-        public delegate void NightEvent(); //NightEventArgs nightEventArgs);
+        public delegate void NightScriptEvent(); //NightEventArgs nightEventArgs);
 
-        public NightEvent OnNightBegan;
-        public NightEvent OnNightEnded;
+        public NightScriptEvent OnNightBegan;
+        public NightScriptEvent OnNightEnded;
 
         public void TryToStartNight() {
             foreach (Character character in DataScript.ChData.PanelCharacters) {
@@ -88,16 +89,12 @@ namespace CriminalTown {
             while (GetEventNum(out m_currentEventNum)) {
                 Debug.Log("Call robbery event: " + m_currentEventNum);
                 NightRobberyData rob = m_robberies[m_currentEventNum];
-
                 if (rob.nightEvent.RootNode != null) {
-                    RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                        () => { WM1.nightEventWindow.ShowChoice(rob.nightEvent.RootNode); }, EventStatus.InProgress, eventTime);
+                    AssignNightEventDataToWindow(rob, eventTime);
                     yield return new WaitForSeconds(eventTime);
                     if (NightEventWindow.Choice == -1) {
-                        WM1.nightEventWindow.CloseWindow();
                         MakeChoice(Random.Range(0, rob.nightEvent.RootNode.Buttons.Count));
                     }
-                    RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
                     ApplyChangesAfterChoice(m_currentEventNum);
 
                     if (rob.nightEvent.RootNode.Buttons[NightEventWindow.Choice].NextEventNode != null)
@@ -105,38 +102,48 @@ namespace CriminalTown {
                     else
                         rob.nightEvent.RootNode = null;
                 } else {
-                    switch (GetResult(m_currentEventNum)) {
-                        case false:
-                            RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                                () => { WM1.nightEventWindow.ShowFail(rob.nightEvent.Fail); }, EventStatus.Fail, eventTime);
-
-                            yield return new WaitForSeconds(eventTime);
-                            if (NightEventWindow.Choice == -1) {
-                                WM1.nightEventWindow.CloseWindow();
-                                MakeChoice(0);
-                            }
-                            RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
-                            rob.SetAsFailed();
-                            break;
-                        case true:
-                            RobberyManager.RmInstance.AddNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum,
-                                () => { WM1.nightEventWindow.ShowSuccess(rob.nightEvent.Success, rob.Awards, rob.Money); }, EventStatus.Success, eventTime);
-
-                            yield return new WaitForSeconds(eventTime);
-                            if (NightEventWindow.Choice == -1) {
-                                MakeChoice(0);
-                                WM1.nightEventWindow.CloseWindow();
-                            }
-                            RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
-                            rob.SetAsSuccesfull();
-                            break;
+                    if (GetResult(m_currentEventNum) == false) {
+                        rob.SetAsFailed();
+                    } else {
+                        rob.SetAsSuccesfull();
                     }
+                    AssignNightEventDataToWindow(rob, eventTime);
+                    yield return new WaitForSeconds(eventTime);
+                    if (NightEventWindow.Choice == -1) {
+                        MakeChoice(0);
+                    }
+                    RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
                     rob.nightEvent = null;
                 }
+                WM1.nightEventWindow.CloseWindow();            
             }
-
             UpdateDataAfterNight();
             FinishNight();
+        }
+
+        private void AssignNightEventDataToWindow(NightRobberyData rData, float time) {
+            UnityAction windowSetUpMethod;
+            RobberyType rt = rData.Robbery.RobberyType;
+            int ln = rData.Robbery.LocationNum;
+            Vector2 windowPostion = RobberyManager.RmInstance.RobberiesObjects[rt][ln].transform.position;
+            switch (rData.Status) {
+                case EventStatus.Success:
+                    windowSetUpMethod = () => WM1.nightEventWindow.ShowSuccess(rData.nightEvent.Success,
+                        rData.Awards, rData.Money, windowPostion);
+                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Success, eventTime);
+                    break;
+                case EventStatus.Fail:
+                    windowSetUpMethod = () => WM1.nightEventWindow.ShowFail(rData.nightEvent.Fail, windowPostion);
+                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Fail, eventTime);
+                    break;
+                case EventStatus.InProgress:
+                    windowSetUpMethod = () => WM1.nightEventWindow.ShowChoice(rData.nightEvent.RootNode, windowPostion);
+                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.InProgress, eventTime);
+                    break;
+            }
         }
 
         private void FinishNight() {

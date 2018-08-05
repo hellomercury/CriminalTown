@@ -18,8 +18,8 @@ namespace CriminalTown {
             if (Input.GetMouseButtonUp(0)) {
                 if (isEntered) {
                     RobberyCustomization robCust = gameObject.GetComponent<RobberyCustomization>();
-                    int locNum = robCust.number;
-                    RobberyType robType = robCust.robberyType;
+                    int locNum = robCust.Number;
+                    RobberyType robType = robCust.RobberyType;
 
                     if (Drag.ItemType == DraggeableItemType.Character) {
                         CharacterCustomization charCust;
