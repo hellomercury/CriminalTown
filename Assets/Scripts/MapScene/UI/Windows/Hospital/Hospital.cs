@@ -46,7 +46,7 @@ namespace CriminalTown {
                 };
                 EventButtonDetails noButton = new EventButtonDetails {
                     buttonText = "Нет",
-                    action = WM1.modalPanel.ClosePanel
+                    action = UIManager.modalPanel.ClosePanel
                 };
                 details = new ModalPanelDetails {
                     button0Details = yesButton,
@@ -58,7 +58,7 @@ namespace CriminalTown {
             } else {
                 EventButtonDetails noButton = new EventButtonDetails {
                     buttonText = "Ну ладно...",
-                    action = WM1.modalPanel.ClosePanel
+                    action = UIManager.modalPanel.ClosePanel
                 };
                 details = new ModalPanelDetails {
                     button1Details = noButton,
@@ -67,7 +67,7 @@ namespace CriminalTown {
                     titletext = character.Name
                 };
             }
-            WM1.modalPanel.CallModalPanel(details);
+            UIManager.modalPanel.CallModalPanel(details);
 
         }
 

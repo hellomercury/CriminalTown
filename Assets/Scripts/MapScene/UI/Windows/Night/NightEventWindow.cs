@@ -93,7 +93,7 @@ namespace CriminalTown {
             foreach (int itemNum in awards.Keys) {
                 if (awards[itemNum] > 0) {
                     AwardsImages[i].gameObject.SetActive(true);
-                    AwardsImages[i].sprite = WM1.itemsOptions.itemsSprites[itemNum];
+                    AwardsImages[i].sprite = ItemsOptions.Instance.itemsSprites[itemNum];
                     AwardsTexts[i].text = awards[itemNum].ToString();
                 } else
                     AwardsImages[i].gameObject.SetActive(false);

@@ -60,7 +60,7 @@ namespace CriminalTown {
                         };
                         EventButtonDetails noButton = new EventButtonDetails {
                             buttonText = "Нет",
-                            action = WM1.modalPanel.ClosePanel
+                            action = UIManager.modalPanel.ClosePanel
                         };
                         ModalPanelDetails details = new ModalPanelDetails {
                             button0Details = yesButton,
@@ -69,7 +69,7 @@ namespace CriminalTown {
                             text = "Этот персонаж скоро нас сдаст. Босс, ты уверен, что стоит оставить его в грязных руках копов?",
                             titletext = character.Name
                         };
-                        WM1.modalPanel.CallModalPanel(details);
+                        UIManager.modalPanel.CallModalPanel(details);
                         return;
                     }
             }
@@ -112,10 +112,10 @@ namespace CriminalTown {
                     if (NightEventWindow.Choice == -1) {
                         MakeChoice(0);
                     }
-                    RobberyManager.RmInstance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
+                    RobberiesManager.Instance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
                     rob.nightEvent = null;
                 }
-                WM1.nightEventWindow.CloseWindow();            
+                UIManager.nightEventWindow.CloseWindow();            
             }
             UpdateDataAfterNight();
             FinishNight();
@@ -125,29 +125,29 @@ namespace CriminalTown {
             UnityAction windowSetUpMethod;
             RobberyType rt = rData.Robbery.RobberyType;
             int ln = rData.Robbery.LocationNum;
-            Vector2 windowPostion = RobberyManager.RmInstance.RobberiesObjects[rt][ln].transform.position;
+            Vector2 windowPostion = RobberiesManager.Instance.RobberiesObjects[rt][ln].transform.position;
             switch (rData.Status) {
                 case EventStatus.Success:
-                    windowSetUpMethod = () => WM1.nightEventWindow.ShowSuccess(rData.nightEvent.Success,
+                    windowSetUpMethod = () => UIManager.nightEventWindow.ShowSuccess(rData.nightEvent.Success,
                         rData.Awards, rData.Money, windowPostion);
-                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                    RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
                         rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Success, eventTime);
                     break;
                 case EventStatus.Fail:
-                    windowSetUpMethod = () => WM1.nightEventWindow.ShowFail(rData.nightEvent.Fail, windowPostion);
-                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                    windowSetUpMethod = () => UIManager.nightEventWindow.ShowFail(rData.nightEvent.Fail, windowPostion);
+                    RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
                         rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Fail, eventTime);
                     break;
                 case EventStatus.InProgress:
-                    windowSetUpMethod = () => WM1.nightEventWindow.ShowChoice(rData.nightEvent.RootNode, windowPostion);
-                    RobberyManager.RmInstance.AddNightEvent(rData.Robbery.RobberyType,
+                    windowSetUpMethod = () => UIManager.nightEventWindow.ShowChoice(rData.nightEvent.RootNode, windowPostion);
+                    RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
                         rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.InProgress, eventTime);
                     break;
             }
         }
 
         private void FinishNight() {
-            WM1.nightResumeWindow.SetActive(true);
+            UIManager.nightResumeWindow.SetActive(true);
             m_isNight = false;
             OnNightEnded();
         }
@@ -182,7 +182,7 @@ namespace CriminalTown {
 
         public void MakeChoice(int choiceNum) {
             NightEventWindow.Choice = choiceNum;
-            RobberyManager.RmInstance.ResetNightEvent(m_robberies[m_currentEventNum].Robbery.RobberyType,
+            RobberiesManager.Instance.ResetNightEvent(m_robberies[m_currentEventNum].Robbery.RobberyType,
                 m_robberies[m_currentEventNum].Robbery.LocationNum);
         }
 
@@ -221,7 +221,7 @@ namespace CriminalTown {
                     }
                     character.SetDefaultStatus();
                 }
-                WM1.robberyWindow.RemoveAllItemsFromRoobbery(nightRobDat.Robbery.RobberyType, nightRobDat.Robbery.LocationNum);
+                UIManager.robberyWindow.RemoveAllItemsFromRoobbery(nightRobDat.Robbery.RobberyType, nightRobDat.Robbery.LocationNum);
             }
             m_robberies.Clear();
             NightEventsOptions.ClearUsedEvents();

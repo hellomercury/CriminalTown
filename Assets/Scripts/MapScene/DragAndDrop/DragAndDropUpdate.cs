@@ -8,18 +8,18 @@ namespace CriminalTown {
         public GameObject robberies;
 
 
-        public RobberyManager robUpdate;
+        public RobberiesManager robUpdate;
 
         private void Update() {
             if (!Night.Instance.IsNight) {
                 //Update drop
                 if (Drag.IsObjectDragging) {
-                    if (WM1.hospital.gameObject.activeInHierarchy)
-                        WM1.hospital.GetComponent<DropToHospitalWindow>().DropToHospitalWindowUpdate();
+                    if (UIManager.hospital.gameObject.activeInHierarchy)
+                        UIManager.hospital.GetComponent<DropToHospitalWindow>().DropToHospitalWindowUpdate();
                     hospitalButton.GetComponent<DropToHospital>().DropToHospitalButtonUpdate();
 
-                    if (WM1.robberyWindow.gameObject.activeInHierarchy)
-                        WM1.robberyWindow.GetComponent<DropToRobberyWindow>().DropToRobberyWindowUpdate();
+                    if (UIManager.robberyWindow.gameObject.activeInHierarchy)
+                        UIManager.robberyWindow.GetComponent<DropToRobberyWindow>().DropToRobberyWindowUpdate();
 
                     foreach (RobberyType robberyType in robUpdate.RobberiesObjects.Keys) {
                         for (int i = 0; i < robUpdate.RobberiesObjects[robberyType].Length; i++) {

@@ -905,7 +905,6 @@ GameObject:
   m_Component:
   - component: {fileID: 88625073}
   - component: {fileID: 88625072}
-  - component: {fileID: 88625071}
   m_Layer: 0
   m_Name: PlacesManager
   m_TagString: Untagged
@@ -913,25 +912,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &88625071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 88625070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6a40bd92e28bc42bad5aca22dfbf4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_darkStreets:
-  - {fileID: 831240745}
-  - {fileID: 1236281085}
-  - {fileID: 1353129153}
-  m_stalls:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &88625072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,8 +938,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 476302839}
-  m_RootOrder: 1
+  m_Father: {fileID: 1673442711}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &99437924
 GameObject:
@@ -2563,12 +2543,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 227154598}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1284660568}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &227154600
 MonoBehaviour:
@@ -2581,7 +2561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c3d2a495838a5f4c8a5a282650c9d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpecialSprites:
+  m_specialSprites:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2592,7 +2572,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  ComMaleSprites:
+  m_comMaleSprites:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2603,7 +2583,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  ComFemaleSprites:
+  m_comFemaleSprites:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2719,7 +2699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hospitalButton: {fileID: 600092996}
   robberies: {fileID: 1793419840}
-  robUpdate: {fileID: 88625071}
+  robUpdate: {fileID: 505092063}
 --- !u!4 &232712919
 Transform:
   m_ObjectHideFlags: 0
@@ -2731,7 +2711,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &241679958
 GameObject:
@@ -5450,7 +5430,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &412902346
 GameObject:
@@ -6706,37 +6686,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 471319855}
   m_CullTransparentMesh: 0
---- !u!1 &476302838
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 476302839}
-  m_Layer: 0
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &476302839
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 476302838}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2050156964}
-  - {fileID: 88625073}
-  - {fileID: 665982013}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &485971616
 Prefab:
   m_ObjectHideFlags: 0
@@ -6917,6 +6866,54 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 495585088}
   m_CullTransparentMesh: 0
+--- !u!1 &505092061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 505092062}
+  - component: {fileID: 505092063}
+  m_Layer: 0
+  m_Name: RobberiesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &505092062
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 505092061}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1673442711}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &505092063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 505092061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6a40bd92e28bc42bad5aca22dfbf4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_darkStreets:
+  - {fileID: 831240745}
+  - {fileID: 1236281085}
+  - {fileID: 1353129153}
+  m_stalls:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &509252268
 GameObject:
   m_ObjectHideFlags: 0
@@ -7823,11 +7820,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 526828381}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -634.21747, y: -481.0334, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1274513041}
-  m_RootOrder: 0
+  m_Father: {fileID: 1284660568}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &526828383
 MonoBehaviour:
@@ -9849,8 +9846,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 476302839}
-  m_RootOrder: 2
+  m_Father: {fileID: 1673442711}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &672588933
 GameObject:
@@ -10170,7 +10167,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &712775997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14799,7 +14796,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &945177133
 GameObject:
@@ -15094,11 +15091,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 970761595}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -634.21747, y: -481.0334, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1274513041}
-  m_RootOrder: 1
+  m_Father: {fileID: 1284660568}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &972298527
 GameObject:
@@ -19707,13 +19704,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 634.21747, y: 481.0334, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 526828382}
-  - {fileID: 970761597}
-  - {fileID: 1972396961}
-  - {fileID: 1758704128}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1278478718
 GameObject:
@@ -19869,6 +19862,56 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1283893030}
   m_CullTransparentMesh: 0
+--- !u!1 &1284660567
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1284660568}
+  - component: {fileID: 1284660569}
+  m_Layer: 0
+  m_Name: OptionsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1284660568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1284660567}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 227154599}
+  - {fileID: 526828382}
+  - {fileID: 970761597}
+  - {fileID: 1972396961}
+  - {fileID: 1758704128}
+  m_Father: {fileID: 1673442711}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1284660569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1284660567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbda4472ddccfb44582aecb854053395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_charactersOptions: {fileID: 227154600}
+  m_itemsOptions: {fileID: 526828383}
+  m_robberiesOptions: {fileID: 970761596}
+  m_nightEventsOprions: {fileID: 1758704127}
+  m_traitsOptions: {fileID: 1972396960}
 --- !u!1 &1294773751
 GameObject:
   m_ObjectHideFlags: 0
@@ -25179,7 +25222,7 @@ RectTransform:
   - {fileID: 13360362}
   - {fileID: 42607706}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -26305,6 +26348,55 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1666335460}
   m_CullTransparentMesh: 0
+--- !u!1 &1673442710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1673442711}
+  - component: {fileID: 1673442712}
+  m_Layer: 0
+  m_Name: MapStarter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1673442711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1673442710}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 665982013}
+  - {fileID: 2050156964}
+  - {fileID: 88625073}
+  - {fileID: 505092062}
+  - {fileID: 1284660568}
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1673442712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1673442710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc3215c00c581645887eaf26f3268f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_uiManager: {fileID: 2050156963}
+  m_optionsManager: {fileID: 1284660569}
+  m_robberiesManager: {fileID: 505092063}
+  m_placesManager: {fileID: 88625072}
 --- !u!1 &1673656190
 GameObject:
   m_ObjectHideFlags: 0
@@ -27700,11 +27792,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1758704126}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -634.21747, y: -481.0334, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1274513041}
-  m_RootOrder: 3
+  m_Father: {fileID: 1284660568}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1761422953
 GameObject:
@@ -31703,11 +31795,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1972396959}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -634.21747, y: -481.0334, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1274513041}
-  m_RootOrder: 2
+  m_Father: {fileID: 1284660568}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1972713704
 GameObject:
@@ -32489,7 +32581,7 @@ GameObject:
   - component: {fileID: 2050156964}
   - component: {fileID: 2050156963}
   m_Layer: 0
-  m_Name: WindowsManager
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32506,11 +32598,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7227f560b113347b002def7315af97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersOptionsObject: {fileID: 227154598}
-  itemsOptionsObject: {fileID: 526828381}
-  robberiesOptionsObject: {fileID: 970761595}
-  nightEventsOprionsObject: {fileID: 1758704126}
-  traitsOptionsObject: {fileID: 1972396959}
   modalPanelObject: {fileID: 111250632}
   robberyWindowObject: {fileID: 1201771687}
   characterMenuObject: {fileID: 1763476066}
@@ -32535,8 +32622,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 476302839}
-  m_RootOrder: 0
+  m_Father: {fileID: 1673442711}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2054342711
 GameObject:

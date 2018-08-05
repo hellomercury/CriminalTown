@@ -281,7 +281,7 @@ namespace CriminalTown {
             };
             EventButtonDetails noButton = new EventButtonDetails {
                 buttonText = "Нет",
-                action = WM1.modalPanel.ClosePanel
+                action = UIManager.modalPanel.ClosePanel
             };
             ModalPanelDetails details = new ModalPanelDetails {
                 button0Details = yesButton,
@@ -292,7 +292,7 @@ namespace CriminalTown {
                     : "Вы уверены, что хотите выгнать данного персонажа?",
                 titletext = characterName.text
             };
-            WM1.modalPanel.CallModalPanel(details);
+            UIManager.modalPanel.CallModalPanel(details);
         }
 
         public void OnKickCharacterWindowReaction() {

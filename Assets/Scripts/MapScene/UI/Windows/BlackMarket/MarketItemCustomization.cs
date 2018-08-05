@@ -11,7 +11,7 @@ namespace CriminalTown {
 
 
         public void OnMarketItemClick() {
-            WM1.buyWindow.SetBuyWindow(number);
+            UIManager.buyWindow.SetBuyWindow(number);
         }
     }
 

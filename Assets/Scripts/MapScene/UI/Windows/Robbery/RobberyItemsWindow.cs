@@ -55,9 +55,9 @@ namespace CriminalTown {
 
         public void AddOrRemoveButtonClick() {
             if (isAdding)
-                WM1.robberyWindow.AddItemToRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
+                UIManager.robberyWindow.AddItemToRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
             else
-                WM1.robberyWindow.RemoveItemFromRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
+                UIManager.robberyWindow.RemoveItemFromRobberyAndUpdate(number, (int) countSlider.value, robType, locNum);
             itemsWindowObject.SetActive(false);
         }
 

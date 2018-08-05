@@ -26,7 +26,7 @@ namespace CriminalTown {
 
         public override Sprite Sprite {
             get {
-                return CharactersOptions.GetSpecialSprite(SpriteId);
+                return CharactersOptions.Instance.GetSpecialSprite(SpriteId);
             }
         }
 

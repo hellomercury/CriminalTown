@@ -5,12 +5,12 @@ using UnityEngine.Events;
 
 namespace CriminalTown {
 
-    public class RobberyManager : MonoBehaviour {
-        private static RobberyManager m_rmInstance;
+    public class RobberiesManager : MonoBehaviour {
+        private static RobberiesManager m_instance;
 
-        public static RobberyManager RmInstance {
+        public static RobberiesManager Instance {
             get {
-                return m_rmInstance;
+                return m_instance;
             }
         }
 
@@ -26,12 +26,12 @@ namespace CriminalTown {
             }
         }
         
-        private void Awake() {
+        public void Initialize() {
             m_robberiesObjects = new Dictionary<RobberyType, GameObject[]>() {
                 {RobberyType.DarkStreet, m_darkStreets},
 //                {RobberyType.Stall, m_stalls}
             };
-            m_rmInstance = gameObject.GetComponent<RobberyManager>();
+            m_instance = gameObject.GetComponent<RobberiesManager>();
             CustomizeRobberies();
             UpdateRobberies();
 

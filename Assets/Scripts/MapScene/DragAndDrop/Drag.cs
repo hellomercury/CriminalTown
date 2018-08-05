@@ -68,13 +68,13 @@ namespace CriminalTown {
         }
 
         private void GetCurrentLocation() {
-            if (gameObject.transform.parent.parent == WM1.charactersPanel.charactersLocation)
+            if (gameObject.transform.parent.parent == UIManager.charactersPanel.charactersLocation)
                 Location = DraggableObjectsLocations.charactersPanel;
-            else if (gameObject.transform.parent.parent == WM1.itemsPanel.itemsLocation)
+            else if (gameObject.transform.parent.parent == UIManager.itemsPanel.itemsLocation)
                 Location = DraggableObjectsLocations.itemsPanel;
-            else if (gameObject.transform.parent.parent == WM1.robberyWindow.itemsLocation)
+            else if (gameObject.transform.parent.parent == UIManager.robberyWindow.itemsLocation)
                 Location = DraggableObjectsLocations.robbery;
-            else if (gameObject.transform.parent.parent == WM1.robberyWindow.charactersLocation)
+            else if (gameObject.transform.parent.parent == UIManager.robberyWindow.charactersLocation)
                 Location = DraggableObjectsLocations.robbery;
         }
 

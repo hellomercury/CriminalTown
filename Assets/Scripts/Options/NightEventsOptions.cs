@@ -141,6 +141,14 @@ namespace CriminalTown {
     }
 
     public class NightEventsOptions : MonoBehaviour {
+        private static NightEventsOptions m_instance;
+
+        public static NightEventsOptions Instance {
+            get {
+                return m_instance;
+            }
+        }
+        
         [SerializeField]
         private Sprite[] m_placesSprites = new Sprite[5];
         [SerializeField]
@@ -149,6 +157,12 @@ namespace CriminalTown {
         private static Dictionary<RobberyType, List<int>> m_usedEvents;
         private static Dictionary<RobberyType, NightEvent[]> m_nightEventsCollection;
 
+        public void Initialize() {
+            m_instance = GetComponent<NightEventsOptions>();
+            m_nightEventsCollection = NightEventsSerialization.GetNightEventsCollection();
+            m_usedEvents = new Dictionary<RobberyType, List<int>>();
+        }
+        
         public static NightEvent GetRandomEvent(RobberyType robberyType) {
             int eventsCount = m_nightEventsCollection[robberyType].Length;
             int randomNumber = Random.Range(0, eventsCount);
@@ -176,30 +190,25 @@ namespace CriminalTown {
                 case SpriteType.Characters:
                     switch (charSpriteType) {
                         case CharacterSpriteType.ComMale:
-                            return WM1.charactersOptions.ComMaleSprites[spriteId];
+                            return CharactersOptions.Instance.GetCommonSprite(Sex.Male, spriteId);
                         case CharacterSpriteType.ComFemale:
-                            return WM1.charactersOptions.ComFemaleSprites[spriteId];
+                            return CharactersOptions.Instance.GetCommonSprite(Sex.Female, spriteId);
                         case CharacterSpriteType.Special:
-                            return WM1.charactersOptions.SpecialSprites[spriteId];
+                            return CharactersOptions.Instance.GetSpecialSprite(spriteId);
                         default:
                             return null;
                     }
                 case SpriteType.Items:
-                    return WM1.itemsOptions.itemsSprites[spriteId];
+                    return ItemsOptions.Instance.itemsSprites[spriteId];
                 case SpriteType.Robberies:
-                    return WM1.robberiesOptions.RobberySprites[spriteId];
+                    return RobberiesOptions.Instance.RobberySprites[spriteId];
                 case SpriteType.People:
-                    return WM1.nightEventsOptions.m_peopleSprites[spriteId];
+                    return m_instance.m_peopleSprites[spriteId];
                 case SpriteType.Places:
-                    return WM1.nightEventsOptions.m_placesSprites[spriteId];
+                    return m_instance.m_placesSprites[spriteId];
                 default:
                     return null;
             }
-        }
-
-        public static void InitializeNightEventsCollection() {
-            m_nightEventsCollection = NightEventsSerialization.GetNightEventsCollection();
-            m_usedEvents = new Dictionary<RobberyType, List<int>>();
         }
 
         public int GetCharacterSpriteId(RobberyType robberyType, int locationNum) {

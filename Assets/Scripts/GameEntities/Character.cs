@@ -76,7 +76,7 @@ namespace CriminalTown {
 
         public virtual Sprite Sprite {
             get {
-                return CharactersOptions.GetCommonSprite(Sex, SpriteId);
+                return CharactersOptions.Instance.GetCommonSprite(Sex, SpriteId);
             }
         }
 

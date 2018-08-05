@@ -25,8 +25,17 @@ public struct ItemName
 namespace CriminalTown {
 
     public class ItemsOptions : MonoBehaviour {
-        static TextAsset ItemsCollectionDataXml;
-        static XmlDocument xmlDoc;
+        private static ItemsOptions m_instance;
+
+        public static ItemsOptions Instance {
+            get {
+                return m_instance;
+            }
+        }
+
+        
+        private static TextAsset m_itemsCollectionDataXml;
+        private static XmlDocument m_xmlDoc;
 
 
         public static int totalAmount = 0;
@@ -42,15 +51,18 @@ namespace CriminalTown {
             return itemsCollection[num];
         }
 
-
+        public void Initialize() {
+            m_instance = GetComponent<ItemsOptions>();
+            GetItemsCollectionData();
+        }
 
         public static void GetItemsCollectionData() {
-            ItemsCollectionDataXml = Resources.Load("ItemsCollectionData") as TextAsset;
+            m_itemsCollectionDataXml = Resources.Load("ItemsCollectionData") as TextAsset;
 
-            xmlDoc = new XmlDocument();
-            if (ItemsCollectionDataXml) {
-                xmlDoc.LoadXml(ItemsCollectionDataXml.text);
-                XmlNode allItems = xmlDoc.SelectSingleNode("./items");
+            m_xmlDoc = new XmlDocument();
+            if (m_itemsCollectionDataXml) {
+                m_xmlDoc.LoadXml(m_itemsCollectionDataXml.text);
+                XmlNode allItems = m_xmlDoc.SelectSingleNode("./items");
                 foreach (XmlNode item in allItems) {
                     itemDict = new Dictionary<ItemProperty, string> {
                         {ItemProperty.isSpecial, item.Attributes["isSpecial"].Value}

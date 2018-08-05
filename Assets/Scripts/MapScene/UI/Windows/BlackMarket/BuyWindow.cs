@@ -53,7 +53,7 @@ namespace CriminalTown {
             DataScript.SData.ItemsCount[number] += (int) countSlider.value;
             DataScript.SaveSourcesData();
             buyWindowObject.SetActive(false);
-            WM1.itemsPanel.UpdateSingleItemWithAnimation(number);
+            UIManager.itemsPanel.UpdateSingleItemWithAnimation(number);
         }
 
         public void OnSliderValueChanged() {

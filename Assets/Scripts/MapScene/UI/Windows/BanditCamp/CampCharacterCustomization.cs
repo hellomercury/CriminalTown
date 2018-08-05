@@ -37,7 +37,7 @@ namespace CriminalTown {
             tempColorBlock.normalColor = highlightColor;
             tempColorBlock.highlightedColor = highlightColor;
             CharacterButton.colors = tempColorBlock;
-            WM1.banditCamp.HighlightCharacter(m_character);
+            UIManager.banditCamp.HighlightCharacter(m_character);
         }
 
         public void SetDefaultColor() {

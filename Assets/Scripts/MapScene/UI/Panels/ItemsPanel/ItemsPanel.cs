@@ -23,7 +23,7 @@ namespace CriminalTown {
 
                 items[i] = Instantiate(itemPrefab, itemsLocation);
                 items[i].GetComponent<ItemCustomization>().number = i;
-                items[i].GetComponent<ItemCustomization>().itemImage.sprite = WM1.itemsOptions.itemsSprites[i];
+                items[i].GetComponent<ItemCustomization>().itemImage.sprite = ItemsOptions.Instance.itemsSprites[i];
                 items[i].GetComponent<ItemCustomization>().itemName.text = itemDict[ItemProperty.name];
             }
             UpdateItemsPanel();

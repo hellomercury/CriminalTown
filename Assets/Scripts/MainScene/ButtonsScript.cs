@@ -20,7 +20,6 @@ namespace CriminalTown {
             EventButtonDetails yesButton = new EventButtonDetails {
                 buttonText = "Да",
                 action = () => {
-                    DataScript.AssignDefaultData();
                     SceneManager.LoadScene("Map");
                 }
             };

@@ -3,9 +3,6 @@ using UnityEngine;
 
 namespace CriminalTown {
 
-
-
-
     public enum CharacterStatus {
         Normal,
         Robbery,
@@ -26,9 +23,15 @@ namespace CriminalTown {
     }
 
     public partial class CharactersOptions {
+        private static CharactersOptions m_instance;
+
+        public static CharactersOptions Instance {
+            get {
+                return m_instance;
+            }
+        }
 
         #region CharactersSettings - constants
-
         public const int CampComCellsAmount = 10;
         public const int CampSpCellsAmount = 10;
         public const int PanelCellsMaxAmount = 20;
@@ -62,10 +65,18 @@ namespace CriminalTown {
 
         #endregion
 
-        public Sprite[] SpecialSprites = new Sprite[SpecialSpritesAmount];
-        public Sprite[] ComMaleSprites = new Sprite[ComMaleSpritesAmount];
-        public Sprite[] ComFemaleSprites = new Sprite[ComFemaleSpritesAmount];
+        [SerializeField]
+        private Sprite[] m_specialSprites = new Sprite[SpecialSpritesAmount];
+        [SerializeField]
+        private Sprite[] m_comMaleSprites = new Sprite[ComMaleSpritesAmount];
+        [SerializeField]
+        private Sprite[] m_comFemaleSprites = new Sprite[ComFemaleSpritesAmount];
 
+        public void Initialize() {
+            m_instance = GetComponent<CharactersOptions>();
+            GetCharactersCollectionData();
+        }
+        
         #region Accessing methods
 
         public static string GetCommonName(Sex sex, int id) {
@@ -90,12 +101,12 @@ namespace CriminalTown {
             }
         }
 
-        public static Sprite GetCommonSprite(Sex sex, int id) {
+        public Sprite GetCommonSprite(Sex sex, int id) {
             switch (sex) {
                 case Sex.Male:
-                    return WM1.charactersOptions.ComMaleSprites[id];
+                    return m_comMaleSprites[id];
                 case Sex.Female:
-                    return WM1.charactersOptions.ComFemaleSprites[id];
+                    return m_comFemaleSprites[id];
                 default:
                     return null;
             }
@@ -113,8 +124,8 @@ namespace CriminalTown {
             return int.Parse(specialCharactersAuthList[authority][id][CharacterProperty.SpriteId]);
         }
 
-        public static Sprite GetSpecialSprite(int spriteId) {
-            return WM1.charactersOptions.SpecialSprites[spriteId];
+        public Sprite GetSpecialSprite(int spriteId) {
+            return m_specialSprites[spriteId];
         }
 
         public static int GetSpecialTraitId(int authority, int id) {

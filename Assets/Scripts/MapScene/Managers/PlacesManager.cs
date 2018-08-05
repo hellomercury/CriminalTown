@@ -4,6 +4,14 @@ using UnityEngine.UI;
 namespace CriminalTown {
 
     public class PlacesManager : MonoBehaviour {
+        private static PlacesManager m_instance;
+
+        public static PlacesManager Instance {
+            get {
+                return m_instance;
+            }
+        }
+        
         public GameObject hospitalObject;
         public GameObject policeStationObject;
         public GameObject blackMarketObject;
@@ -16,7 +24,9 @@ namespace CriminalTown {
         public static Button banditCamp;
         public static Button testPanel;
 
-        private void Awake() {
+        public void Initialize() {
+            m_instance = GetComponent<PlacesManager>();
+            
             hospital = hospitalObject.GetComponentInChildren<Button>();
             policeStation = policeStationObject.GetComponent<Button>();
             blackMarket = blackMarketObject.GetComponent<Button>();

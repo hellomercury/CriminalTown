@@ -74,20 +74,11 @@ namespace CriminalTown {
         public Dictionary<RobberyType, Dictionary<int, Robbery>> RobberiesData;
     }
 
-    public class DataScript : MonoBehaviour {
+    public static class DataScript {
         public static SData SData = new SData();
         public static ChData ChData = new ChData();
         public static PData PData = new PData();
         public static EData EData = new EData();
-
-        private void Awake() {
-            DontDestroyOnLoad(gameObject);
-            ItemsOptions.GetItemsCollectionData();
-            CharactersOptions.GetCharactersCollectionData();
-            RobberiesOptions.InitializeRobberiesCollection();
-            NightEventsOptions.InitializeNightEventsCollection();
-            TraitsOptions.GetTraitsCollectionData();
-        }
 
         public static bool CheckDataFiles() {
             return
@@ -95,42 +86,6 @@ namespace CriminalTown {
                     File.Exists(Application.persistentDataPath + "/charactersDataFile.dat") &&
                     File.Exists(Application.persistentDataPath + "/progressDataFile.dat")) &&
                 File.Exists(Application.persistentDataPath + "/eventsDataFile.dat");
-        }
-
-        public static void AssignDefaultData() {
-            //sData
-            SData.ItemsCount = new int[ItemsOptions.totalAmount];
-            for (int i = 0; i < ItemsOptions.totalAmount; i++)
-                SData.ItemsCount[i] = 5;
-            SData.Money = 1000000;
-
-            //chData
-            Character arrestedChar = CharactersOptions.GetRandomCharacter(5);
-            arrestedChar.AddToPolice();
-            ChData.AddCharacter(arrestedChar);
-
-            Character hospitalChar = CharactersOptions.GetRandomCharacter(6);
-            hospitalChar.AddToHospital();
-            ChData.AddCharacter(hospitalChar);
-
-
-            //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(8));
-            //chData.panelCharacters.Add(CharactersOptions.GetRandomCommonCharacter(9));
-            //chData.panelCharacters.Add(CharactersOptions.GetSpecialCharacter(9, 0));
-            ChData.AddCharacter(CharactersOptions.GetSpecialCharacter(9, 1));
-
-            //eData
-            EData.PoliceKnowledge = 0;
-
-            RobberiesOptions.GetNewRobberies();
-
-            //pData
-            PData.IsItemAvailable = new bool[ItemsOptions.totalAmount];
-            for (int i = 0; i < ItemsOptions.totalAmount; i++)
-                PData.IsItemAvailable[i] = true;
-            PData.Authority = 9;
-
-            SaveAll();
         }
 
         public static void LoadData() {

@@ -27,14 +27,14 @@ namespace CriminalTown {
 
                         if (charCust != null)
                             if (charCust.Character.Status == CharacterStatus.Normal)
-                                WM1.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
+                                UIManager.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
                     }
                     if (Drag.ItemType == DraggeableItemType.Item) {
                         ItemCustomization iCust;
                         Drop.DropObject(out iCust);
                         if (iCust != null)
                             if (Drag.Location == DraggableObjectsLocations.itemsPanel)
-                                WM1.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
+                                UIManager.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
                     }
                     isEntered = false;
                 } else //if pointer exited
@@ -52,7 +52,7 @@ namespace CriminalTown {
                         Drop.DropObject(out iCust);
 
                         if (Drag.Location == DraggableObjectsLocations.robbery)
-                            WM1.robberyWindow.TryToRemoveItemFromRobbery(iCust.number, RobberyWindow.robberyData.RobberyType, RobberyWindow.robberyData.LocationNum);
+                            UIManager.robberyWindow.TryToRemoveItemFromRobbery(iCust.number, RobberyWindow.robberyData.RobberyType, RobberyWindow.robberyData.LocationNum);
                     }
                     isEntered = false;
                 }

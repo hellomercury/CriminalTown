@@ -97,7 +97,7 @@ namespace CriminalTown {
         }
 
         public void OnClick() {
-            WM1.characterMenu.SetCharacterMenu(Character);
+            UIManager.characterMenu.SetCharacterMenu(Character);
         }
 
         public void OnDestroy() {

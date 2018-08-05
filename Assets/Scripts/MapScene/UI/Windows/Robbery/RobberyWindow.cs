@@ -37,7 +37,7 @@ namespace CriminalTown {
             UpdateCharacters();
             UpdateItems();
 
-            robberyImage.sprite = WM1.robberiesOptions.RobberySprites[(int) robType];
+            robberyImage.sprite = RobberiesOptions.Instance.RobberySprites[(int) robType];
             descriptionText.text = RobberiesOptions.GetRobberyDescription(robType);
             nameText.text = RobberiesOptions.GetRobberyName(robType);
 
@@ -70,7 +70,7 @@ namespace CriminalTown {
             foreach (int number in robberyData.Items.Keys) {
                 items.Add(Instantiate(itemPrefab, itemsLocation));
                 items[j].GetComponent<ItemCustomization>().number = number;
-                items[j].GetComponent<ItemCustomization>().itemImage.sprite = WM1.itemsOptions.itemsSprites[number];
+                items[j].GetComponent<ItemCustomization>().itemImage.sprite = ItemsOptions.Instance.itemsSprites[number];
                 items[j].GetComponent<ItemCustomization>().itemCount.text = robberyData.Items[number].ToString();
                 items[j].GetComponent<ItemCustomization>().itemName.text = ItemsOptions.GetItemData(number)[ItemProperty.name];
                 items[j].SetActive(true);
@@ -86,7 +86,7 @@ namespace CriminalTown {
                 };
                 EventButtonDetails noButton = new EventButtonDetails {
                     buttonText = "Ладно, отдыхай",
-                    action = WM1.modalPanel.ClosePanel
+                    action = UIManager.modalPanel.ClosePanel
                 };
                 ModalPanelDetails details = new ModalPanelDetails {
                     button0Details = yesButton,
@@ -95,7 +95,7 @@ namespace CriminalTown {
                     text = "Босс, может мне лучше в больницу?",
                     titletext = character.Name
                 };
-                WM1.modalPanel.CallModalPanel(details);
+                UIManager.modalPanel.CallModalPanel(details);
             } else if (character.Status == CharacterStatus.Normal) {
                 DataScript.EData.RobberiesData[robType][locNum].AddCharacter(character);
             }
@@ -103,7 +103,7 @@ namespace CriminalTown {
         }
 
         public void TryToAddItemToRobbery(int itemNumber, RobberyType robberyType, int locationNum) {
-            WM1.robberyItemsWindow.SetItemsWindow(itemNumber, isItemAdding: true, robberyType: robberyType, locationNum: locationNum);
+            UIManager.robberyItemsWindow.SetItemsWindow(itemNumber, isItemAdding: true, robberyType: robberyType, locationNum: locationNum);
         }
 
         public void AddItemToRobberyAndUpdate(int itemNumber, int itemCount, RobberyType robberyType, int locationNum) {
@@ -115,11 +115,11 @@ namespace CriminalTown {
 
             if (robberyWindowObject.activeInHierarchy)
                 UpdateItems();
-            WM1.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
+            UIManager.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
         }
 
         public void TryToRemoveItemFromRobbery(int itemNumber, RobberyType robberyType, int locationNum) {
-            WM1.robberyItemsWindow.SetItemsWindow(itemNumber, isItemAdding: false, robberyType: robberyType, locationNum: locationNum);
+            UIManager.robberyItemsWindow.SetItemsWindow(itemNumber, isItemAdding: false, robberyType: robberyType, locationNum: locationNum);
         }
 
         public void RemoveItemFromRobberyAndUpdate(int itemNumber, int itemCount, RobberyType robberyType, int locationNum) {
@@ -129,7 +129,7 @@ namespace CriminalTown {
             } else
                 DataScript.EData.RobberiesData[robberyType][locationNum].Items[itemNumber] -= itemCount;
             UpdateItems();
-            WM1.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
+            UIManager.itemsPanel.UpdateSingleItemWithAnimation(itemNumber);
         }
 
         public void RemoveAllItemsFromRoobbery(RobberyType robberyType, int locationNum) {

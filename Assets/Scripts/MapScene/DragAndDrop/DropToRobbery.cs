@@ -27,7 +27,7 @@ namespace CriminalTown {
 
                         if (charCust != null)
                             if (charCust.Character.Status == CharacterStatus.Normal)
-                                WM1.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
+                                UIManager.robberyWindow.TryToAddCharacterToRobbery(charCust.Character, robType, locNum);
 
                         isEntered = false;
                     }
@@ -35,7 +35,7 @@ namespace CriminalTown {
                         ItemCustomization iCust;
                         Drop.DropObject(out iCust);
                         if (iCust != null)
-                            WM1.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
+                            UIManager.robberyWindow.TryToAddItemToRobbery(iCust.number, robType, locNum);
                     }
                     isEntered = false;
                 }

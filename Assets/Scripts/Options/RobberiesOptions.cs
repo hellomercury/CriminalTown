@@ -20,13 +20,22 @@ namespace CriminalTown {
     }
 
     public class RobberiesOptions : MonoBehaviour {
+        private static RobberiesOptions m_instance;
+
+        public static RobberiesOptions Instance {
+            get {
+                return m_instance;
+            }
+        }
+        
         public Sprite[] RobberySprites = new Sprite[5];
 
         private static RobberiesCollection m_robberiesCollection;
 
-        public static void InitializeRobberiesCollection() {
+        public void Initialize() {
+            m_instance = GetComponent<RobberiesOptions>();
             m_robberiesCollection = RobberiesSerialization.GetRobberiesCollection();
-        }
+        }        
 
         public static string GetRobberyName(RobberyType robberyType) {
             return m_robberiesCollection.Robberies[(int) robberyType].Name;

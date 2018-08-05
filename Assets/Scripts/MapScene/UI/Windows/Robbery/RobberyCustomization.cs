@@ -61,7 +61,7 @@ namespace CriminalTown {
 
         [UsedImplicitly]
         public void OnClick() {
-            WM1.robberyWindow.SetRobberyWindow(m_robberyType, m_number);
+            UIManager.robberyWindow.SetRobberyWindow(m_robberyType, m_number);
         }
 
         public void CustomizeRobbery(int num, RobberyType robType) {

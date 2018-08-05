@@ -40,6 +40,14 @@ namespace CriminalTown {
     }
 
     public class TraitsOptions : MonoBehaviour {
+        private static TraitsOptions m_instance;
+
+        public static TraitsOptions Instance {
+            get {
+                return m_instance;
+            }
+        }
+        
         public Sprite[] traitsSprites = new Sprite[15];
 
         private static Dictionary<int, Trait> traitsCollection;
@@ -47,12 +55,17 @@ namespace CriminalTown {
         private static TextAsset TraitsCollectionDataXml;
         private static XmlDocument xmlDoc;
 
+        public void Initialize() {
+            m_instance = GetComponent<TraitsOptions>();
+            GetTraitsCollectionData();
+        }
+        
         public static Trait GetTrait(int traitId) {
             return traitsCollection[traitId];
         }
 
         public static Sprite GetTraitSprite(int traitId) {
-            return WM1.traitsOptions.traitsSprites[traitId];
+            return m_instance.traitsSprites[traitId];
         }
 
         public static void GetTraitsCollectionData() {
