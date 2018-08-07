@@ -125,7 +125,7 @@ namespace CriminalTown {
             UnityAction windowSetUpMethod;
             RobberyType rt = rData.Robbery.RobberyType;
             int ln = rData.Robbery.LocationNum;
-            Vector2 windowPostion = RobberiesManager.Instance.RobberiesObjects[rt][ln].transform.position;
+            Vector2 windowPostion = RobberiesManager.Instance.RobberiesObjects[rt][ln].transform.localPosition;
             switch (rData.Status) {
                 case EventStatus.Success:
                     windowSetUpMethod = () => UIManager.nightEventWindow.ShowSuccess(rData.nightEvent.Success,

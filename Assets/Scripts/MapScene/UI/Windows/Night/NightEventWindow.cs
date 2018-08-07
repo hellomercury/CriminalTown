@@ -75,7 +75,7 @@ namespace CriminalTown {
         }
 
         private void SetPosition(Vector2 position) {
-            transform.position = position;
+            transform.localPosition = position;
         }
         
         public void ShowChoice(NightEventNode eventNode, Vector2 windowPosition) {
