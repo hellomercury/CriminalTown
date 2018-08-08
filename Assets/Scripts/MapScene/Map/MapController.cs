@@ -2,6 +2,14 @@
 using UnityEngine.UI;
 
 public class MapController : MonoBehaviour {
+    private static MapController m_instance;
+
+    public static MapController Instance {
+        get {
+            return m_instance;
+        }
+    }
+    
     [SerializeField]
     private ScrollRect m_scrollRect;
     [SerializeField]
@@ -9,8 +17,8 @@ public class MapController : MonoBehaviour {
 
     private Vector2 m_contentSize;
     
-    
     private void Awake() {
+        m_instance = this;
         m_contentSize = m_content.sizeDelta;
     }
 

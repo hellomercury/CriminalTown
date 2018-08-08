@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -8,12 +9,16 @@ using Random = UnityEngine.Random;
 namespace CriminalTown {
 
     public class NightEventArgs : EventArgs {
-        private Character m_character;
+        private NightRobberyData m_robberyData;
 
-        public Character Character {
+        public NightRobberyData RobberyData {
             get {
-                return m_character;
+                return m_robberyData;
             }
+        }
+
+        public NightEventArgs(NightRobberyData robberyData) {
+            m_robberyData = robberyData;
         }
     }
 
@@ -23,7 +28,7 @@ namespace CriminalTown {
         private bool m_isNight;
         private List<NightRobberyData> m_robberies;
         private int m_currentEventNum;
-        //todo Разобраться со временем каждого ивента
+        //todo Разобраться со временем каждого эвента
         private float eventTime = 4;
 
         public static Night Instance {
@@ -45,7 +50,7 @@ namespace CriminalTown {
             m_instance = this;
         }
 
-        public delegate void NightScriptEvent(); //NightEventArgs nightEventArgs);
+        public delegate void NightScriptEvent();
 
         public NightScriptEvent OnNightBegan;
         public NightScriptEvent OnNightEnded;
@@ -89,6 +94,12 @@ namespace CriminalTown {
             while (GetEventNum(out m_currentEventNum)) {
                 Debug.Log("Call robbery event: " + m_currentEventNum);
                 NightRobberyData rob = m_robberies[m_currentEventNum];
+                
+                //todo: implement event for that
+                RobberyType rt = rob.Robbery.RobberyType;
+                int ln = rob.Robbery.LocationNum;
+                MapController.Instance.MoveToPosition(RobberiesManager.Instance.Robberies[rt][ln].LocalPosition);
+
                 if (rob.nightEvent.RootNode != null) {
                     AssignNightEventDataToWindow(rob, eventTime);
                     yield return new WaitForSeconds(eventTime);
@@ -117,7 +128,6 @@ namespace CriminalTown {
                 }
                 UIManager.nightEventWindow.CloseWindow();            
             }
-            UpdateDataAfterNight();
             FinishNight();
         }
 
@@ -125,28 +135,29 @@ namespace CriminalTown {
             UnityAction windowSetUpMethod;
             RobberyType rt = rData.Robbery.RobberyType;
             int ln = rData.Robbery.LocationNum;
-            Vector2 windowPostion = RobberiesManager.Instance.RobberiesObjects[rt][ln].transform.localPosition;
+            Vector2 windowPostion = RobberiesManager.Instance.Robberies[rt][ln].transform.localPosition;
             switch (rData.Status) {
                 case EventStatus.Success:
                     windowSetUpMethod = () => UIManager.nightEventWindow.ShowSuccess(rData.nightEvent.Success,
                         rData.Awards, rData.Money, windowPostion);
                     RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
-                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Success, eventTime);
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Success, time);
                     break;
                 case EventStatus.Fail:
                     windowSetUpMethod = () => UIManager.nightEventWindow.ShowFail(rData.nightEvent.Fail, windowPostion);
                     RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
-                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Fail, eventTime);
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.Fail, time);
                     break;
                 case EventStatus.InProgress:
                     windowSetUpMethod = () => UIManager.nightEventWindow.ShowChoice(rData.nightEvent.RootNode, windowPostion);
                     RobberiesManager.Instance.AddNightEvent(rData.Robbery.RobberyType,
-                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.InProgress, eventTime);
+                        rData.Robbery.LocationNum, windowSetUpMethod, EventStatus.InProgress, time);
                     break;
             }
         }
 
         private void FinishNight() {
+            UpdateDataAfterNight();
             UIManager.nightResumeWindow.SetActive(true);
             m_isNight = false;
             OnNightEnded();
@@ -225,6 +236,7 @@ namespace CriminalTown {
             }
             m_robberies.Clear();
             NightEventsOptions.ClearUsedEvents();
+            //todo: delete
             RobberiesOptions.GetNewRobberies();
         }
     }

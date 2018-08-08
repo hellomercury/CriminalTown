@@ -18,15 +18,19 @@ namespace CriminalTown {
         [SerializeField]
         private Transform m_counter;
         [SerializeField]
-        private GameObject m_charCounterIconPrefab;
-
-        private readonly List<GameObject> m_charCounterIcons = new List<GameObject>();
+        private GameObject[] m_charCounterIcons;
 
         private Robbery m_robbery;
         private RobberyType m_robberyType;
         private int m_number;
         private bool m_isAvailable;
 
+        public Vector2 LocalPosition {
+            get {
+                return transform.localPosition;
+            }
+        }
+        
         public RobberyType RobberyType {
             get {
                 return m_robberyType;
@@ -45,18 +49,8 @@ namespace CriminalTown {
             }
         }
 
-
         public void ActivateRobbery(bool value) {
             m_isAvailable = value;
-        }
-        
-        public void CounterMinus() {
-            Destroy(m_charCounterIcons[0].gameObject);
-            m_charCounterIcons.RemoveAt(0);
-        }
-
-        public void CounterPlus() {
-            m_charCounterIcons.Add(Instantiate(m_charCounterIconPrefab, m_counter));
         }
 
         [UsedImplicitly]
@@ -72,9 +66,9 @@ namespace CriminalTown {
         }
 
         private void SetCounter() {
-            if (m_robbery.IsRobberyEmpty() == false) {
-                for (int i = 0; i < m_robbery.Characters.Count; i++)
-                    m_charCounterIcons.Add(Instantiate(m_charCounterIconPrefab, m_counter));
+            int charsCount = m_robbery.Characters.Count;
+            for (int i = 0; i < charsCount && i < m_charCounterIcons.Length; i++) {
+                m_charCounterIcons[i].SetActive(i < charsCount);
             }
         }
 

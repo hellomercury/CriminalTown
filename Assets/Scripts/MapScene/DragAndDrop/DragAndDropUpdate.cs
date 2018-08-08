@@ -5,8 +5,6 @@ namespace CriminalTown {
     public class DragAndDropUpdate : MonoBehaviour {
         public GameObject hospitalButton;
         //public GameObject hospitalWindow;
-        public GameObject robberies;
-
 
         public RobberiesManager robUpdate;
 
@@ -21,10 +19,10 @@ namespace CriminalTown {
                     if (UIManager.robberyWindow.gameObject.activeInHierarchy)
                         UIManager.robberyWindow.GetComponent<DropToRobberyWindow>().DropToRobberyWindowUpdate();
 
-                    foreach (RobberyType robberyType in robUpdate.RobberiesObjects.Keys) {
-                        for (int i = 0; i < robUpdate.RobberiesObjects[robberyType].Length; i++) {
-                            GameObject robbery = robUpdate.RobberiesObjects[robberyType][i];
-                            if (robbery.GetComponent<RobberyCustomization>().IsAvailable) {
+                    foreach (RobberyType robberyType in robUpdate.Robberies.Keys) {
+                        for (int i = 0; i < robUpdate.Robberies[robberyType].Length; i++) {
+                            RobberyCustomization robbery = robUpdate.Robberies[robberyType][i];
+                            if (robbery.IsAvailable) {
                                 robbery.GetComponent<DropToRobbery>().DropToRobberyUpdate();
                             }
                         }
