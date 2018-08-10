@@ -106,6 +106,7 @@ namespace CriminalTown {
                     if (NightEventWindow.Choice == -1) {
                         MakeChoice(Random.Range(0, rob.nightEvent.RootNode.Buttons.Count));
                     }
+                    RobberiesManager.Instance.ResetNightEvent(rob.Robbery.RobberyType, rob.Robbery.LocationNum);
                     ApplyChangesAfterChoice(m_currentEventNum);
 
                     if (rob.nightEvent.RootNode.Buttons[NightEventWindow.Choice].NextEventNode != null)

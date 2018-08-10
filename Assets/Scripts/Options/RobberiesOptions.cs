@@ -134,14 +134,14 @@ namespace CriminalTown {
             float robberyStats = rStrength + rAgility + rSkill + rLuck;
             float equipmentStats = CalcucateEquipmentStats(robbery);
 
-            Debug.Log(robbery.RobberyType + " " + robbery.LocationNum);
-            Debug.Log("banditsStats: " + banditsStats);
-            Debug.Log("robberyStats: " + robberyStats);
-            Debug.Log("equipmentStats: " + equipmentStats);
+            //Debug.Log(robbery.RobberyType + " " + robbery.LocationNum);
+            //Debug.Log("banditsStats: " + banditsStats);
+            //Debug.Log("robberyStats: " + robberyStats);
+            //Debug.Log("equipmentStats: " + equipmentStats);
 
             float chance = (banditsStats + equipmentStats) / (banditsStats + equipmentStats + robberyStats);
 
-            Debug.Log(chance);
+            //Debug.Log(chance);
 
             foreach (Trait chanceTrait in chanceTraits) {
                 switch (chanceTrait.stat) {
