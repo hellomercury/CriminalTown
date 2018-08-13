@@ -22,4 +22,7 @@ CriminalTown - это мобильная пошаговая стратегия, 
 <img src="https://image.ibb.co/jcZD0p/Main_Menu_Background.png" width="450">
 <img src="https://image.ibb.co/kTSSQ7/2018_03_04_23_11_41.png" width="450">
 <img src="https://image.ibb.co/gD3OyS/2018_03_04_23_19_51.png" width="450">
-<img src="https://image.ibb.co/ifFssn/2018_03_04_23_38_28.png" width="350">
+
+<img src="https://image.ibb.co/bNPKBU/Portrait_bandana.png" width="100">
+<img src="https://image.ibb.co/dX26rU/Portrait_biker.png" width="100">
+<img src="https://image.ibb.co/cRWXWU/Portrait_blue_One.png" width="100">
