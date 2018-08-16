@@ -1,0 +1,1 @@
+StreamingAssets folder for a game data
