@@ -2,41 +2,28 @@
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 
 namespace CriminalTown.Serialization {
 
     [Serializable]
-    public class QuestsCollection {
-        public int Test;
-        public Dictionary<int, Quest> Quests;
-
-        public QuestsCollection() {
-            Quests = new Dictionary<int, Quest>() {
-                {0, new Quest()}
-            };
-        }
-    }
-
-    public static class QuestsSerialization {
-
-        [CanBeNull]
-        public static QuestsCollection Deserialize() {
-            string filePath = Application.dataPath + "/StreamingAssets/";
-            if (!File.Exists(filePath)) {
-                return new QuestsCollection();
+    public class QuestsSerialization : MonoBehaviour {
+        public static QuestsSerialization Instance {
+            get {
+                return FindObjectOfType<QuestsSerialization>();
             }
-            string dataAsJson = File.ReadAllText(filePath);
-            QuestsCollection questsCollection = JsonUtility.FromJson<QuestsCollection>(dataAsJson);
-            return questsCollection == null ? new QuestsCollection() : questsCollection;
         }
+        
+        [SerializeField]
+        private List<Quest> m_quests;
 
-        public static void Serialize([NotNull] QuestsCollection questsCollection) {
-            string dataAsJson = JsonUtility.ToJson(questsCollection);
-
-            string filePath = Application.dataPath + "/StreamingAssets/";
-            File.WriteAllText(filePath, dataAsJson);
+        public List<Quest> Quests {
+            get {
+                return m_quests;
+            }
         }
+        
     }
-
+    
 }
