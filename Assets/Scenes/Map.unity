@@ -3910,11 +3910,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_quests:
-  - Id: 122
+  - Id: 666
     Name: 
     Description: 
-  Quest:
-    Id: 0
+  - Id: 777
     Name: 
     Description: 
 --- !u!4 &318272094
