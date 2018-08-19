@@ -20,6 +20,7 @@ namespace CriminalTown {
     [Serializable]
     public class ChoiceQuest : Quest {
         public Choice[] Choices;
+
         public class Choice {
             public int ShortDescription;
             public int NextId;
@@ -31,9 +32,9 @@ namespace CriminalTown {
     public class LinearQuest : Quest {
         public int SuccessNextId;
         public int FailNextId;
-        public QuestAward Award; 
+        public QuestAward Award;
     }
-    
+
     [Serializable]
     public class CharacterQuest : LinearQuest {
         public Character Character;
@@ -48,15 +49,15 @@ namespace CriminalTown {
     public class KickCharacterQuest : CharacterQuest {
 
     }
-    
+
     [Serializable]
     public class StatusCharacterQuest : CharacterQuest {
         public CharacterStatus Status;
     }
-    
+
     [Serializable]
     public class LevelUpCharacterQuest : CharacterQuest {
-        
+
     }
 
     [Serializable]
@@ -66,7 +67,7 @@ namespace CriminalTown {
 
     [Serializable]
     public class ItemQuest : LinearQuest {
-        public int ItemID;
+        public int ItemId;
         public int Count;
     }
 
@@ -75,6 +76,11 @@ namespace CriminalTown {
         public RobberyType RobberyType;
         public int Count;
     }
-    
+
+    [Serializable]
+    public class EducationQuest : LinearQuest {
+        
+    }
+
 }
 
