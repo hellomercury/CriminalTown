@@ -21,6 +21,7 @@ namespace CriminalTown {
     public class ChoiceQuest : Quest {
         public Choice[] Choices;
 
+        [Serializable]
         public class Choice {
             public int ShortDescription;
             public int NextId;
@@ -62,7 +63,7 @@ namespace CriminalTown {
 
     [Serializable]
     public class StatsUpCharacterQuest : CharacterQuest {
-        public Stat Stat;
+        public int StatId;
     }
 
     [Serializable]

@@ -2,48 +2,110 @@
 using UnityEngine;
 
 namespace CriminalTown.Editors {
+    
+    [CustomPropertyDrawer(typeof(QuestAward), true)]
+    public class QuestAwardProperyDrawer : PropertyDrawer {
+        
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Money"));
+        }
+    }
+    
+    [CustomPropertyDrawer(typeof(ChoiceQuest.Choice), true)]
+    public class ChoiceQuestChoiceProperyDrawer : PropertyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("ShortDescription"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("NextId"));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Award"), true);
+            EditorGUILayout.Separator();
 
+        }
+        
+    }
+    
     [CustomPropertyDrawer(typeof(Quest), true)]
     public class QuestPropertyDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-           
-            EditorGUI.BeginProperty(position, label, property);
-            EditorGUILayout.LabelField(label);
-            EditorGUI.indentLevel++;
-            
-            Rect idRect = new Rect(position.x, position.y + 18, position.width, 16);
-            Rect nameRect = new Rect(position.x, position.y + 36, position.width, 16);
-            Rect descriptionRect = new Rect(position.x, position.y + 54, position.width, 48);
-
-            EditorGUI.PropertyField(idRect, property.FindPropertyRelative("Id"));
-            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("Name"));
-            EditorGUI.PropertyField(descriptionRect, property.FindPropertyRelative("Description"));
-         
-            EditorGUI.indentLevel--;
-            EditorGUI.EndProperty();
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Id"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Name"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Description"), GUILayout.Height(60));
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return 90f;
+    }
+    
+    
+    [CustomPropertyDrawer(typeof(ChoiceQuest), true)]
+    public class ChoiceQuestProperyDrawer : QuestPropertyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Choices"), true);
         }
+
+    }
+    
+    
+    [CustomPropertyDrawer(typeof(LinearQuest), true)]
+    public class LinearQuestProperyDrawer : QuestPropertyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("SuccessNextId"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("FailNextId"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Award"));
+        }
+        
+    }
+    
+    [CustomPropertyDrawer(typeof(CharacterQuest), true)]
+    public class CharacterQuestProperyDrawer : LinearQuestProperyDrawer {
+    }
+    
+    [CustomPropertyDrawer(typeof(StatsUpCharacterQuest), true)]
+    public class StatsUpCharacterQuestProperyDrawer : CharacterQuestProperyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("StatId"));
+        }
+        
+    }
+    
+    [CustomPropertyDrawer(typeof(StatusCharacterQuest), true)]
+    public class StatusCharacterQuestProperyDrawer : CharacterQuestProperyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Status"));
+        }
+        
     }
 
     [CustomPropertyDrawer(typeof(ItemQuest), true)]
-    public class ItemQuestProperyDrawer : QuestPropertyDrawer {
+    public class ItemQuestProperyDrawer : LinearQuestProperyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
-            EditorGUI.indentLevel++;
-            SerializedProperty itemIdProp = property.FindPropertyRelative("ItemId");
-            if (itemIdProp != null) {
-                Rect itemIdRect = new Rect(position.x, position.y + base.GetPropertyHeight(property, label) + 18, position.width, 16);
-                EditorGUI.PropertyField(itemIdRect, itemIdProp);
-            }
-            EditorGUI.indentLevel--;
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("ItemId"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Count"));
         }
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return 30f + base.GetPropertyHeight(property, label);
+        
+    }
+    
+    [CustomPropertyDrawer(typeof(RobberyQuest), true)]
+    public class RobberyQuestProperyDrawer : LinearQuestProperyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("RobberyType"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Count"));
         }
+        
+    }
+    
+    [CustomPropertyDrawer(typeof(EducationQuest), true)]
+    public class EducationQuestProperyDrawer : LinearQuestProperyDrawer {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+            base.OnGUI(position, property, label);
+            EditorGUILayout.LabelField("Add education system");
+        }
+        
     }
 
 }

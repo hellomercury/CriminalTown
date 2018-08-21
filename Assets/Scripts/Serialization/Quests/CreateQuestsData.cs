@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CriminalTown.Serialization {
 
     public class CreateQuestsData {
-        [MenuItem("CriminalTown/Create/Create quests data")]
+        //[MenuItem("CriminalTown/Create/Create quests data")]
         public static QuestsScriptableObject Create() {
             QuestsScriptableObject data = ScriptableObject.CreateInstance<QuestsScriptableObject>();
 

@@ -22,6 +22,7 @@ namespace CriminalTown.Editors {
         private static Vector2 m_scroll;
         private static SerializedObject m_questsObject;
         private static List<SerializedProperty> m_questsProperties;
+        private static bool[] m_questTypeFoldout;
 
 
         [MenuItem("CriminalTown/Quests editor")]
@@ -53,37 +54,42 @@ namespace CriminalTown.Editors {
                 m_questsObject.FindProperty("m_educationQuests"),
                 m_questsObject.FindProperty("m_choiceQuests"),
             };
+            
+            m_questTypeFoldout = new bool[m_questsProperties.Count];
 
             m_titleStyle = new GUIStyle() {
                 alignment = TextAnchor.UpperCenter,
                 fontSize = 25,
                 fontStyle = FontStyle.Bold,
             };
-            minSize = new Vector2(200, 300);
+
+            minSize = new Vector2(400, 300);
         }
 
         private void OnGUI() {
-            GUILayout.Label("Quests", m_titleStyle);
+            EditorGUILayout.LabelField("Quests", m_titleStyle);
             m_scroll = GUILayout.BeginScrollView(m_scroll);
             {
-                foreach (SerializedProperty questsProperty in m_questsProperties) {
+                for (var quPropNum = 0; quPropNum < m_questsProperties.Count; quPropNum++) {
+                    SerializedProperty questsProperty = m_questsProperties[quPropNum];
                     int questsCount = questsProperty.arraySize;
-                    GUILayout.Label(questsProperty.name, m_titleStyle);
-                    for (int i = 0; i < questsCount; i++) {
-                        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                        {
+
+                    m_questTypeFoldout[quPropNum] = EditorGUILayout.Foldout(m_questTypeFoldout[quPropNum], questsProperty.name);
+                    if (m_questTypeFoldout[quPropNum]) {
+                        for (int i = 0; i < questsCount; i++) {
+                            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                             EditorGUILayout.PropertyField(questsProperty.GetArrayElementAtIndex(i), true);
-                        }
-                        EditorGUILayout.EndVertical();
-                        if (GUILayout.Button("Remove quest")) {
-                            if (EditorUtility.DisplayDialog("Delete quest", "A you sure you want to delete quest: questId", "Yes", "No")) {
-                                questsProperty.DeleteArrayElementAtIndex(i);
-                                break; //avoid OutOfRange
+                            EditorGUILayout.EndVertical();
+                            if (GUILayout.Button("Remove quest")) {
+                                if (EditorUtility.DisplayDialog("Delete quest", "A you sure you want to delete quest: questId", "Yes", "No")) {
+                                    questsProperty.DeleteArrayElementAtIndex(i);
+                                    break; //avoid OutOfRange
+                                }
                             }
                         }
-                    }
-                    if (GUILayout.Button("Add quest")) {
-                        questsProperty.InsertArrayElementAtIndex(questsCount);
+                        if (GUILayout.Button("Add quest")) {
+                            questsProperty.InsertArrayElementAtIndex(questsCount);
+                        }
                     }
                 }
             }
@@ -96,6 +102,9 @@ namespace CriminalTown.Editors {
             GUILayout.EndHorizontal();
 
             m_questsObject.ApplyModifiedProperties();
+            if (GUI.changed) {
+                EditorUtility.SetDirty(m_questsCollection);
+            }
         }
         
     }
