@@ -11,6 +11,13 @@ namespace CriminalTown {
     }
 
     [Serializable]
+    public class QuestTransition {
+        public int ShortDescription;
+        public int NextId;
+        public QuestAward Award;
+    }
+
+    [Serializable]
     public class Quest {
         public int Id;
         public string Name;
@@ -19,21 +26,13 @@ namespace CriminalTown {
 
     [Serializable]
     public class ChoiceQuest : Quest {
-        public Choice[] Choices;
-
-        [Serializable]
-        public class Choice {
-            public int ShortDescription;
-            public int NextId;
-            public QuestAward Award;
-        }
+        public QuestTransition[] Choices;
     }
 
     [Serializable]
     public class LinearQuest : Quest {
-        public int SuccessNextId;
-        public int FailNextId;
-        public QuestAward Award;
+        public QuestTransition SuccessTransition;
+        public QuestTransition FailTransition;
     }
 
     [Serializable]

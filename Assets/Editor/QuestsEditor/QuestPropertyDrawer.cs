@@ -11,7 +11,7 @@ namespace CriminalTown.Editors {
         }
     }
     
-    [CustomPropertyDrawer(typeof(ChoiceQuest.Choice), true)]
+    [CustomPropertyDrawer(typeof(QuestTransition), true)]
     public class ChoiceQuestChoiceProperyDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUILayout.BeginHorizontal();
@@ -50,9 +50,8 @@ namespace CriminalTown.Editors {
     public class LinearQuestProperyDrawer : QuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("SuccessNextId"));
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("FailNextId"));
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("Award"));
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("SuccessTransition"), true);
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("FailTransition"), true);
         }
         
     }
