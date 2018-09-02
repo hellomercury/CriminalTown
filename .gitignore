@@ -6,8 +6,9 @@
 /.idea/
 
 /Assets/AssetStoreTools*
-/Assets/Plugins/GitHub.meta
-/Assets/Plugins/GitHub/
+/Assets/Plugins/Editor/
+/Assets/Plugins/Editor.meta
+
 
 # Visual Studio 2015 cache directory
 /.vs/
