@@ -5,71 +5,80 @@ using CriminalTown.Serialization;
 
 namespace CriminalTown.Editors {
 
-    public class NodeBasedEditor : EditorWindow {
+    public class QuestsGraphEditor : EditorWindow {
+        
         private static QuestsGraphScriptableObject m_questsGraphData;
         
         private List<QuestNode> m_nodes;
         private List<QuestConnection> m_connections;
 
         private QuestConnectionPoint m_selectedInPoint;
-        private QuestConnectionPoint m_selectedOutPoint;
-
-        private Vector2 m_offset;
-        private Vector2 m_drag;
-        
+        private QuestConnectionPoint m_selectedOutPoint;      
+      
         private readonly Rect m_saveButtonRect = new Rect(0, 0, 200, 50);
         private readonly Rect m_loadButtonRect = new Rect(200, 0, 200, 50);
+        private readonly Rect m_scrollRect = new Rect(0, 50, 640, 430);
+        public static readonly Rect ScrollViewRect = new Rect(0, 50, 1280, 1024);
+        private Vector2 m_scrollPosition;
 
         [MenuItem("CriminalTown/QuestGraphEditor")]
         private static void OpenWindow() {
             m_questsGraphData = QuestsSerialization.GetQuestsGraphData;
-            NodeBasedEditor window = GetWindow<NodeBasedEditor>();
+            QuestsGraphEditor window = GetWindow<QuestsGraphEditor>();
             window.titleContent = new GUIContent("Node Based Editor");
         }
 
         private void OnGUI() {
-            DrawGrid(20, 0.2f, Color.gray);
-            DrawGrid(100, 0.4f, Color.gray);
-
-            DrawNodes();
-            DrawConnections();
-
-            DrawConnectionLine(Event.current);
-
-            ProcessNodeEvents(Event.current);
-            ProcessEvents(Event.current);
-
             if (GUI.Button(m_saveButtonRect, "Save")) {
-                
+
             }
             if (GUI.Button(m_loadButtonRect, "Load")) {
-                
-            }
 
-            if (GUI.changed)
+            }
+            m_scrollPosition = GUI.BeginScrollView(m_scrollRect, m_scrollPosition, ScrollViewRect);
+            {
+                DrawGrid(ScrollViewRect, 20, 0.2f, Color.gray);
+                DrawGrid(ScrollViewRect, 100, 0.4f, Color.gray);
+
+                DrawNodes();
+                DrawConnections();
+
+                DrawConnectionLine(Event.current);
+
+                ProcessNodeEvents(Event.current);
+                ProcessEvents(Event.current);
+            }
+            GUI.EndScrollView();
+
+            if (GUI.changed) {
                 Repaint();
+            }
         }
 
         private void OnEnable() {
             minSize = new Vector2(640, 480); 
+            maxSize = new Vector2(640, 480); 
         }
 
-        private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor) {
-            int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
-            int heightDivs = Mathf.CeilToInt(position.height / gridSpacing);
+        private static void DrawGrid(Rect rect, float gridSpacing, float gridOpacity, Color gridColor) {
+            float width = rect.width;
+            float height = rect.height;
+            float x = rect.x;
+            float y = rect.y;
+            
+            int widthDivs = Mathf.CeilToInt(width / gridSpacing);
+            int heightDivs = Mathf.CeilToInt(height / gridSpacing);
 
             Handles.BeginGUI();
             Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridOpacity);
 
-            m_offset += m_drag * 0.5f;
-            Vector3 newOffset = new Vector3(m_offset.x % gridSpacing, m_offset.y % gridSpacing, 0);
 
             for (int i = 0; i < widthDivs; i++) {
-                Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, position.height, 0f) + newOffset);
+                Handles.DrawLine(new Vector3(gridSpacing * i + x, -gridSpacing + y, 0), new Vector3(gridSpacing * i + x, height + y, 0f));
             }
 
             for (int j = 0; j < heightDivs; j++) {
-                Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(position.width, gridSpacing * j, 0f) + newOffset);
+                Handles.DrawLine(new Vector3(-gridSpacing + x, gridSpacing * j + y, 0), new Vector3(width + x, gridSpacing * j + y, 0f));
             }
 
             Handles.color = Color.white;
@@ -79,6 +88,7 @@ namespace CriminalTown.Editors {
         private void DrawNodes() {
             if (m_nodes != null) {
                 for (int i = 0; i < m_nodes.Count; i++) {
+                    m_nodes[i].CheckOutOfBordersAndFix();
                     m_nodes[i].Draw();
                 }
             }
@@ -93,7 +103,6 @@ namespace CriminalTown.Editors {
         }
 
         private void ProcessEvents(Event e) {
-            m_drag = Vector2.zero;
 
             switch (e.type) {
                 case EventType.MouseDown:
@@ -163,13 +172,7 @@ namespace CriminalTown.Editors {
         }
 
         private void OnDrag(Vector2 delta) {
-            m_drag = delta;
-
-            if (m_nodes != null) {
-                for (int i = 0; i < m_nodes.Count; i++) {
-                    m_nodes[i].Drag(delta);
-                }
-            }
+            m_scrollPosition -= delta;
 
             GUI.changed = true;
         }

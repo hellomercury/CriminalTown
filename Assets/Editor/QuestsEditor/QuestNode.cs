@@ -6,14 +6,14 @@ namespace CriminalTown.Editors {
 
     public class QuestNode {
         private Quest m_quest;
-        
+
         private const float Width = 200;
         private const float Height = 50;
 
         private Rect m_rect;
         private bool m_isDragged;
         private bool m_isSelected;
-        private double m_lastClickTime = 0;
+        private double m_lastClickTime;
         private const double DoubleClickDelay = 0.5;
 
         private readonly QuestConnectionPoint m_inPoint;
@@ -87,14 +87,21 @@ namespace CriminalTown.Editors {
             GUI.Box(m_rect, "", m_currentStyle);
         }
 
+        public void CheckOutOfBordersAndFix() {
+            Rect view = QuestsGraphEditor.ScrollViewRect;
+            m_rect.x = m_rect.x < view.x ? view.x : m_rect.x;
+            m_rect.y = m_rect.y < view.y ? view.y : m_rect.y;
+            m_rect.y = m_rect.y > view.y + view.height ? view.y + view.height : m_rect.y;
+            m_rect.x = m_rect.x > view.x + view.width ? view.x + view.width : m_rect.x;
+        }
+
         public bool ProcessEvents(Event e) {
             switch (e.type) {
                 case EventType.MouseDown:
                     if (e.button == 0) {
                         if (m_rect.Contains(e.mousePosition)) {
-                            Debug.Log(EditorApplication.timeSinceStartup);
                             if (EditorApplication.timeSinceStartup - m_lastClickTime < DoubleClickDelay) {
-                                Debug.Log("double click");
+
                             }
                             m_lastClickTime = EditorApplication.timeSinceStartup;
                             m_isDragged = true;
@@ -113,11 +120,9 @@ namespace CriminalTown.Editors {
                         e.Use();
                     }
                     break;
-
                 case EventType.MouseUp:
                     m_isDragged = false;
                     break;
-
                 case EventType.MouseDrag:
                     if (e.button == 0 && m_isDragged) {
                         Drag(e.delta);
@@ -126,7 +131,6 @@ namespace CriminalTown.Editors {
                     }
                     break;
             }
-
             return false;
         }
 
