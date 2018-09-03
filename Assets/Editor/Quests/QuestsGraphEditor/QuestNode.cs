@@ -91,8 +91,10 @@ namespace CriminalTown.Editors {
             Rect view = QuestsGraphEditor.ScrollViewRect;
             m_rect.x = m_rect.x < view.x ? view.x : m_rect.x;
             m_rect.y = m_rect.y < view.y ? view.y : m_rect.y;
-            m_rect.y = m_rect.y > view.y + view.height ? view.y + view.height : m_rect.y;
-            m_rect.x = m_rect.x > view.x + view.width ? view.x + view.width : m_rect.x;
+            m_rect.y = m_rect.y > view.y + view.height - m_rect.height ?
+                view.y + view.height - m_rect.height : m_rect.y;
+            m_rect.x = m_rect.x > view.x + view.width - m_rect.width ?
+                view.x + view.width - m_rect.width : m_rect.x;
         }
 
         public bool ProcessEvents(Event e) {
