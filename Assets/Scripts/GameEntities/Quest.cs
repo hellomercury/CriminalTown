@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace CriminalTown {
 
@@ -13,26 +15,30 @@ namespace CriminalTown {
     [Serializable]
     public class QuestTransition {
         public int ShortDescription;
-        public int NextId;
+        public int NextId = -1;
         public QuestAward Award;
     }
 
     [Serializable]
-    public class Quest {
+    public class Quest : ScriptableObject {
         public int Id;
         public string Name;
         public string Description;
+        public Vector2 PositionInEditor;
     }
 
     [Serializable]
     public class ChoiceQuest : Quest {
-        public QuestTransition[] Choices;
+        [NotNull]
+        public QuestTransition[] Choices = new []{new QuestTransition(), new QuestTransition()};
     }
 
     [Serializable]
     public class LinearQuest : Quest {
-        public QuestTransition SuccessTransition;
-        public QuestTransition FailTransition;
+        [NotNull]
+        public QuestTransition SuccessTransition = new QuestTransition();
+        [NotNull]
+        public QuestTransition FailTransition = new QuestTransition();
     }
 
     [Serializable]

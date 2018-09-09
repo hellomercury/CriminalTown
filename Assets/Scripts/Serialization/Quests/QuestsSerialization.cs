@@ -11,12 +11,7 @@ namespace CriminalTown.Serialization {
                 return Resources.Load<QuestsScriptableObject>("QuestsCollectionData");
             }
         }
-        
-        public static QuestsGraphScriptableObject GetQuestsGraphData {
-            get {
-                return Resources.Load<QuestsGraphScriptableObject>("QuestsGraphData");
-            }
-        }
+
     }
-    
+
 }
