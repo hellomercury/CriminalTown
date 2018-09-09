@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CriminalTown.Editors {
     
     [CustomPropertyDrawer(typeof(QuestAward), true)]
-    public class QuestAwardProperyDrawer : PropertyDrawer {
+    public class QuestAwardPropertyDrawer : PropertyDrawer {
         
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUILayout.PropertyField(property.FindPropertyRelative("Money"));
@@ -12,7 +12,7 @@ namespace CriminalTown.Editors {
     }
     
     [CustomPropertyDrawer(typeof(QuestTransition), true)]
-    public class ChoiceQuestChoiceProperyDrawer : PropertyDrawer {
+    public class ChoiceQuestChoicePropertyDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PropertyField(property.FindPropertyRelative("ShortDescription"));
@@ -37,7 +37,7 @@ namespace CriminalTown.Editors {
     
     
     [CustomPropertyDrawer(typeof(ChoiceQuest), true)]
-    public class ChoiceQuestProperyDrawer : QuestPropertyDrawer {
+    public class ChoiceQuestPropertyDrawer : QuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("Choices"), true);
@@ -47,7 +47,7 @@ namespace CriminalTown.Editors {
     
     
     [CustomPropertyDrawer(typeof(LinearQuest), true)]
-    public class LinearQuestProperyDrawer : QuestPropertyDrawer {
+    public class LinearQuestPropertyDrawer : QuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("SuccessTransition"), true);
@@ -57,11 +57,11 @@ namespace CriminalTown.Editors {
     }
     
     [CustomPropertyDrawer(typeof(CharacterQuest), true)]
-    public class CharacterQuestProperyDrawer : LinearQuestProperyDrawer {
+    public class CharacterQuestPropertyDrawer : LinearQuestPropertyDrawer {
     }
     
     [CustomPropertyDrawer(typeof(StatsUpCharacterQuest), true)]
-    public class StatsUpCharacterQuestProperyDrawer : CharacterQuestProperyDrawer {
+    public class StatsUpCharacterQuestPropertyDrawer : CharacterQuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("StatId"));
@@ -70,7 +70,7 @@ namespace CriminalTown.Editors {
     }
     
     [CustomPropertyDrawer(typeof(StatusCharacterQuest), true)]
-    public class StatusCharacterQuestProperyDrawer : CharacterQuestProperyDrawer {
+    public class StatusCharacterQuestPropertyDrawer : CharacterQuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("Status"));
@@ -79,7 +79,7 @@ namespace CriminalTown.Editors {
     }
 
     [CustomPropertyDrawer(typeof(ItemQuest), true)]
-    public class ItemQuestProperyDrawer : LinearQuestProperyDrawer {
+    public class ItemQuestPropertyDrawer : LinearQuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("ItemId"));
@@ -89,7 +89,7 @@ namespace CriminalTown.Editors {
     }
     
     [CustomPropertyDrawer(typeof(RobberyQuest), true)]
-    public class RobberyQuestProperyDrawer : LinearQuestProperyDrawer {
+    public class RobberyQuestPropertyDrawer : LinearQuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.PropertyField(property.FindPropertyRelative("RobberyType"));
@@ -99,7 +99,7 @@ namespace CriminalTown.Editors {
     }
     
     [CustomPropertyDrawer(typeof(EducationQuest), true)]
-    public class EducationQuestProperyDrawer : LinearQuestProperyDrawer {
+    public class EducationQuestPropertyDrawer : LinearQuestPropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             base.OnGUI(position, property, label);
             EditorGUILayout.LabelField("Add education system");
